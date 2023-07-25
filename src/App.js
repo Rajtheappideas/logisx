@@ -1,25 +1,29 @@
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import './App.css'
+import SignIn from './pages/SignIn'
+import SignUp from './pages/SignUp'
+import TellUsAbout from './components/Signup/TellUsAbout'
+import Shipping from './components/Signup/Shipping'
+import Location from './components/Signup/Location'
+import UploadDocs from './components/Signup/UploadDocs'
+import Review from './components/Signup/Review'
+import AccountSubmit from './components/AccountSubmit'
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<SignIn />} />
+        <Route path="/sign-up" element={<SignUp />} />
+        <Route path="/tell-us-about-you" element={<TellUsAbout />} />
+        <Route path="/shipping-manager" element={<Shipping />} />
+        <Route path="/terminal-location" element={<Location />} />
+        <Route path="/upload-docs" element={<UploadDocs />} />
+        <Route path="/review" element={<Review />} />
+        <Route path="/account-submit" element={<AccountSubmit />} />
+      </Routes>
+    </BrowserRouter>
+  )
 }
 
-export default App;
+export default App
