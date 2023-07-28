@@ -1,3 +1,13 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.blue_button {
+  @apply bg-primaryBlue text-white font-medium text-center md:w-48 w-40 md:h-12 h-10 rounded-lg p-2 hover:bg-primaryBlue/80 active:scale-95 transition;
+}
+.disable_button {
+    @apply bg-disableGray text-white font-medium text-center md:w-48 w-40 md:h-12 h-10 rounded-lg p-2 hover:bg-disableGray/80 active:scale-95 transition;
+}
+.input_field{
+    @apply border-b-2 focus:border-primaryBlue border-textColorGray w-full text-disableGray  focus:outline-none p-2
+}
