@@ -5,14 +5,14 @@ import { AiOutlineClose, AiOutlineMenu, AiOutlineSearch } from 'react-icons/ai'
 const Header = () => {
   const [openSidebar, setOpenSidebar] = useState(false)
   return (
-    <div className="overflow-hidden h-auto">
+    <div className="overflow-hidden h-auto bg-white drop-shadow">
       {/* desktop & tablet */}
       <section className="flex items-center justify-between w-full">
         <div className="logo w-auto">
           <img
             src={logo}
             alt="logo"
-            className="lg:w-40 w-20 h-fit cursor-pointer"
+            className="lg:w-32 w-20 h-fit cursor-pointer"
           />
         </div>
         <nav className="flex md:mr-6 mr-2 items-center gap-x-2 flex-initial justify-end">

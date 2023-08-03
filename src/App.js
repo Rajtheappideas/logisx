@@ -14,10 +14,12 @@ import ForgotPassword from './pages/ForgotPassword'
 import Verification from './components/Forgot/Verification'
 import ResetPassword from './components/Forgot/ResetPassword'
 import VerificationSuccess from './components/Forgot/VerificationSuccess'
+// import Chat from './components/Chat'
 
 function App() {
   return (
     <BrowserRouter>
+      {/* <Chat /> */}
       <Header />
       <Routes>
         <Route path="/sign-in" element={<SignIn />} />
@@ -33,7 +35,7 @@ function App() {
         <Route path="/verification" element={<Verification />} />
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/verification-success" element={<VerificationSuccess />} />
-        <Route path='/' element={<Home/>}/>
+        <Route path="/" element={<Home />} />
       </Routes>
     </BrowserRouter>
   )
