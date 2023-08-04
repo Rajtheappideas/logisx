@@ -1,5 +1,5 @@
 import React from 'react'
-import Background from '../../assets/BG.png'
+import Background from '../../assets/images/BG.png'
 
 const Review = () => {
   return (
@@ -81,11 +81,11 @@ const Review = () => {
             <p className="text-[#BDBDBD] font-medium">Photos of loading dock</p>
             <div className="flex">
               <img
-                src={require('../../assets/desktop-wallpaper-printable-world-map-png-in-pdf-2021-world-map.jpg')}
+                src={require('../../assets/images/desktop-wallpaper-printable-world-map-png-in-pdf-2021-world-map.jpg')}
                 style={{ width: '30%', borderRadius: '8px' }}
               />
               <img
-                src={require('../../assets/desktop-wallpaper-printable-world-map-png-in-pdf-2021-world-map.jpg')}
+                src={require('../../assets/images/desktop-wallpaper-printable-world-map-png-in-pdf-2021-world-map.jpg')}
                 style={{
                   width: '30%',
                   borderRadius: '8px',

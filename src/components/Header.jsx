@@ -1,11 +1,21 @@
-import React, { useState } from 'react'
-import logo from '../assets/logisX-2-png 3.svg'
-import { AiOutlineClose, AiOutlineMenu, AiOutlineSearch } from 'react-icons/ai'
+import React, { useState } from "react";
+import logo from "../assets/images/logisX-2-png 3.svg";
+import { AiOutlineClose, AiOutlineMenu, AiOutlineSearch } from "react-icons/ai";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  handleChangeActiveComponent,
+  handleChangeActiveHeader,
+} from "../redux/globalStates";
 
 const Header = () => {
-  const [openSidebar, setOpenSidebar] = useState(false)
+  const [openSidebar, setOpenSidebar] = useState(false);
+
+  const { activeHeader } = useSelector((state) => state.root.globalStates);
+
+  const dispatch = useDispatch();
+
   return (
-    <div className="overflow-hidden h-auto bg-white drop-shadow">
+    <div className="h-auto bg-white drop-shadow">
       {/* desktop & tablet */}
       <section className="flex items-center justify-between w-full">
         <div className="logo w-auto">
@@ -17,16 +27,47 @@ const Header = () => {
         </div>
         <nav className="flex md:mr-6 mr-2 items-center gap-x-2 flex-initial justify-end">
           <ul className="md:flex hidden mx-6 space-x-6 whitespace-nowrap items-center  text-textColorGray font-semibold">
-            <li className="hover:text-primaryBlue cursor-pointer transition duration-700 ease-in-out">
+            <li
+              onClick={() => {
+                dispatch(handleChangeActiveHeader("jobs"));
+                dispatch(handleChangeActiveComponent("active_jobs"));
+              }}
+              className={`hover:text-primaryBlue ${
+                activeHeader === "jobs" && "text-primaryBlue text-lg"
+              } cursor-pointer transition duration-300 ease-in-out`}
+            >
               Jobs
             </li>
-            <li className="hover:text-primaryBlue cursor-pointer transition duration-700 ease-in-out">
+            <li
+              onClick={() => {
+                dispatch(handleChangeActiveHeader("bids"));
+                dispatch(handleChangeActiveComponent("shipped"));
+              }}
+              className={`hover:text-primaryBlue ${
+                activeHeader === "bids" && "text-primaryBlue text-lg"
+              } cursor-pointer transition duration-300 ease-in-out`}
+            >
               Bids
             </li>
-            <li className="hover:text-primaryBlue cursor-pointer transition duration-700 ease-in-out">
+            <li
+              onClick={() => {
+                // dispatch(handleChangeActiveHeader("chat"));
+              }}
+              className={`hover:text-primaryBlue ${
+                activeHeader === "chat" && "text-primaryBlue text-lg"
+              } cursor-pointer transition duration-300 ease-in-out`}
+            >
               Chat
             </li>
-            <li className="hover:text-primaryBlue cursor-pointer transition duration-700 ease-in-out">
+            <li
+              onClick={() => {
+                dispatch(handleChangeActiveHeader("my_account"));
+                dispatch(handleChangeActiveComponent("profile"));
+              }}
+              className={`hover:text-primaryBlue ${
+                activeHeader === "my_account" && "text-primaryBlue text-lg"
+              } cursor-pointer transition duration-300 ease-in-out`}
+            >
               My Account
             </li>
           </ul>
@@ -47,17 +88,11 @@ const Header = () => {
           />
         </nav>
       </section>
-      {/* MOBILE */}
-      {openSidebar && (
-        <div
-          onClick={() => setOpenSidebar(false)}
-          className="md:hidden inset-0 z-0 absolute overflow-hidden backdrop-blur-sm bg-lightBlack bg-opacity-50 min-h-screen max-h-screen max-w-[100%]"
-        ></div>
-      )}
 
+      {/* mobile header */}
       <div
         className={`md:hidden bg-white absolute top-0 left-0 z-20 min-h-screen max-h-screen min-w-[80%] ${
-          openSidebar ? 'translate-x-0' : '-translate-x-full'
+          openSidebar ? "translate-x-0" : "-translate-x-full"
         } transition duration-300 ease-linear`}
       >
         <AiOutlineClose
@@ -66,23 +101,29 @@ const Header = () => {
         />
         <div className="text-center items-start">
           <ul className="leading-10 pt-3 text-textColorGray font-semibold">
-            <li className="hover:text-primaryBlue cursor-pointer transition duration-700 ease-in-out">
+            <li className="hover:text-primaryBlue cursor-pointer transition duration-300 ease-in-out">
               Jobs
             </li>
-            <li className="hover:text-primaryBlue cursor-pointer transition duration-700 ease-in-out">
+            <li className="hover:text-primaryBlue cursor-pointer transition duration-300 ease-in-out">
               Bids
             </li>
-            <li className="hover:text-primaryBlue cursor-pointer transition duration-700 ease-in-out">
+            <li className="hover:text-primaryBlue cursor-pointer transition duration-300 ease-in-out">
               Chat
             </li>
-            <li className="hover:text-primaryBlue cursor-pointer transition duration-700 ease-in-out">
+            <li className="hover:text-primaryBlue cursor-pointer transition duration-300 ease-in-out">
               My Account
             </li>
           </ul>
         </div>
       </div>
+      {openSidebar && (
+        <div
+          onClick={() => setOpenSidebar(false)}
+          className="md:hidden inset-0 z-0 absolute overflow-hidden backdrop-blur-sm bg-lightBlack bg-opacity-50 min-h-screen max-h-screen max-w-[100%]"
+        ></div>
+      )}
     </div>
-  )
-}
+  );
+};
 
-export default Header
+export default Header;

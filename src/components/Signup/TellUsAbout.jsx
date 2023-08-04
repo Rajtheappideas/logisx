@@ -1,6 +1,6 @@
 import React from 'react'
-import Background from '../../assets/BG.png'
-import Logo from '../../assets/logisX-2-png 3.svg'
+import Background from '../../assets/images/BG.png'
+import Logo from '../../assets/images/logisX-2-png 3.svg'
 
 const TellUsAbout = () => {
   return (

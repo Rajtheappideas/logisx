@@ -1,6 +1,6 @@
 import React from 'react'
 import { VscLocation } from 'react-icons/vsc'
-import Background from '../../assets/BG.png'
+import Background from '../../assets/images/BG.png'
 
 
 const Location = () => {
@@ -35,7 +35,7 @@ const Location = () => {
             <VscLocation className="text-2xl" />
             <p className="text-[#666666] mx-1">Use current location</p>
           </div>
-          <img className="mt-4" src={require('../../assets/map.jpg')} />
+          <img className="mt-4" src={require('../../assets/images/map.jpg')} />
           <div className="flex justify-between">
             <button className="lg:p-3 mb-6 bg-[#CCCCCC] text-white rounded-lg mt-11 md:w-1/4">
               BACK

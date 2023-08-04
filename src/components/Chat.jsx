@@ -15,7 +15,7 @@ const Chat = () => {
           <div className="flex">
             <div className="">
               <img
-                src={require('../assets/Ellipse 21.png')}
+                src={require('../assets/images/Ellipse 21.png')}
                 alt='Ellipse'
                 style={{ width: '50px' }}
               />
@@ -39,7 +39,7 @@ const Chat = () => {
           <div className="flex">
             <div className="">
               <img
-                src={require('../assets/Ellipse 21.png')}
+                src={require('../assets/images/Ellipse 21.png')}
                 alt='Ellipse'
                 style={{ width: '50px' }}
               />
@@ -63,7 +63,7 @@ const Chat = () => {
           <div className="flex">
             <div className="">
               <img
-                src={require('../assets/Ellipse 21.png')}
+                src={require('../assets/images/Ellipse 21.png')}
                 alt='Ellipse'
                 style={{ width: '50px' }}
               />
@@ -82,7 +82,7 @@ const Chat = () => {
           <div className="flex">
             <div className="">
               <img
-                src={require('../assets/Ellipse 21.png')}
+                src={require('../assets/images/Ellipse 21.png')}
                 alt='Ellipse'
                 style={{ width: '50px' }}
               />
@@ -101,7 +101,7 @@ const Chat = () => {
           <div className="flex">
             <div className="">
               <img
-                src={require('../assets/Ellipse 21.png')}
+                src={require('../assets/images/Ellipse 21.png')}
                 alt='Ellipse'
                 style={{ width: '50px' }}
               />
