@@ -12,9 +12,7 @@ const RequestBid = () => {
   const [showUploadFile, setShowUploadFile] = useState(false);
   const [images, setImages] = useState([]);
 
-  const { showShippedDetails, activeHeader } = useSelector(
-    (state) => state.root.globalStates
-  );
+  const { activeHeader } = useSelector((state) => state.root.globalStates);
 
   return (
     <div className="bg-bgLight w-full min-h-screen lg:p-10 md:p-5 p-2 space-y-3">

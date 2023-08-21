@@ -9,7 +9,7 @@ import {
 import { RiTimerLine } from "react-icons/ri";
 
 const SingleJob = memo(({ status, jobDescription }) => {
-  const { showActiveJobDetails, activeHeader, activeComponent } = useSelector(
+  const { activeHeader, activeComponent } = useSelector(
     (state) => state.root.globalStates
   );
 

@@ -7,10 +7,10 @@ const EditProfile = ({ setShowProfile }) => {
       <div className="bg-white md:p-4 p-2 rounded-2xl w-full min-h-screen md:space-y-4 space-y-2">
         <p
           onClick={() => setShowProfile(false)}
-          className="md:text-2xl text-md  text-primaryBlue font-semibold flex items-center cursor-pointer"
+          className="md:text-2xl text-md text-primaryBlue font-semibold flex items-center cursor-pointer w-auto"
         >
           <GoArrowLeft className="inline-block mr-2" />
-          Edit Profle
+          Edit Profile
         </p>
         <form className="grid md:grid-cols-2 place-items-start items-start gap-3 md:gap-5">
           <div className="w-full md:space-y-3 space-y-2">

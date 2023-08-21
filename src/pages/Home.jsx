@@ -11,12 +11,8 @@ import RequestBid from "../components/RequestForBid/RequestBid";
 import Chat from "../components/Chat";
 
 const Home = () => {
-  const {
-    activeComponent,
-    showSearchComponent,
-    showBidUploadComponent,
-    showChatSidebar,
-  } = useSelector((state) => state.root.globalStates);
+  const { activeComponent, showSearchComponent, showBidUploadComponent } =
+    useSelector((state) => state.root.globalStates);
   return (
     <>
       <Helmet title={`${activeComponent} | Logisx`} />

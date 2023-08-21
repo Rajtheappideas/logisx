@@ -17,7 +17,7 @@ import PageNotFound from "./pages/PageNotFound";
 function App() {
   return (
     <BrowserRouter>
-      <Toaster toastOptions={{ duration: 4000 }} position="top-center" />
+      <Toaster toastOptions={{ duration: 3000 }} position="top-center" />
       <ErrorBoundary
         FallbackComponent={ErrorFallBack}
         onReset={() => {
