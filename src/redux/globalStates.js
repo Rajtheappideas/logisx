@@ -2,9 +2,13 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   showActiveJobDetails: false,
-  activeComponent: "active_jobs",
+  activeComponent: "active jobs",
   activeHeader: "jobs",
   showShippedDetails: false,
+  showSignupProcess: false,
+  showSearchComponent: false,
+  showBidUploadComponent: false,
+  showChatSidebar: false,
 };
 
 const globalStates = createSlice({
@@ -23,6 +27,19 @@ const globalStates = createSlice({
     handleChangeActiveHeader: (state, { payload }) => {
       state.activeHeader = payload;
     },
+    handleChangeShowSignupProcess: (state, { payload }) => {
+      state.showSignupProcess = payload;
+    },
+
+    handleChangeShowSearchComponent: (state, { payload }) => {
+      state.showSearchComponent = payload;
+    },
+    handleChangeShowBidUploadComponent: (state, { payload }) => {
+      state.showBidUploadComponent = payload;
+    },
+    handleChangeShowChatSidebar: (state, { payload }) => {
+      state.showChatSidebar = payload;
+    },
   },
 });
 
@@ -31,6 +48,10 @@ export const {
   handleChangeActiveComponent,
   handleChangeActiveHeader,
   handleChangeShippedDetails,
+  handleChangeShowSignupProcess,
+  handleChangeShowBidUploadComponent,
+  handleChangeShowSearchComponent,
+  handleChangeShowChatSidebar,
 } = globalStates.actions;
 
 export default globalStates.reducer;

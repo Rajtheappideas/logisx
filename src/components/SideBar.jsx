@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { BsTruck, BsClockHistory } from "react-icons/bs";
 import { BiUser } from "react-icons/bi";
 import { FiLogOut, FiHeart, FiCheckCircle } from "react-icons/fi";
@@ -9,12 +9,19 @@ import { RiLockPasswordLine } from "react-icons/ri";
 import { PiFileText } from "react-icons/pi";
 import { LiaTruckMovingSolid } from "react-icons/lia";
 import { useDispatch, useSelector } from "react-redux";
-import { handleChangeActiveComponent } from "../redux/globalStates";
+import {
+  handleChangeActiveComponent,
+  handleChangeActiveJobDetails,
+  handleChangeShippedDetails,
+} from "../redux/globalStates";
 
 const SideBar = () => {
-  const { activeHeader, activeComponent } = useSelector(
-    (state) => state.root.globalStates
-  );
+  const {
+    activeHeader,
+    activeComponent,
+    showActiveJobDetails,
+    showShippedDetails,
+  } = useSelector((state) => state.root.globalStates);
 
   const dispatch = useDispatch();
 
@@ -34,62 +41,72 @@ const SideBar = () => {
       {activeHeader === "jobs" && (
         <div className="space-y-3">
           <div
-            onClick={() => dispatch(handleChangeActiveComponent("active_jobs"))}
+            onClick={() => {
+              dispatch(handleChangeActiveComponent("active jobs"));
+              showActiveJobDetails &&
+                dispatch(handleChangeActiveJobDetails(false));
+            }}
             className={`sidebar_tab ${
-              activeComponent === "active_jobs" && "bg-primaryBlue text-white"
+              activeComponent === "active jobs" && "bg-primaryBlue text-white"
             } `}
           >
             <BsTruck className="text-xl" />
-            <p className="lg:text-ld text-md font-semibold mx-5">Active Jobs</p>
+            <p className="font-semibold ml-4">Active Jobs</p>
           </div>
           <div
-            onClick={() =>
-              dispatch(handleChangeActiveComponent("completed_jobs"))
-            }
+            onClick={() => {
+              dispatch(handleChangeActiveComponent("completed jobs"));
+              showActiveJobDetails &&
+                dispatch(handleChangeActiveJobDetails(false));
+            }}
             className={`sidebar_tab ${
-              activeComponent === "completed_jobs" &&
+              activeComponent === "completed jobs" &&
               "bg-primaryBlue text-white"
             } `}
           >
             <FiCheckCircle className="text-xl" />
-            <p className="lg:text-ld font-semibold mx-5">Completed Jobs</p>
+            <p className="font-semibold ml-4">Completed Jobs</p>
           </div>
         </div>
       )}
       {activeHeader === "bids" && (
         <div className="space-y-3">
           <div
-            onClick={() => dispatch(handleChangeActiveComponent("shipped"))}
+            onClick={() => {
+              dispatch(handleChangeActiveComponent("shipped"));
+              showShippedDetails && dispatch(handleChangeShippedDetails(false));
+            }}
             className={`sidebar_tab ${
               activeComponent === "shipped" && "bg-primaryBlue text-white"
             } `}
           >
             <LiaTruckMovingSolid className="text-xl" />
-            <p className="lg:text-ld text-md font-semibold mx-5">Shipped</p>
+            <p className="lg:text-lg text-sm font-semibold mx-5">Shipped</p>
           </div>
           <div
-            onClick={() =>
-              dispatch(handleChangeActiveComponent("pending_bids"))
-            }
+            onClick={() => {
+              dispatch(handleChangeActiveComponent("pending bids"));
+              showShippedDetails && dispatch(handleChangeShippedDetails(false));
+            }}
             className={`sidebar_tab ${
-              activeComponent === "pending_bids" && "bg-primaryBlue text-white"
+              activeComponent === "pending bids" && "bg-primaryBlue text-white"
             } `}
           >
             <BsClockHistory className="text-xl" />
-            <p className="lg:text-ld font-semibold mx-5">Pending Bids</p>
+            <p className="font-semibold ml-4">Pending Bids</p>
           </div>
         </div>
       )}
-
       {activeHeader === "my_account" && (
         <div className="space-y-3">
           {accountTabs.map((tab) => (
             <div
-              onClick={() =>
-                dispatch(
-                  handleChangeActiveComponent(tab.title.toLocaleLowerCase())
-                )
-              }
+              onClick={() => {
+                tab.title !== "Logout" &&
+                  dispatch(
+                    handleChangeActiveComponent(tab.title.toLocaleLowerCase())
+                  );
+              }}
               className={`sidebar_tab ${
                 tab.title.toLocaleLowerCase() ===
                   activeComponent.toLocaleLowerCase() &&
@@ -99,7 +116,7 @@ const SideBar = () => {
             >
               <tab.icon className="text-xl" />
               <p
-                className={`lg:text-ld text-md font-semibold mx-5 ${
+                className={`font-semibold ml-4 ${
                   tab.title === "Logout" && "text-red-500"
                 } `}
               >

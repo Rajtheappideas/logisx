@@ -8,7 +8,7 @@ import {
 } from "../redux/globalStates";
 import { RiTimerLine } from "react-icons/ri";
 
-const SingleJob = memo(({ status }) => {
+const SingleJob = memo(({ status, jobDescription }) => {
   const { showActiveJobDetails, activeHeader, activeComponent } = useSelector(
     (state) => state.root.globalStates
   );
@@ -17,13 +17,13 @@ const SingleJob = memo(({ status }) => {
 
   const handleDispatch = () => {
     if (
-      activeComponent === "active_jobs" ||
-      activeComponent === "completed_jobs"
+      activeComponent === "active jobs" ||
+      activeComponent === "completed jobs"
     ) {
       return dispatch(handleChangeActiveJobDetails(true));
     } else if (
       activeComponent === "shipped" ||
-      activeComponent === "pending_bids"
+      activeComponent === "pending bids"
     ) {
       return dispatch(handleChangeShippedDetails(true));
     }
@@ -37,7 +37,7 @@ const SingleJob = memo(({ status }) => {
           Bid RW3342D
         </p>
         <div className="flex items-center gap-x-1">
-          {activeHeader === "bids" && (
+          {(activeHeader === "bids" || jobDescription !== undefined) && (
             <>
               <p className="">00:00:00</p>
               <RiTimerLine className="mr-1 text-xl" />
@@ -65,7 +65,7 @@ const SingleJob = memo(({ status }) => {
         </div>
 
         {/* line */}
-        <div className="absolute top-[26px] left-[11px] h-7 w-0.5 bg-gray-400 rounded-sm"></div>
+        <div className="absolute z-0 top-[26px] left-[11px] h-7 w-0.5 bg-gray-400 rounded-sm"></div>
       </div>
       {/* destination */}
       <div className="flex justify-between">
@@ -87,7 +87,11 @@ const SingleJob = memo(({ status }) => {
       </div>
       {/* status */}
       <div className="flex items-center">
-        <p className="text-lg font-semibold">Status :</p>
+        {status === undefined ? (
+          <p className="text-sm text-gray-500">{jobDescription}</p>
+        ) : (
+          <p className="text-lg font-semibold">Status :</p>
+        )}
         {status === "in-transit" && (
           <span className="bg-primaryBlue text-white font-medium text-center md:w-32 md:ml-2 ml-1 w-24 md:h-10 md:leading-10 align-middle h-9 leading-9 rounded-3xl ">
             In-Transit
@@ -104,8 +108,14 @@ const SingleJob = memo(({ status }) => {
         <p className="lg:text-2xl text-lg font-semibold text-textPurple">
           $ 1000
         </p>
-        <button className="blue_button uppercase" onClick={() => handleDispatch()}>
-          view {activeComponent === "pending_bids" && "Bids"}
+        <button
+          className="blue_button uppercase tracking-wide"
+          onClick={() => handleDispatch()}
+        >
+          view{" "}
+          {(activeComponent === "pending_bids" ||
+            jobDescription !== undefined) &&
+            "Bids"}
         </button>
       </div>
     </div>

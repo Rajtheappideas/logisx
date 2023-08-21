@@ -22,13 +22,13 @@ const Jobs = () => {
           {/* title + btns */}
           <div className="flex justify-between">
             <div>
-              {activeComponent === "active_jobs" && (
-                <p className="text-2xl text-primaryBlue font-semibold">
+              {activeComponent === "active jobs" && (
+                <p className="md:text-2xl text-lg text-primaryBlue font-semibold">
                   Active Jobs
                 </p>
               )}
-              {activeComponent === "completed_jobs" && (
-                <p className="text-2xl text-greenColor font-semibold">
+              {activeComponent === "completed jobs" && (
+                <p className="md:text-2xl text-lg text-greenColor font-semibold">
                   Completed Jobs
                 </p>
               )}
@@ -54,27 +54,27 @@ const Jobs = () => {
             <div className="grid lg:grid-cols-2 md:gap-5 gap-3 w-full">
               <SingleJob
                 status={
-                  activeComponent === "active_jobs" ? "in-transit" : "completed"
+                  activeComponent === "active jobs" ? "in-transit" : "completed"
                 }
               />
               <SingleJob
                 status={
-                  activeComponent === "active_jobs" ? "in-transit" : "completed"
+                  activeComponent === "active jobs" ? "in-transit" : "completed"
                 }
               />
               <SingleJob
                 status={
-                  activeComponent === "active_jobs" ? "in-transit" : "completed"
+                  activeComponent === "active jobs" ? "in-transit" : "completed"
                 }
               />
               <SingleJob
                 status={
-                  activeComponent === "active_jobs" ? "in-transit" : "completed"
+                  activeComponent === "active jobs" ? "in-transit" : "completed"
                 }
               />
               <SingleJob
                 status={
-                  activeComponent === "active_jobs" ? "in-transit" : "completed"
+                  activeComponent === "active jobs" ? "in-transit" : "completed"
                 }
               />
             </div>

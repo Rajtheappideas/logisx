@@ -2,25 +2,17 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
 import Header from "./components/Header";
 import Home from "./pages/Home";
-import SignIn from "./pages/SignIn";
-import SignUp from "./pages/SignUp";
-import TellUsAbout from "./components/Signup/TellUsAbout";
-import Shipping from "./components/Signup/Shipping";
-import Location from "./components/Signup/Location";
-import UploadDocs from "./components/Signup/UploadDocs";
-import Review from "./components/Signup/Review";
-import AccountSubmit from "./components/AccountSubmit";
+import Auth from "./pages/Auth";
 import ForgotPassword from "./pages/ForgotPassword";
-import Verification from "./components/Forgot/Verification";
-import ResetPassword from "./components/Forgot/ResetPassword";
-import VerificationSuccess from "./components/Forgot/VerificationSuccess";
+import Verification from "./components/ForgotPassword/Verification";
+import VerificationSuccess from "./components/ForgotPassword/Success";
 import { Toaster } from "react-hot-toast";
 import ErrorFallBack from "./components/ErrorFallBack";
 import { ErrorBoundary } from "react-error-boundary";
 import { Suspense } from "react";
-// import Chat from './components/Chat'
 import loading from "./assets/animations/trackLoading.json";
 import Lottie from "lottie-react";
+import PageNotFound from "./pages/PageNotFound";
 
 function App() {
   return (
@@ -51,14 +43,7 @@ function App() {
           {/* <Chat /> */}
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/sign-in" caseSensitive element={<SignIn />} />
-            <Route path="/sign-up" caseSensitive element={<SignUp />} />
-            <Route path="/tell-us-about-you" element={<TellUsAbout />} />
-            <Route path="/shipping-manager" element={<Shipping />} />
-            <Route path="/terminal-location" element={<Location />} />
-            <Route path="/upload-docs" element={<UploadDocs />} />
-            <Route path="/review" element={<Review />} />
-            <Route path="/account-submit" element={<AccountSubmit />} />
+            <Route path="/auth" caseSensitive element={<Auth />} />
             <Route
               path="/forgot-password"
               caseSensitive
@@ -69,6 +54,10 @@ function App() {
             <Route
               path="/verification-success"
               element={<VerificationSuccess />}
+            />
+            <Route
+              path="/*"
+              element={<PageNotFound />}
             />
           </Routes>
         </Suspense>

@@ -2,15 +2,84 @@
 @tailwind components;
 @tailwind utilities;
 
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  margin: 0;
+}
+
+
+body::-webkit-scrollbar {
+  width: 0.5em !important;
+  height: 20px;
+}
+
+body::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+body::-webkit-scrollbar-thumb {
+  background-color: #017DC3;
+  width: 2px;
+  border-radius: 10px;
+}
+
+
+.hide_scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar::-webkit-scrollbar {
+  width: 0.5em !important;
+  height: 10px;
+}
+
+.scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollbar::-webkit-scrollbar-thumb {
+  background-color: #017DC3;
+  width: 2px;
+  border-radius: 10px;
+}
+
+
 .blue_button {
-  @apply bg-primaryBlue text-white font-medium text-center md:w-40 w-28 md:h-11 h-10 rounded-lg p-2 hover:bg-primaryBlue/80 active:scale-95 transition;
+  @apply bg-primaryBlue text-white uppercase font-medium text-center md:min-w-[11rem] min-w-[8rem] md:min-h-[3rem] min-h-[2rem] rounded-lg md:p-2 p-1 hover:bg-primaryBlue/80 active:scale-95 transition duration-100 md:text-base text-sm;
+}
+.red_button_outline {
+  @apply text-red-500 border border-red-500 font-medium uppercase text-center md:min-w-[11rem] min-w-[8rem] md:min-h-[3rem] min-h-[2rem] rounded-lg md:p-2 p-1 hover:text-white hover:bg-red-500/80 active:scale-95 transition duration-100 md:text-base text-sm;
+}
+.blue_button_outline {
+  @apply text-primaryBlue border border-primaryBlue font-medium uppercase text-center md:min-w-[11rem] min-w-[8rem] md:min-h-[3rem] min-h-[2rem] rounded-lg md:p-2 p-1 hover:text-white hover:bg-primaryBlue/80 active:scale-95 transition duration-100 md:text-base text-sm;
 }
 .disable_button {
-  @apply bg-disableGray text-white font-medium text-center md:w-48 w-40 md:h-12 h-10 rounded-lg p-2 hover:bg-disableGray/80 active:scale-95 transition;
+  @apply bg-disableGray text-white font-medium text-center md:min-w-[11rem] min-w-[8rem] md:min-h-[3rem] min-h-[2rem] rounded-lg md:p-2 p-1 md:text-base text-sm cursor-not-allowed;
 }
 .input_field {
-  @apply border-b-2 focus:border-primaryBlue border-textColorGray w-full text-disableGray  focus:outline-none p-2;
+  @apply focus:border-b-2 focus:border-primaryBlue transition border-b border-textColorGray w-full focus:outline-none md:p-2 p-1;
 }
 .sidebar_tab {
   @apply flex rounded-lg items-center hover:bg-primaryBlue cursor-pointer transition duration-300 hover:text-white p-2;
+}
+.header_tab_mobile {
+  @apply flex rounded-lg items-center hover:bg-primaryBlue cursor-pointer transition duration-300 hover:text-white px-1;
+}
+.error {
+  @apply text-red-600 font-medium text-sm capitalize;
+}
+.Label {
+  @apply text-primaryBlue md:text-lg text-sm;
+}
+.Title {
+  @apply font-semibold text-center lg:text-3xl md:text-2xl text-xl text-primaryBlue;
+}
+.small_clip_for_chat_right {
+  clip-path: polygon(0% 0%, 0% 100%, 100% 0%);
+}
+.small_clip_for_chat_left {
+  clip-path: polygon(0% 0%, 100% 100%, 100% 0%);
 }

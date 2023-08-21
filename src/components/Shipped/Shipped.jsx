@@ -4,8 +4,9 @@ import { BiSolidGridAlt } from "react-icons/bi";
 import { AiOutlinePlus } from "react-icons/ai";
 import { FiMenu } from "react-icons/fi";
 import ShippedDetails from "./ShippedDetails";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import TableViewShipped from "./TableViewShipped";
+import { handleChangeShowBidUploadComponent } from "../../redux/globalStates";
 
 const Shipped = () => {
   const [view, setView] = useState("grid");
@@ -14,22 +15,24 @@ const Shipped = () => {
     (state) => state.root.globalStates
   );
 
+  const dispatch = useDispatch();
+
   return (
     <div className="bg-white md:p-6 p-3 rounded-2xl">
       {showShippedDetails && <ShippedDetails />}
 
       {!showShippedDetails && (
-        <div className="space-y-3">
+        <div className="md:space-y-3 space-y-2">
           {/* title + btns */}
-          <div className="flex justify-between">
+          <div className="flex justify-between flex-wrap gap-2">
             <div>
               {activeComponent === "shipped" && (
-                <p className="text-2xl text-primaryBlue font-semibold">
+                <p className="md:text-2xl text-lg text-primaryBlue font-semibold">
                   Shipped
                 </p>
               )}
-              {activeComponent === "pending_bids" && (
-                <p className="text-2xl text-primaryBlue font-semibold">
+              {activeComponent === "pending bids" && (
+                <p className="md:text-2xl text-lg text-primaryBlue font-semibold">
                   Pending Bids
                 </p>
               )}
@@ -49,7 +52,12 @@ const Shipped = () => {
                     : "text-disableGray"
                 } text-2xl cursor-pointer`}
               />
-              <button className="border uppercase border-blue-300 rounded-md px-3 py-2 text-blue-400 font-medium">
+              <button
+                onClick={() =>
+                  dispatch(handleChangeShowBidUploadComponent(true))
+                }
+                className="border md:text-base text-xs uppercase border-blue-300 rounded-md md:px-3 md:py-2 p-1 text-blue-400 font-medium"
+              >
                 <AiOutlinePlus className="inline-block mr-1 mb-1" />
                 Request for bid
               </button>

@@ -15,38 +15,38 @@ const TableViewShipped = () => {
       <div className="outline-none md:mt-5 mt-3 py-3 px-4 bg-white overflow-x-scroll scrollbar">
         <table className="border-none outline-none w-full overflow-scroll">
           <thead className="w-full border-b border-gray-100 text-left">
-            <tr>
-              <th className="p-4 whitespace-nowrap">
+            <tr className="whitespace-nowrap">
+              <th className="md:p-4 p-2">
                 <span>Bid I.D.</span>
               </th>
-              <th className="p-4">P.O Number</th>
-              <th className="p-4">Price</th>
-              <th className="p-4">Arrival Location</th>
-              <th className="p-4">Pick-up Date</th>
-              <th className="p-4">Job status</th>
-              <th className="p-4">Favorite</th>
-              <th className="p-4">Action</th>
+              <th className="md:p-4 p-2">P.O Number</th>
+              <th className="md:p-4 p-2">Price</th>
+              <th className="md:p-4 p-2">Arrival Location</th>
+              <th className="md:p-4 p-2">Pick-up Date</th>
+              <th className="md:p-4 p-2">Job status</th>
+              <th className="md:p-4 p-2">Favorite</th>
+              <th className="md:p-4 p-2">Action</th>
             </tr>
           </thead>
           <tbody className="w-full">
             <tr className="border-b border-gray-200 w-full text-left">
-              <td className="p-4 whitespace-nowrap">RW3342D</td>
+              <td className="md:p-4 p-2 whitespace-nowrap">RW3342D</td>
 
-              <td className="text-left p-4 whitespace-nowrap">12345</td>
-              <td className="text-left p-4 whitespace-nowrap">$1000</td>
-              <td className="text-left p-4 whitespace-nowrap">
+              <td className="text-left md:p-4 p-2 whitespace-nowrap">12345</td>
+              <td className="text-left md:p-4 p-2 whitespace-nowrap">$1000</td>
+              <td className="text-left md:p-4 p-2 whitespace-nowrap">
                 Kalamazoo Distrib...
               </td>
-              <td className="text-left p-4 whitespace-nowrap">March 7</td>
-              <td className="text-left p-4">
+              <td className="text-left md:p-4 p-2 whitespace-nowrap">March 7</td>
+              <td className="text-left md:p-4 p-2">
                 <span className="bg-primaryBlue text-white font-medium text-center whitespace-nowrap p-2 rounded-3xl">
                   In-Transit
                 </span>
               </td>
-              <td className="text-left p-4">
-                <FaHeart color="red" />
+              <td className="text-left md:p-4 p-2">
+                <FaHeart color="red" className="mx-auto" />
               </td>
-              <td className="flex items-center justify-start p-4">
+              <td className="flex items-center justify-start md:p-4 p-2">
                 <button
                   onClick={() => dispatch(handleChangeShippedDetails(true))}
                   type="button"
@@ -57,23 +57,23 @@ const TableViewShipped = () => {
               </td>
             </tr>
             <tr className="border-b border-gray-200 w-full text-left">
-              <td className="p-4 whitespace-nowrap">RW3342D</td>
+              <td className="md:p-4 p-2 whitespace-nowrap">RW3342D</td>
 
-              <td className="text-left p-4 whitespace-nowrap">12345</td>
-              <td className="text-left p-4 whitespace-nowrap">$1000</td>
-              <td className="text-left p-4 whitespace-nowrap">
+              <td className="text-left md:p-4 p-2 whitespace-nowrap">12345</td>
+              <td className="text-left md:p-4 p-2 whitespace-nowrap">$1000</td>
+              <td className="text-left md:p-4 p-2 whitespace-nowrap">
                 Kalamazoo Distrib...
               </td>
-              <td className="text-left p-4 whitespace-nowrap">March 7</td>
-              <td className="text-left p-4">
+              <td className="text-left md:p-4 p-2 whitespace-nowrap">March 7</td>
+              <td className="text-left md:p-4 p-2">
                 <span className="bg-loddingButton whitespace-nowrap text-white font-medium text-center p-2 rounded-3xl">
                   Loading
                 </span>
               </td>
-              <td className="text-left p-4">
-                <FaHeart color="red" />
+              <td className="text-left md:p-4 p-2">
+                <FaHeart color="red" className="mx-auto" />
               </td>
-              <td className="flex items-center justify-start p-4">
+              <td className="flex items-center justify-start md:p-4 p-2">
                 <button
                   onClick={() => dispatch(handleChangeShippedDetails(true))}
                   type="button"
@@ -84,23 +84,23 @@ const TableViewShipped = () => {
               </td>
             </tr>
             <tr className="border-b border-gray-200 w-full text-left">
-              <td className="p-4 whitespace-nowrap">RW3342D</td>
+              <td className="md:p-4 p-2 whitespace-nowrap">RW3342D</td>
 
-              <td className="text-left p-4 whitespace-nowrap">12345</td>
-              <td className="text-left p-4 whitespace-nowrap">$1000</td>
-              <td className="text-left p-4 whitespace-nowrap">
+              <td className="text-left md:p-4 p-2 whitespace-nowrap">12345</td>
+              <td className="text-left md:p-4 p-2 whitespace-nowrap">$1000</td>
+              <td className="text-left md:p-4 p-2 whitespace-nowrap">
                 Kalamazoo Distrib...
               </td>
-              <td className="text-left p-4 whitespace-nowrap">March 7</td>
-              <td className="text-left p-4">
+              <td className="text-left md:p-4 p-2 whitespace-nowrap">March 7</td>
+              <td className="text-left md:p-4 p-2">
                 <span className="bg-greenColor whitespace-nowrap text-white font-medium text-center p-2 rounded-3xl">
                   Completed
                 </span>
               </td>
-              <td className="text-left p-4">
-                <FaHeart color="red" />
+              <td className="text-left md:p-4 p-2">
+                <FaHeart color="red" className="mx-auto" />
               </td>
-              <td className="flex items-center justify-start p-4">
+              <td className="flex items-center justify-start md:p-4 p-2">
                 <button
                   onClick={() => dispatch(handleChangeShippedDetails(true))}
                   type="button"
@@ -111,23 +111,23 @@ const TableViewShipped = () => {
               </td>
             </tr>
             <tr className="border-b border-gray-200 w-full text-left">
-              <td className="p-4 whitespace-nowrap">RW3342D</td>
+              <td className="md:p-4 p-2 whitespace-nowrap">RW3342D</td>
 
-              <td className="text-left p-4 whitespace-nowrap">12345</td>
-              <td className="text-left p-4 whitespace-nowrap">$1000</td>
-              <td className="text-left p-4 whitespace-nowrap">
+              <td className="text-left md:p-4 p-2 whitespace-nowrap">12345</td>
+              <td className="text-left md:p-4 p-2 whitespace-nowrap">$1000</td>
+              <td className="text-left md:p-4 p-2 whitespace-nowrap">
                 Kalamazoo Distrib...
               </td>
-              <td className="text-left p-4 whitespace-nowrap">March 7</td>
-              <td className="text-left p-4">
+              <td className="text-left md:p-4 p-2 whitespace-nowrap">March 7</td>
+              <td className="text-left md:p-4 p-2">
                 <span className="bg-loddingButton whitespace-nowrap text-white font-medium text-center p-2 rounded-3xl">
                   In-Transit
                 </span>
               </td>
-              <td className="text-left p-4">
-                <FaHeart color="red" />
+              <td className="text-center md:p-4 p-2">
+                <FiHeart color="red" className="mx-auto" />
               </td>
-              <td className="flex items-center justify-start p-4">
+              <td className="flex items-center justify-start md:p-4 p-2">
                 <button
                   onClick={() => dispatch(handleChangeShippedDetails(true))}
                   type="button"
@@ -138,23 +138,23 @@ const TableViewShipped = () => {
               </td>
             </tr>
             <tr className="border-b border-gray-200 w-full text-left">
-              <td className="p-4 whitespace-nowrap">RW3342D</td>
+              <td className="md:p-4 p-2 whitespace-nowrap">RW3342D</td>
 
-              <td className="text-left p-4 whitespace-nowrap">12345</td>
-              <td className="text-left p-4 whitespace-nowrap">$1000</td>
-              <td className="text-left p-4 whitespace-nowrap">
+              <td className="text-left md:p-4 p-2 whitespace-nowrap">12345</td>
+              <td className="text-left md:p-4 p-2 whitespace-nowrap">$1000</td>
+              <td className="text-left md:p-4 p-2 whitespace-nowrap">
                 Kalamazoo Distrib...
               </td>
-              <td className="text-left p-4 whitespace-nowrap">March 7</td>
-              <td className="text-left p-4">
+              <td className="text-left md:p-4 p-2 whitespace-nowrap">March 7</td>
+              <td className="text-left md:p-4 p-2">
                 <span className="bg-primaryBlue whitespace-nowrap text-white font-medium text-center p-2 rounded-3xl">
                   In-transit
                 </span>
               </td>
-              <td className="text-left p-4">
-                <FiHeart color="red" />
+              <td className="text-center md:p-4 p-2">
+                <FiHeart color="red" className="mx-auto" />
               </td>
-              <td className="flex items-center justify-start p-4">
+              <td className="flex items-center justify-start md:p-4 p-2">
                 <button
                   onClick={() => dispatch(handleChangeShippedDetails(true))}
                   type="button"
@@ -165,29 +165,33 @@ const TableViewShipped = () => {
               </td>
             </tr>
             <tr className="border-b border-gray-200 w-full text-left">
-              <td className="p-4 whitespace-nowrap">RW3342D</td>
+              <td className="md:p-4 p-2 whitespace-nowrap">RW3342D</td>
 
-              <td className="text-left p-4 whitespace-nowrap">12345</td>
-              <td className="text-left p-4 whitespace-nowrap">$1000</td>
-              <td className="text-left p-4 whitespace-nowrap">
+              <td className="text-left md:p-4 p-2 whitespace-nowrap">12345</td>
+              <td className="text-left md:p-4 p-2 whitespace-nowrap">$1000</td>
+              <td className="text-left md:p-4 p-2 whitespace-nowrap">
                 Kalamazoo Distrib...
               </td>
-              <td className="text-left p-4 whitespace-nowrap">March 7</td>
-              <td className="text-left p-4">
+              <td className="text-left md:p-4 p-2 whitespace-nowrap">March 7</td>
+              <td className="text-left md:p-4 p-2">
                 <span className="bg-loddingButton whitespace-nowrap text-white font-medium text-center p-2 rounded-3xl">
                   Loading
                 </span>
               </td>
-              <td className="text-left p-4">
-                <FiHeart color="red" />
+              <td className="text-center md:p-4 p-2">
+                <FiHeart color="red" className="mx-auto" />
               </td>
-              <td className="flex items-center justify-start p-4">
+              <td className="flex items-center justify-start md:p-4 p-2">
                 <button
                   onClick={() => dispatch(handleChangeShippedDetails(true))}
                   type="button"
                   className="hover:bg-gray-200 p-1 rounded-full h-10 w-10"
                 >
-                  <BsEye color="gray" size={30} className="inline-block" />
+                  <BsEye
+                    color="gray"
+                    size={30}
+                    className="inline-block mx-auto"
+                  />
                 </button>
               </td>
             </tr>

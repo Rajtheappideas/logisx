@@ -17,6 +17,7 @@ module.exports = {
         boxBroder: "#B8D2E0",
         textBlackcolor: "#333333",
         textLightGray: "#B3B3B3",
+        bgGray: "#F0F0F0",
       },
     },
   },

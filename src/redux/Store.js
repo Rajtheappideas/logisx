@@ -6,7 +6,7 @@ import GlobalStates from "./globalStates";
 const rootPersistConfig = {
   key: "root",
   storage,
-  blacklist: ["globalStates"],
+  // blacklist: ["globalStates"],
 };
 
 const rootReducer = combineReducers({

@@ -3,7 +3,10 @@ import { HiOutlineXMark } from "react-icons/hi2";
 import Details from "./Details";
 import Timeline from "./Timeline";
 import { useDispatch, useSelector } from "react-redux";
-import { handleChangeActiveJobDetails } from "../../redux/globalStates";
+import {
+  handleChangeActiveJobDetails,
+  handleChangeShowChatSidebar,
+} from "../../redux/globalStates";
 
 const ActiveJobsDetails = () => {
   const [activeTab, setActiveTab] = useState("details");
@@ -11,7 +14,7 @@ const ActiveJobsDetails = () => {
   const dispatch = useDispatch();
 
   return (
-    <div className="w-full space-y-4">
+    <div className="w-full md:space-y-4 space-y-2">
       {/* tabs + icon */}
       <div className="flex w-full justify-around items-center">
         <div className="xl:w-1/3 lg:w-1/5"></div>
@@ -36,7 +39,10 @@ const ActiveJobsDetails = () => {
           >
             Timeline
           </button>
-          <button className="bg-disableGray rounded-full md:w-36 w-28 md:p-3 p-1">
+          <button
+            onClick={() => dispatch(handleChangeShowChatSidebar(true))}
+            className="bg-disableGray rounded-full md:w-36 w-28 md:p-3 p-1"
+          >
             Chat
           </button>
         </div>
