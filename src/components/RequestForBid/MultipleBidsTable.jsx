@@ -6,7 +6,7 @@ import ReactPaginate from "react-paginate";
 
 const MultipleBidsTable = () => {
   return (
-    <div className="w-full min-h-screen space-y-4">
+    <div className="w-full min-h-screen md:space-y-4 space-y-2">
       <p className="md:text-2xl text-lg text-primaryBlue font-semibold">
         Multiple Bids Uploads
       </p>
@@ -23,13 +23,13 @@ const MultipleBidsTable = () => {
             + add new
           </button>
           <button className="uppercase md:h-12 md:w-40 w-auto px-1 h-9 rounded-lg border bg-primaryBlue text-white text-center">
-            <PiTelegramLogoLight className="inline-block mr-1 md:text-2xl text-lg" /> post
-            now
+            <PiTelegramLogoLight className="inline-block mr-1 md:text-2xl text-lg" />{" "}
+            post now
           </button>
         </div>
       </div>
-      <div className="outline-none md:mt-5 mt-3 py-3 px-4 bg-white overflow-x-scroll scrollbar">
-        <table className="border-none outline-none w-full overflow-scroll">
+      <div className="outline-none md:mt-5 mt-3 py-3 md:px-4 px-1 bg-white overflow-x-scroll scrollbar">
+        <table className="border-none outline-none w-full overflow-scroll md:text-base text-sm">
           <thead className="w-full border-b border-gray-100 text-left whitespace-nowrap">
             <tr>
               <th className="md:p-4 p-2">
@@ -59,26 +59,40 @@ const MultipleBidsTable = () => {
               <td className="md:p-4 p-2 whitespace-nowrap">RW3342D</td>
 
               <td className="text-left md:p-4 p-2 whitespace-nowrap">12345</td>
-              <td className="text-left md:p-4 p-2 whitespace-nowrap">714258757</td>
+              <td className="text-left md:p-4 p-2 whitespace-nowrap">
+                714258757
+              </td>
               <td className="text-left md:p-4 p-2 whitespace-nowrap">
                 Kalamazoo Distrib...
               </td>
-              <td className="text-left md:p-4 p-2 whitespace-nowrap">March 7</td>
-              <td className="text-left md:p-4 p-2 whitespace-nowrap">March 7</td>
+              <td className="text-left md:p-4 p-2 whitespace-nowrap">
+                March 7
+              </td>
+              <td className="text-left md:p-4 p-2 whitespace-nowrap">
+                March 7
+              </td>
               <td className="text-left md:p-4 p-2 whitespace-nowrap">20:05</td>
               <td className="text-left md:p-4 p-2 whitespace-nowrap">
                 lorem ipsum lipsum...
               </td>
-              <td className="text-left md:p-4 p-2 whitespace-nowrap">John adam</td>
+              <td className="text-left md:p-4 p-2 whitespace-nowrap">
+                John adam
+              </td>
               <td className="text-left md:p-4 p-2 whitespace-nowrap">
                 Kalamazoo Distrib...
               </td>
-              <td className="text-left md:p-4 p-2 whitespace-nowrap">+1 2134451</td>
+              <td className="text-left md:p-4 p-2 whitespace-nowrap">
+                +1 2134451
+              </td>
               <td className="text-left md:p-4 p-2 whitespace-nowrap">
                 loremipsum@mail.com
               </td>
-              <td className="text-left md:p-4 p-2 whitespace-nowrap">20 June 2023</td>
-              <td className="text-left md:p-4 p-2 whitespace-nowrap">lorem ipsum</td>
+              <td className="text-left md:p-4 p-2 whitespace-nowrap">
+                20 June 2023
+              </td>
+              <td className="text-left md:p-4 p-2 whitespace-nowrap">
+                lorem ipsum
+              </td>
               <td className="text-left md:p-4 p-2 whitespace-nowrap">
                 lorem ipsum, ipsum
               </td>
@@ -105,26 +119,40 @@ const MultipleBidsTable = () => {
               <td className="md:p-4 p-2 whitespace-nowrap">RW3342D</td>
 
               <td className="text-left md:p-4 p-2 whitespace-nowrap">12345</td>
-              <td className="text-left md:p-4 p-2 whitespace-nowrap">714258757</td>
+              <td className="text-left md:p-4 p-2 whitespace-nowrap">
+                714258757
+              </td>
               <td className="text-left md:p-4 p-2 whitespace-nowrap">
                 Kalamazoo Distrib...
               </td>
-              <td className="text-left md:p-4 p-2 whitespace-nowrap">March 7</td>
-              <td className="text-left md:p-4 p-2 whitespace-nowrap">March 7</td>
+              <td className="text-left md:p-4 p-2 whitespace-nowrap">
+                March 7
+              </td>
+              <td className="text-left md:p-4 p-2 whitespace-nowrap">
+                March 7
+              </td>
               <td className="text-left md:p-4 p-2 whitespace-nowrap">20:05</td>
               <td className="text-left md:p-4 p-2 whitespace-nowrap">
                 lorem ipsum lipsum...
               </td>
-              <td className="text-left md:p-4 p-2 whitespace-nowrap">John adam</td>
+              <td className="text-left md:p-4 p-2 whitespace-nowrap">
+                John adam
+              </td>
               <td className="text-left md:p-4 p-2 whitespace-nowrap">
                 Kalamazoo Distrib...
               </td>
-              <td className="text-left md:p-4 p-2 whitespace-nowrap">+1 2134451</td>
+              <td className="text-left md:p-4 p-2 whitespace-nowrap">
+                +1 2134451
+              </td>
               <td className="text-left md:p-4 p-2 whitespace-nowrap">
                 loremipsum@mail.com
               </td>
-              <td className="text-left md:p-4 p-2 whitespace-nowrap">20 June 2023</td>
-              <td className="text-left md:p-4 p-2 whitespace-nowrap">lorem ipsum</td>
+              <td className="text-left md:p-4 p-2 whitespace-nowrap">
+                20 June 2023
+              </td>
+              <td className="text-left md:p-4 p-2 whitespace-nowrap">
+                lorem ipsum
+              </td>
               <td className="text-left md:p-4 p-2 whitespace-nowrap">
                 lorem ipsum, ipsum
               </td>
@@ -151,26 +179,40 @@ const MultipleBidsTable = () => {
               <td className="md:p-4 p-2 whitespace-nowrap">RW3342D</td>
 
               <td className="text-left md:p-4 p-2 whitespace-nowrap">12345</td>
-              <td className="text-left md:p-4 p-2 whitespace-nowrap">714258757</td>
+              <td className="text-left md:p-4 p-2 whitespace-nowrap">
+                714258757
+              </td>
               <td className="text-left md:p-4 p-2 whitespace-nowrap">
                 Kalamazoo Distrib...
               </td>
-              <td className="text-left md:p-4 p-2 whitespace-nowrap">March 7</td>
-              <td className="text-left md:p-4 p-2 whitespace-nowrap">March 7</td>
+              <td className="text-left md:p-4 p-2 whitespace-nowrap">
+                March 7
+              </td>
+              <td className="text-left md:p-4 p-2 whitespace-nowrap">
+                March 7
+              </td>
               <td className="text-left md:p-4 p-2 whitespace-nowrap">20:05</td>
               <td className="text-left md:p-4 p-2 whitespace-nowrap">
                 lorem ipsum lipsum...
               </td>
-              <td className="text-left md:p-4 p-2 whitespace-nowrap">John adam</td>
+              <td className="text-left md:p-4 p-2 whitespace-nowrap">
+                John adam
+              </td>
               <td className="text-left md:p-4 p-2 whitespace-nowrap">
                 Kalamazoo Distrib...
               </td>
-              <td className="text-left md:p-4 p-2 whitespace-nowrap">+1 2134451</td>
+              <td className="text-left md:p-4 p-2 whitespace-nowrap">
+                +1 2134451
+              </td>
               <td className="text-left md:p-4 p-2 whitespace-nowrap">
                 loremipsum@mail.com
               </td>
-              <td className="text-left md:p-4 p-2 whitespace-nowrap">20 June 2023</td>
-              <td className="text-left md:p-4 p-2 whitespace-nowrap">lorem ipsum</td>
+              <td className="text-left md:p-4 p-2 whitespace-nowrap">
+                20 June 2023
+              </td>
+              <td className="text-left md:p-4 p-2 whitespace-nowrap">
+                lorem ipsum
+              </td>
               <td className="text-left md:p-4 p-2 whitespace-nowrap">
                 lorem ipsum, ipsum
               </td>
@@ -197,26 +239,40 @@ const MultipleBidsTable = () => {
               <td className="md:p-4 p-2 whitespace-nowrap">RW3342D</td>
 
               <td className="text-left md:p-4 p-2 whitespace-nowrap">12345</td>
-              <td className="text-left md:p-4 p-2 whitespace-nowrap">714258757</td>
+              <td className="text-left md:p-4 p-2 whitespace-nowrap">
+                714258757
+              </td>
               <td className="text-left md:p-4 p-2 whitespace-nowrap">
                 Kalamazoo Distrib...
               </td>
-              <td className="text-left md:p-4 p-2 whitespace-nowrap">March 7</td>
-              <td className="text-left md:p-4 p-2 whitespace-nowrap">March 7</td>
+              <td className="text-left md:p-4 p-2 whitespace-nowrap">
+                March 7
+              </td>
+              <td className="text-left md:p-4 p-2 whitespace-nowrap">
+                March 7
+              </td>
               <td className="text-left md:p-4 p-2 whitespace-nowrap">20:05</td>
               <td className="text-left md:p-4 p-2 whitespace-nowrap">
                 lorem ipsum lipsum...
               </td>
-              <td className="text-left md:p-4 p-2 whitespace-nowrap">John adam</td>
+              <td className="text-left md:p-4 p-2 whitespace-nowrap">
+                John adam
+              </td>
               <td className="text-left md:p-4 p-2 whitespace-nowrap">
                 Kalamazoo Distrib...
               </td>
-              <td className="text-left md:p-4 p-2 whitespace-nowrap">+1 2134451</td>
+              <td className="text-left md:p-4 p-2 whitespace-nowrap">
+                +1 2134451
+              </td>
               <td className="text-left md:p-4 p-2 whitespace-nowrap">
                 loremipsum@mail.com
               </td>
-              <td className="text-left md:p-4 p-2 whitespace-nowrap">20 June 2023</td>
-              <td className="text-left md:p-4 p-2 whitespace-nowrap">lorem ipsum</td>
+              <td className="text-left md:p-4 p-2 whitespace-nowrap">
+                20 June 2023
+              </td>
+              <td className="text-left md:p-4 p-2 whitespace-nowrap">
+                lorem ipsum
+              </td>
               <td className="text-left md:p-4 p-2 whitespace-nowrap">
                 lorem ipsum, ipsum
               </td>

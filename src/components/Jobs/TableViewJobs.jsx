@@ -10,8 +10,8 @@ const TableViewActiveJobs = () => {
 
   return (
     <>
-      <div className="outline-none md:mt-5 mt-3 py-3 px-4 bg-white overflow-x-scroll scrollbar">
-        <table className="border-none outline-none w-full overflow-scroll">
+      <div className="outline-none md:mt-5 mt-3 py-3 md:px-4 px-1 bg-white overflow-x-scroll scrollbar">
+        <table className="border-none outline-none w-full overflow-scroll md:text-base text-sm">
           <thead className="w-full border-b border-gray-100 text-left">
             <tr className="whitespace-nowrap">
               <th className="md:p-4 p-2">

@@ -3,7 +3,7 @@ import React from "react";
 const TermsCondition = () => {
   return (
     <div className="bg-bgLight w-full min-h-screen">
-      <div className="bg-white md:p-4 p-2 rounded-2xl w-full md:space-y-4 space-y-2">
+      <div className="bg-white md:p-4 p-2 rounded-2xl w-full min-h-screen md:space-y-4 space-y-2">
         <p className="lg:text-3xl md:text-2xl text-lg capitalize text-primaryBlue font-semibold">
           Terms & conditions
         </p>

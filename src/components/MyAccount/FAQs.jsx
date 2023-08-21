@@ -60,7 +60,7 @@ const FAQs = () => {
   ];
   return (
     <div className="bg-bgLight w-full min-h-screen">
-      <div className="bg-white md:p-4 p-2 rounded-2xl w-full md:space-y-4 space-y-2">
+      <div className="bg-white md:p-4 p-2 rounded-2xl w-full min-h-screen md:space-y-4 space-y-2">
         <p className="md:text-2xl text-lg text-primaryBlue font-semibold">FAQ</p>
         {data.map((item) => (
           <Faq key={item.id} question={item.question} answer={item.answer} />
