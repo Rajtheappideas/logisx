@@ -13,10 +13,11 @@ import { toast } from "react-hot-toast";
 const Auth = () => {
   const [openTab, setOpenTab] = useState("sign-up");
   const [fcmToken, setFcmToken] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const { showSignupProcess } = useSelector((state) => state.root.auth);
 
-  const { user } = useSelector((state) => state.root.auth);
+  const { user, error } = useSelector((state) => state.root.auth);
 
   const { abortApiCall } = useAbortApiCall();
 
@@ -24,7 +25,7 @@ const Auth = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    GetToken(setFcmToken);
+    GetToken(setFcmToken, setLoading);
 
     if (user !== null) {
       toast("You already logged in.", { duration: 3000 });
@@ -34,7 +35,17 @@ const Auth = () => {
       abortApiCall();
     };
   }, []);
+
+  useEffect(() => {
+    if (
+      fcmToken === null ||
+      (error !== null && error?.message === "fcmToken is required.")
+    ) {
+      GetToken(setFcmToken, setLoading);
+    }
+  }, [openTab, fcmToken, error]);
   
+
   return (
     <>
       <Helmet>
