@@ -8,8 +8,6 @@ import SingelChat from "./SingelChat";
 
 const Chat = () => {
   const [showChatDetails, setShowChatDetails] = useState(false);
-  // const [isConnected, setIsConnected] = useState(socket.connected);
-  const [fooEvents, setFooEvents] = useState([]);
 
   const { showChatSidebar } = useSelector((state) => state.root.globalStates);
   const { chats, loading } = useSelector((state) => state.root.content);
@@ -41,11 +39,6 @@ const Chat = () => {
   function handleClickOutside() {
     showChatSidebar && dispatch(handleChangeShowChatSidebar(false));
   }
-
-  // useEffect(() => {
-  //   socket.emit("join", { id: "64e84677fedac5e0ce329f90" });
-  // }, []);
-
 
   return (
     <div

@@ -8,7 +8,7 @@ import GetContentSlice from "./GetContentSlice";
 const rootPersistConfig = {
   key: "root",
   storage,
-  blacklist: ["auth"],
+  blacklist: ["auth","content"],
 };
 
 const authConfig = {

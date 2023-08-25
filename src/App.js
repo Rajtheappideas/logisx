@@ -1,10 +1,4 @@
-import {
-  BrowserRouter,
-  Route,
-  Routes,
-  useInRouterContext,
-  useNavigate,
-} from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
 import Home from "./pages/Home";
 import Auth from "./pages/Auth";
@@ -17,30 +11,19 @@ import loading from "./assets/animations/trackLoading.json";
 import Lottie from "lottie-react";
 import PageNotFound from "./pages/PageNotFound";
 import PrivateRoute from "./pages/PrivateRoute";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useEffect } from "react";
 import {
   loginAllTabsEventListener,
   logoutAllTabsEventListener,
 } from "./redux/globalStates";
-import {
-  handleGetFaqs,
-  handleGetPrivacy,
-  handleGetTerms,
-} from "./redux/GetContentSlice";
-import useAbortApiCall from "./hooks/useAbortApiCall";
 
 function App() {
   const dispatch = useDispatch();
 
-  const { AbortControllerRef } = useAbortApiCall();
-
   useEffect(() => {
     dispatch(loginAllTabsEventListener());
     dispatch(logoutAllTabsEventListener());
-    dispatch(handleGetFaqs({ signal: AbortControllerRef }));
-    dispatch(handleGetTerms({ signal: AbortControllerRef }));
-    dispatch(handleGetPrivacy({ signal: AbortControllerRef }));
   }, []);
 
   return (

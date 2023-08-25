@@ -73,6 +73,8 @@ const Signin = ({ fcmToken }) => {
       abortApiCall();
     };
   }, []);
+  console.log(fcmToken)
+  
 
   return (
     <form

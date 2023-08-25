@@ -4,7 +4,6 @@ import { app } from "./firebaseConfig";
 const messaging = getMessaging(app);
 
 export function GetToken(setToken) {
-  let token = "";
   if (Notification.permission === "denied") {
     Notification.requestPermission().then((permission) => {
       if (permission === "granted") {
