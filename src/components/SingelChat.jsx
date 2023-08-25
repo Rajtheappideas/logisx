@@ -1,6 +1,5 @@
 import React from "react";
 import { FaTelegram } from "react-icons/fa";
-import { socket } from "../Socket";
 
 const SingelChat = () => {
   return (

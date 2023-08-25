@@ -5,11 +5,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { handleChangeShowChatSidebar } from "../redux/globalStates";
 import { useState } from "react";
 import SingelChat from "./SingelChat";
-import { socket } from "../Socket";
 
 const Chat = () => {
   const [showChatDetails, setShowChatDetails] = useState(false);
-  const [isConnected, setIsConnected] = useState(socket.connected);
+  // const [isConnected, setIsConnected] = useState(socket.connected);
   const [fooEvents, setFooEvents] = useState([]);
 
   const { showChatSidebar } = useSelector((state) => state.root.globalStates);
@@ -43,11 +42,10 @@ const Chat = () => {
     showChatSidebar && dispatch(handleChangeShowChatSidebar(false));
   }
 
-  useEffect(() => {
-    socket.emit("join", { id: "64e84677fedac5e0ce329f90" });
-  }, []);
+  // useEffect(() => {
+  //   socket.emit("join", { id: "64e84677fedac5e0ce329f90" });
+  // }, []);
 
-  // console.log(socket);
 
   return (
     <div
