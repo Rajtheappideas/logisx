@@ -9,6 +9,7 @@ import {
   handleChangeShippedDetails,
   handleChangeShowBidUploadComponent,
   handleChangeShowChatSidebar,
+  handleLogoutFromAllTabs,
 } from "../redux/globalStates";
 import {
   BsChatText,
@@ -23,6 +24,8 @@ import { CgFileDocument } from "react-icons/cg";
 import { RiLockPasswordLine } from "react-icons/ri";
 import { GoChecklist } from "react-icons/go";
 import { PiFileText } from "react-icons/pi";
+import { toast } from "react-hot-toast";
+import { handleLogout } from "../redux/AuthSlice";
 
 const Header = () => {
   const [openSidebar, setOpenSidebar] = useState(false);
@@ -77,6 +80,15 @@ const Header = () => {
     dispatch(handleChangeActiveJobDetails(false));
     dispatch(handleChangeShippedDetails(false));
     dispatch(handleChangeShowBidUploadComponent(false));
+  };
+
+  const handleChangeLogout = () => {
+    toast.loading("logout...");
+    setTimeout(() => {
+      toast.remove();
+      dispatch(handleLogout());
+      dispatch(handleLogoutFromAllTabs());
+    }, 1000);
   };
 
   return (
@@ -325,12 +337,13 @@ const Header = () => {
                         <hr />
                         <div
                           onClick={() => {
-                            tab.title !== "Logout" &&
-                              dispatch(
-                                handleChangeActiveComponent(
-                                  tab.title.toLocaleLowerCase()
-                                )
-                              );
+                            tab.title === "Logout"
+                              ? handleChangeLogout()
+                              : dispatch(
+                                  handleChangeActiveComponent(
+                                    tab.title.toLocaleLowerCase()
+                                  )
+                                );
                             setOpenSidebar(false);
                             handleChangeCloseComponent();
                           }}

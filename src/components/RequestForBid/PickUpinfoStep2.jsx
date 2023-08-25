@@ -59,7 +59,7 @@ const PickUpinfoStep2 = () => {
         Specification
       </p>
       <textarea
-        className="p-2 min-h-[6rem] max-h-[8rem] w-full focus:border-primaryBlue focus:border-2 text-sm rounded-lg border outline-none"
+        className="p-2 min-h-[6rem] max-h-[8rem] w-full focus:border-primaryBlue focus:border-2 text-sm rounded-lg border border-gray-400 outline-none"
         placeholder="Type Here..."
       ></textarea>
     </div>

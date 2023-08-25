@@ -1,16 +1,26 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import storage from "redux-persist/lib/storage";
-import { persistReducer, persistStore, FLUSH, REHYDRATE } from "redux-persist";
+import { persistReducer, persistStore } from "redux-persist";
 import GlobalStates from "./globalStates";
+import AuthSlice from "./AuthSlice";
+import GetContentSlice from "./GetContentSlice";
 
 const rootPersistConfig = {
   key: "root",
   storage,
-  // blacklist: ["globalStates"],
+  blacklist: ["auth"],
+};
+
+const authConfig = {
+  key: "auth",
+  storage,
+  blacklist: ["showSignupProcess"],
 };
 
 const rootReducer = combineReducers({
   globalStates: GlobalStates,
+  auth: persistReducer(authConfig, AuthSlice),
+  content: GetContentSlice,
 });
 
 const persisteRoot = persistReducer(rootPersistConfig, rootReducer);

@@ -1,148 +1,134 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
-import { BsEyeFill, BsEyeSlashFill } from "react-icons/bs";
 import { useDispatch, useSelector } from "react-redux";
-import { handleChangeShowSignupProcess } from "../../redux/globalStates";
+import TellUsAbout from "../Signup/TellUsAbout";
+import ShippingManager from "../Signup/ShippingManager";
+import TerminalLocation from "../Signup/TerminalLocation";
+import UploadDocs from "../Signup/UploadDocs";
+import Review from "../Signup/Review";
+import SignupComponent from "../Signup/SignupComponent";
+import Success from "../ForgotPassword/Success";
+import { handleChangeShowSignupProcess } from "../../redux/AuthSlice";
 
-const Signup = () => {
-  const [showPassword, setshowPassword] = useState(false);
+const Signup = ({ fcmToken, setOpenTab }) => {
+  const [step, setStep] = useState(0);
 
-  const { showSignupProcess, activeSignupComponent } = useSelector(
-    (state) => state.root.globalStates
-  );
+  const { showSignupProcess } = useSelector((state) => state.root.auth);
 
   const dispatch = useDispatch();
 
-  const signinSchema = yup.object({
-    email: yup.string().email().required("Email is required").trim(),
-    password: yup
-      .string()
-      .required("Password is required")
-      .matches(
-        /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{10,}$/,
-        "Please create a strong password."
-      )
-      .trim(),
-  });
-
-  const {
-    register,
-    handleSubmit,
-    getValues,
-    formState: { errors },
-  } = useForm({
+  const { getValues, setValue, reset } = useForm({
     shouldFocusError: true,
-    resolver: yupResolver(signinSchema),
     defaultValues: {
       email: "",
       password: "",
+      fname: "",
+      lname: "",
+      companyName: "",
+      shipperFname: "",
+      shipperLname: "",
+      shipperEmail: "",
+      shipperPhone: "",
+      location: "",
+      latitude: "",
+      longitude: "",
+      ein: "",
+      totalDocks: "",
+      dockNumbers: "",
+      photo: "",
+      fcmToken: fcmToken,
+      profile: "",
     },
   });
 
-  const onSubmit = (data) => {
-    const { email, password } = data;
-    console.log(data);
-    // const response = dispatch(
-    //   handleLoginUser({
-    //     email,
-    //     password,
-    //     signal: AbortControllerRef,
-    //   })
-    // );
-    // if (response) {
-    //   response.then((res) => {
-    //     if (res?.payload?.status === "success") {
-    //       toast.success(t("Sign in Successfully."), { duration: 2000 });
-    //       dispatch(handleSuccess());
-    //       navigate("/");
-    //     } else if (res?.payload?.status === "error") {
-    //       toast.error(res?.payload?.message);
-    //     }
-    //   });
-    // }
+  const handleResetStates = () => {
+    dispatch(handleChangeShowSignupProcess(false));
   };
 
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      className="w-full md:space-y-3 space-y-2"
-    >
-      <div className="space-y-2">
-        <label htmlFor="email" className="Label">
-          Email
-        </label>
-        <input
-          className="input_field"
-          type="email"
-          placeholder="email@gmail.com"
-          {...register("email")}
+    <div>
+      {!showSignupProcess && step === 0 && (
+        <SignupComponent
+          setStep={setStep}
+          setValue={setValue}
+          getValues={getValues}
         />
-        <span role="alert" className="error">
-          {errors?.email?.message}
-        </span>
-      </div>
-      <div className="space-y-2 w-full relative h-[4.5rem]">
-        <label htmlFor="password" className="Label">
-          Password
-        </label>
-        <input
-          className="focus:border-b-2 focus:border-primaryBlue transition border-b border-textColorGray w-full focus:outline-none md:p-2 p-1 pr-12"
-          type={showPassword ? "text" : "password"}
-          placeholder="******"
-          {...register("password")}
+      )}
+      {showSignupProcess && step === 1 && (
+        <TellUsAbout
+          setStep={setStep}
+          setValue={setValue}
+          getValues={getValues}
+          setOpenTab={setOpenTab}
         />
+      )}
+      {showSignupProcess && step === 2 && (
+        <ShippingManager
+          setStep={setStep}
+          setValue={setValue}
+          getValues={getValues}
+        />
+      )}
+      {showSignupProcess && step === 3 && (
+        <TerminalLocation
+          setStep={setStep}
+          setValue={setValue}
+          getValues={getValues}
+        />
+      )}
+      {showSignupProcess && step === 4 && (
+        <UploadDocs
+          setStep={setStep}
+          setValue={setValue}
+          getValues={getValues}
+        />
+      )}
+      {showSignupProcess && step === 5 && (
+        <Review
+          reset={reset}
+          setStep={setStep}
+          getValues={getValues}
+          fcmToken={fcmToken}
+        />
+      )}
+      {showSignupProcess && step === 6 && (
+        <Success
+          buttonText="Complete"
+          firstLinedescription="Thank you for submitting your account! We will review it and email you when "
+          secondLineDescription="your account is ready."
+          title="Account submitted"
+          link="/auth"
+          onClick={handleResetStates}
+          setStep={setStep}
+        />
+      )}
 
-        {showPassword ? (
-          <BsEyeFill
-            className="cursor-pointer absolute top-1/2 -translate-y-1/2 right-3 w-6 h-6 text-primaryBlue"
-            role="button"
-            onClick={() => setshowPassword(false)}
-          />
-        ) : (
-          <BsEyeSlashFill
-            className="cursor-pointer absolute top-1/2 -translate-y-1/2 right-3 w-6 h-6 text-primaryBlue"
-            role="button"
-            onClick={() => setshowPassword(true)}
-          />
-        )}
-      </div>
-      <p role="alert" className="error">
-        {errors?.password?.message}
-      </p>
-
-      {/* forgot + remember me box */}
-
-      <div className="w-full text-gray-400">
-        8 characters, 1 number, and ?, !, or *
-      </div>
-      {/*  terms + privcy link*/}
-      <p className="text-center w-full lg:text-lg text-sm">
-        By creating an account, you agree to our{" "}
-        <span role="button" className="text-[#017DC3]">
-          Terms, Privacy Policy
-        </span>
-        ,
-        <br className="md:block hidden" /> and{" "}
-        <span role="button" className="text-[#017DC3]">
-          Cookie Policy
-        </span>{" "}
-        .
-      </p>
-      {/* submit btn */}
-      <div className="text-center">
+      {/* <div className="w-full flex justify-between items-center md:flex-row flex-col mt-5 gap-2">
         <button
+          type="button"
           onClick={() => {
-            dispatch(handleChangeShowSignupProcess(true));
+            if (step === 1) {
+              dispatch(handleChangeShowSignupProcess(false));
+              setOpenTab("sign-up");
+              setStep(step - 1);
+            } else {
+              setStep(step - 1);
+            }
           }}
-          type="submit"
-          className={`blue_button w-1/2 uppercase`}
+          className="blue_button md:w-auto"
         >
-          sign in
+          BACK
         </button>
-      </div>
-    </form>
+        <p className="text-xs md:text-base">{step} to 4</p>
+        <button
+          type="submit"
+          // onClick={() => setStep(step + 1)}
+          className="blue_button  md:w-auto"
+        >
+          NEXT
+        </button>
+      </div> */}
+    </div>
   );
 };
 

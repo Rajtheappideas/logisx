@@ -1,11 +1,14 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import {
+  BrowserRouter,
+  Route,
+  Routes,
+  useInRouterContext,
+  useNavigate,
+} from "react-router-dom";
 import "./App.css";
-import Header from "./components/Header";
 import Home from "./pages/Home";
 import Auth from "./pages/Auth";
 import ForgotPassword from "./pages/ForgotPassword";
-import Verification from "./components/ForgotPassword/Verification";
-import VerificationSuccess from "./components/ForgotPassword/Success";
 import { Toaster } from "react-hot-toast";
 import ErrorFallBack from "./components/ErrorFallBack";
 import { ErrorBoundary } from "react-error-boundary";
@@ -13,8 +16,33 @@ import { Suspense } from "react";
 import loading from "./assets/animations/trackLoading.json";
 import Lottie from "lottie-react";
 import PageNotFound from "./pages/PageNotFound";
+import PrivateRoute from "./pages/PrivateRoute";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import {
+  loginAllTabsEventListener,
+  logoutAllTabsEventListener,
+} from "./redux/globalStates";
+import {
+  handleGetFaqs,
+  handleGetPrivacy,
+  handleGetTerms,
+} from "./redux/GetContentSlice";
+import useAbortApiCall from "./hooks/useAbortApiCall";
 
 function App() {
+  const dispatch = useDispatch();
+
+  const { AbortControllerRef } = useAbortApiCall();
+
+  useEffect(() => {
+    dispatch(loginAllTabsEventListener());
+    dispatch(logoutAllTabsEventListener());
+    dispatch(handleGetFaqs({ signal: AbortControllerRef }));
+    dispatch(handleGetTerms({ signal: AbortControllerRef }));
+    dispatch(handleGetPrivacy({ signal: AbortControllerRef }));
+  }, []);
+
   return (
     <BrowserRouter>
       <Toaster toastOptions={{ duration: 3000 }} position="top-center" />
@@ -42,23 +70,22 @@ function App() {
         >
           {/* <Chat /> */}
           <Routes>
-            <Route path="/" element={<Home />} />
+            <Route
+              path="/"
+              element={
+                <PrivateRoute>
+                  <Home />
+                </PrivateRoute>
+              }
+            />
             <Route path="/auth" caseSensitive element={<Auth />} />
             <Route
               path="/forgot-password"
               caseSensitive
               element={<ForgotPassword />}
             />
-            <Route path="/verification" element={<Verification />} />
 
-            <Route
-              path="/verification-success"
-              element={<VerificationSuccess />}
-            />
-            <Route
-              path="/*"
-              element={<PageNotFound />}
-            />
+            <Route path="/*" element={<PageNotFound />} />
           </Routes>
         </Suspense>
       </ErrorBoundary>

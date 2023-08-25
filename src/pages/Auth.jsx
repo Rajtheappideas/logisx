@@ -2,39 +2,39 @@ import React, { useEffect, useState } from "react";
 import Background from "../assets/images/BG.png";
 import Logo from "../assets/images/logisX-2-png 3.svg";
 import { Helmet } from "react-helmet";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Signin from "../components/Auth/Signin";
 import Signup from "../components/Auth/Signup";
-import TellUsAbout from "../components/Signup/TellUsAbout";
 import { useDispatch, useSelector } from "react-redux";
-import ShippingManager from "../components/Signup/ShippingManager";
-import TerminalLocation from "../components/Signup/TerminalLocation";
-import UploadDocs from "../components/Signup/UploadDocs";
-import Review from "../components/Signup/Review";
-import Success from "../components/ForgotPassword/Success";
-import { handleChangeShowSignupProcess } from "../redux/globalStates";
+import { GetToken } from "../firebase/firebase-messaging-sw";
+import useAbortApiCall from "../hooks/useAbortApiCall";
+import { toast } from "react-hot-toast";
 
 const Auth = () => {
-  const [openTab, setOpenTab] = useState("sign-in");
-  const [step, setStep] = useState(1);
+  const [openTab, setOpenTab] = useState("sign-up");
+  const [fcmToken, setFcmToken] = useState(null);
 
-  const { showSignupProcess } = useSelector((state) => state.root.globalStates);
+  const { showSignupProcess } = useSelector((state) => state.root.auth);
 
+  const { user } = useSelector((state) => state.root.auth);
+
+  const { abortApiCall } = useAbortApiCall();
+
+  const navigate = useNavigate();
   const dispatch = useDispatch();
-  // useEffect(() => {
-  //   if (user !== null) {
-  //     toast(t("You already logged in."), { duration: 3000 });
-  //     navigate("/");
-  //   }
-  //   return () => {
-  //     abortApiCall();
-  //   };
-  // }, []);
 
-  const handleResetStates = () => {
-    dispatch(handleChangeShowSignupProcess(false));
-  };
+  useEffect(() => {
+    GetToken(setFcmToken);
 
+    if (user !== null) {
+      toast("You already logged in.", { duration: 3000 });
+      navigate("/");
+    }
+    return () => {
+      abortApiCall();
+    };
+  }, []);
+  
   return (
     <>
       <Helmet>
@@ -61,67 +61,33 @@ const Auth = () => {
         <div className="bg-white shadow-lg md:p-4 p-2 2xl:w-1/3 xl:w-1/2 md:w-3/4 mx-auto md:space-y-3 space-y-2 md:rounded-3xl rounded-2xl w-11/12">
           {/* tabs sign in / sign up */}
           {!showSignupProcess && (
-            <>
-              <div className="justify-around flex text-black lg:text-lg text-sm w-full">
-                <p
-                  onClick={() => setOpenTab("sign-up")}
-                  className={`w-1/2 cursor-pointer  ${
-                    openTab === "sign-up"
-                      ? "border-primaryBlue border-b-4 text-primaryBlue md:text-lg text-base font-bold"
-                      : "border-gray-200 border-b text-gray-300 text-base"
-                  }  transition duration-300 pb-3 text-center`}
-                >
-                  Sign up
-                </p>
-                <p
-                  onClick={() => setOpenTab("sign-in")}
-                  className={`w-1/2 cursor-pointer  ${
-                    openTab === "sign-in"
-                      ? "border-primaryBlue border-b-4 text-primaryBlue md:text-lg font-bold"
-                      : "border-gray-200 border-b text-gray-300 text-base"
-                  }  transition duration-300 pb-3 text-center`}
-                >
-                  Log in
-                </p>
-              </div>
-              {openTab === "sign-in" ? <Signin /> : <Signup />}
-            </>
-          )}
-          {showSignupProcess && step === 1 && <TellUsAbout />}
-          {showSignupProcess && step === 2 && <ShippingManager />}
-          {showSignupProcess && step === 3 && <TerminalLocation />}
-          {showSignupProcess && step === 4 && <UploadDocs />}
-          {showSignupProcess && step === 5 && <Review setStep={setStep} />}
-          {showSignupProcess && step === 6 && (
-            <Success
-              buttonText="Complete"
-              firstLinedescription="Thank you for submitting your account! We will review it and email you when "
-              secondLineDescription="your account is ready."
-              title="Account submitted"
-              link="/"
-              onClick={handleResetStates}
-            />
-          )}
-          {step <= 4 && showSignupProcess && (
-            <div className="w-full flex justify-between items-center md:flex-row flex-col mt-5 gap-2">
-              <button
-                type="button"
-                onClick={() => setStep(step - 1)}
-                className={`${
-                  step === 1 ? "disable_button" : "blue_button"
-                } md:w-auto`}
+            <div className="justify-around flex text-black lg:text-lg text-sm w-full">
+              <p
+                onClick={() => setOpenTab("sign-up")}
+                className={`w-1/2 cursor-pointer  ${
+                  openTab === "sign-up"
+                    ? "border-primaryBlue border-b-4 text-primaryBlue md:text-lg text-base font-bold"
+                    : "border-gray-200 border-b text-gray-300 text-base"
+                }  transition duration-300 pb-3 text-center`}
               >
-                BACK
-              </button>
-              <p className="text-xs md:text-base">{step} to 4</p>
-              <button
-                type="button"
-                onClick={() => setStep(step + 1)}
-                className="blue_button  md:w-auto"
+                Sign up
+              </p>
+              <p
+                onClick={() => setOpenTab("sign-in")}
+                className={`w-1/2 cursor-pointer  ${
+                  openTab === "sign-in"
+                    ? "border-primaryBlue border-b-4 text-primaryBlue md:text-lg font-bold"
+                    : "border-gray-200 border-b text-gray-300 text-base"
+                }  transition duration-300 pb-3 text-center`}
               >
-                NEXT
-              </button>
+                Log in
+              </p>
             </div>
+          )}
+          {openTab === "sign-in" ? (
+            <Signin fcmToken={fcmToken} />
+          ) : (
+            <Signup setOpenTab={setOpenTab} fcmToken={fcmToken} />
           )}
         </div>
       </div>

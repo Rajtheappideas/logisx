@@ -7,9 +7,17 @@ import { Link } from "react-router-dom";
 import ForgotPasswordComponent from "../components/ForgotPassword/ForgotPassword";
 import Verification from "../components/ForgotPassword/Verification";
 import ResetPassword from "../components/ForgotPassword/ResetPassword";
+import useAbortApiCall from "../hooks/useAbortApiCall";
+import { useEffect } from "react";
 
 const ForgotPassword = () => {
   const [openComponent, setOpenComponent] = useState("forgot-password");
+
+  const { abortApiCall } = useAbortApiCall();
+
+  useEffect(() => {
+    return () => abortApiCall();
+  }, []);
 
   return (
     <>

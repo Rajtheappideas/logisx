@@ -10,7 +10,6 @@ input[type="number"]::-webkit-outer-spin-button {
   margin: 0;
 }
 
-
 body::-webkit-scrollbar {
   width: 0.5em !important;
   height: 20px;
@@ -21,11 +20,10 @@ body::-webkit-scrollbar-track {
 }
 
 body::-webkit-scrollbar-thumb {
-  background-color: #017DC3;
+  background-color: #017dc3;
   width: 2px;
   border-radius: 10px;
 }
-
 
 .hide_scrollbar::-webkit-scrollbar {
   display: none;
@@ -41,12 +39,48 @@ body::-webkit-scrollbar-thumb {
 }
 
 .scrollbar::-webkit-scrollbar-thumb {
-  background-color: #017DC3;
+  background-color: #017dc3;
   width: 2px;
   border-radius: 10px;
 }
 
+.form-control {
+  border: none !important;
+}
+.react-tel-input {
+  border-bottom: 1px #a6a6a6 solid !important;
+}
+.react-tel-input > input:focus {
+  border-bottom: 2px #017dc3 solid !important;
+}
+.flag-dropdown {
+  border: none !important;
+}
 
+@layer base {
+  h1 {
+    @apply text-5xl font-bold;
+  }
+  h2 {
+    @apply text-4xl font-bold;
+  }
+  h3 {
+    @apply text-2xl font-semibold;
+  }
+  h4 {
+    @apply text-xl font-semibold;
+  }
+  h5 {
+    @apply text-xl font-semibold;
+  }
+  h6 {
+    @apply text-lg font-semibold;
+  }
+}
+
+.loading {
+  @apply text-center w-full font-semibold md:text-2xl text-lg p-2;
+}
 .blue_button {
   @apply bg-primaryBlue text-white uppercase font-medium text-center md:min-w-[11rem] min-w-[8rem] md:min-h-[3rem] min-h-[2rem] rounded-lg md:p-2 p-1 hover:bg-primaryBlue/80 active:scale-95 transition duration-100 md:text-base text-sm;
 }
@@ -60,7 +94,7 @@ body::-webkit-scrollbar-thumb {
   @apply bg-disableGray text-white font-medium text-center md:min-w-[11rem] min-w-[8rem] md:min-h-[3rem] min-h-[2rem] rounded-lg md:p-2 p-1 md:text-base text-sm cursor-not-allowed;
 }
 .input_field {
-  @apply focus:border-b-2 focus:border-primaryBlue transition border-b border-textColorGray w-full focus:outline-none md:p-2 p-1;
+  @apply focus:border-b-[3px] focus:border-primaryBlue transition border-b border-textColorGray w-full focus:outline-none md:p-2 p-1;
 }
 .sidebar_tab {
   @apply flex rounded-lg items-center hover:bg-primaryBlue cursor-pointer transition duration-300 hover:text-white p-2;

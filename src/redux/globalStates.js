@@ -1,15 +1,18 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { BroadcastChannel } from "broadcast-channel";
 
 const initialState = {
   showActiveJobDetails: false,
   activeComponent: "active jobs",
   activeHeader: "jobs",
   showShippedDetails: false,
-  showSignupProcess: false,
   showSearchComponent: false,
   showBidUploadComponent: false,
   showChatSidebar: false,
 };
+
+const logoutChannel = new BroadcastChannel("handleLogout");
+const loginChannel = new BroadcastChannel("handleSuccess");
 
 const globalStates = createSlice({
   name: "globalStates",
@@ -27,10 +30,6 @@ const globalStates = createSlice({
     handleChangeActiveHeader: (state, { payload }) => {
       state.activeHeader = payload;
     },
-    handleChangeShowSignupProcess: (state, { payload }) => {
-      state.showSignupProcess = payload;
-    },
-
     handleChangeShowSearchComponent: (state, { payload }) => {
       state.showSearchComponent = payload;
     },
@@ -40,6 +39,30 @@ const globalStates = createSlice({
     handleChangeShowChatSidebar: (state, { payload }) => {
       state.showChatSidebar = payload;
     },
+    handleSuccess: () => {
+      loginChannel.postMessage("");
+      loginChannel.onmessage = (event) => {
+        loginChannel.close();
+      };
+    },
+    handleLogoutFromAllTabs: () => {
+      logoutChannel.postMessage("");
+      logoutChannel.onmessage = (event) => {
+        logoutChannel.close();
+      };
+    },
+    logoutAllTabsEventListener: () => {
+      logoutChannel.onmessage = (event) => {
+        logoutChannel.close();
+        window.location.reload();
+      };
+    },
+    loginAllTabsEventListener: () => {
+      loginChannel.onmessage = (event) => {
+        window.location.reload();
+        loginChannel.close();
+      };
+    },
   },
 });
 
@@ -48,10 +71,13 @@ export const {
   handleChangeActiveComponent,
   handleChangeActiveHeader,
   handleChangeShippedDetails,
-  handleChangeShowSignupProcess,
   handleChangeShowBidUploadComponent,
   handleChangeShowSearchComponent,
   handleChangeShowChatSidebar,
+  handleLogoutFromAllTabs,
+  handleSuccess,
+  loginAllTabsEventListener,
+  logoutAllTabsEventListener,
 } = globalStates.actions;
 
 export default globalStates.reducer;

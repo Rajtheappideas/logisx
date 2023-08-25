@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Lottie from "lottie-react";
 import success from "../../assets/animations/success.json";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-hot-toast";
 
 const Success = ({
   buttonText,
@@ -10,7 +11,38 @@ const Success = ({
   secondLineDescription,
   link,
   onClick,
+  setStep,
 }) => {
+  const navigate = useNavigate();
+  useEffect(() => {
+    let accountSubmitTimeout;
+    let verifyAccountTimeout;
+
+    if (title === "Account submitted") {
+      accountSubmitTimeout = setTimeout(() => {
+        navigate("/auth");
+        onClick();
+        setStep(0);
+        toast.success("You can login when account is reviewed.", {
+          duration: 4000,
+        });
+      }, 10000);
+    }
+    if (title === "Verification success") {
+      verifyAccountTimeout = setTimeout(() => {
+        navigate("/auth");
+        toast.success("You can login with your new password.", {
+          duration: 4000,
+        });
+      }, 5000);
+    }
+
+    return () => {
+      clearTimeout(accountSubmitTimeout);
+      clearTimeout(verifyAccountTimeout);
+    };
+  }, []);
+
   return (
     <div className="w-full text-center space-y-2">
       <div className="space-y-2 text-center">

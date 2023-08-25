@@ -5,11 +5,15 @@ import { useDispatch, useSelector } from "react-redux";
 import { handleChangeShowChatSidebar } from "../redux/globalStates";
 import { useState } from "react";
 import SingelChat from "./SingelChat";
+import { socket } from "../Socket";
 
 const Chat = () => {
   const [showChatDetails, setShowChatDetails] = useState(false);
+  const [isConnected, setIsConnected] = useState(socket.connected);
+  const [fooEvents, setFooEvents] = useState([]);
 
   const { showChatSidebar } = useSelector((state) => state.root.globalStates);
+  const { chats, loading } = useSelector((state) => state.root.content);
 
   const dispatch = useDispatch();
   const chatRef = useRef(null);
@@ -21,7 +25,11 @@ const Chat = () => {
       window.document.body.style.overflow = "unset";
     }
     const handleClickOutside = (event) => {
-      if (chatRef.current && !chatRef.current.contains(event?.target)) {
+      if (
+        chatRef.current &&
+        !chatRef.current.contains(event?.target) &&
+        showChatSidebar
+      ) {
         dispatch(handleChangeShowChatSidebar(false));
       }
     };
@@ -32,8 +40,14 @@ const Chat = () => {
   }, [handleClickOutside, chatRef]);
 
   function handleClickOutside() {
-    dispatch(handleChangeShowChatSidebar(false));
+    showChatSidebar && dispatch(handleChangeShowChatSidebar(false));
   }
+
+  useEffect(() => {
+    socket.emit("join", { id: "64e84677fedac5e0ce329f90" });
+  }, []);
+
+  console.log(socket);
 
   return (
     <div

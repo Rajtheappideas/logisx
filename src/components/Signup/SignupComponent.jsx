@@ -1,78 +1,51 @@
-import React, { useState, useEffect } from "react";
+import React, { memo } from "react";
+import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { BsEyeFill, BsEyeSlashFill } from "react-icons/bs";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import { BsEyeFill, BsEyeSlashFill } from "react-icons/bs";
-import { Link, useNavigate } from "react-router-dom";
-import {
-  handleChangeShowSignupProcess,
-  handleLoginUser,
-} from "../../redux/AuthSlice";
-import { useDispatch, useSelector } from "react-redux";
-import { toast } from "react-hot-toast";
-import useAbortApiCall from "../../hooks/useAbortApiCall";
-import {
-  handleChangeActiveComponent,
-  handleSuccess,
-} from "../../redux/globalStates";
+import { handleChangeShowSignupProcess } from "../../redux/AuthSlice";
+import { handleChangeActiveComponent } from "../../redux/globalStates";
+import { useNavigate } from "react-router-dom";
 
-const Signin = ({ fcmToken }) => {
+const SignupComponent = memo(({ setStep, setValue, getValues }) => {
   const [showPassword, setshowPassword] = useState(false);
-
-  const { loading } = useSelector((state) => state.root.auth);
-
   const dispatch = useDispatch();
-  const navigate = useNavigate();
-
-  const { AbortControllerRef, abortApiCall } = useAbortApiCall();
 
   const signinSchema = yup.object({
     email: yup.string().email().required("Email is required").trim(),
-    password: yup.string().required("Password is required").trim(),
+    password: yup
+      .string()
+      .required("Password is required")
+      .matches(
+        /^(?=.*?[A-Z])(?=.*?[a-z])(?!.*?[=?<>()'"\/\&]).{10,20}$/,
+        "Please create a strong password."
+      )
+      .trim(),
   });
 
+  const { email, password } = getValues();
+
+  const navigate = useNavigate();
+
   const {
-    register,
     handleSubmit,
-    getValues,
+    register,
     formState: { errors },
   } = useForm({
     shouldFocusError: true,
     resolver: yupResolver(signinSchema),
-    defaultValues: {
-      email: "",
-      password: "",
-    },
+    defaultValues: { email, password },
   });
 
   const onSubmit = (data) => {
     const { email, password } = data;
-    const response = dispatch(
-      handleLoginUser({
-        email,
-        password,
-        fcmToken,
-        signal: AbortControllerRef,
-      })
-    );
-    if (response) {
-      response.then((res) => {
-        if (res?.payload?.status === "success") {
-          toast.success("Sign in Successfully.", { duration: 2000 });
-          dispatch(handleSuccess());
-          dispatch(handleChangeShowSignupProcess(false));
-          navigate("/");
-        } else if (res?.payload?.status === "error") {
-          toast.error(res?.payload?.message);
-        }
-      });
-    }
+    setValue("email", email);
+    setValue("password", password);
+    dispatch(handleChangeShowSignupProcess(true));
+    setStep(1);
   };
-  useEffect(() => {
-    return () => {
-      abortApiCall();
-    };
-  }, []);
 
   return (
     <form
@@ -123,43 +96,27 @@ const Signin = ({ fcmToken }) => {
       </p>
 
       {/* forgot + remember me box */}
-      <div className="flex flex-wrap justify-between items-center w-full">
-        <div className="flex items-center gap-x-2 select-none">
-          <input
-            id="remember_me"
-            type="checkbox"
-            className="md:w-5 md:h-5 w-3 h-3"
-          />
-          <label
-            htmlFor="remember_me"
-            className="text-black lg:text-lg text-sm"
-          >
-            Remember me
-          </label>
-        </div>
-        <button
-          type="button"
-          className="text-black lg:text-lg text-sm hover:underline transition duration-300 hover:text-primaryBlue"
-        >
-          <Link to="/forgot-password">Forgot Password ?</Link>
-        </button>
-      </div>
 
+      <div className="w-full text-gray-400">
+        8 characters, 1 number, and ?, !, or *
+      </div>
       {/*  terms + privcy link*/}
       {/* <p className="text-center w-full lg:text-lg text-sm">
         By creating an account, you agree to our{" "}
         <span
           onClick={() => {
-            toast.error("Please login first");
+            navigate("/");
+            dispatch(handleChangeActiveComponent("terms"));
           }}
           role="button"
           className="text-[#017DC3]"
         >
-          Terms ,
+          Terms,
         </span>
         <span
           onClick={() => {
-            toast.error("Please login first");
+            navigate("/");
+            dispatch(handleChangeActiveComponent("terms"));
           }}
           role="button"
           className="text-[#017DC3]"
@@ -170,16 +127,12 @@ const Signin = ({ fcmToken }) => {
       </p> */}
       {/* submit btn */}
       <div className="text-center">
-        <button
-          disabled={loading}
-          type="submit"
-          className={`blue_button w-1/2 uppercase`}
-        >
-          {loading ? "Logging in..." : "log in"}
+        <button type="submit" className={`blue_button w-1/2 uppercase`}>
+          sign up
         </button>
       </div>
     </form>
   );
-};
+});
 
-export default Signin;
+export default SignupComponent;

@@ -13,7 +13,10 @@ import {
   handleChangeActiveComponent,
   handleChangeActiveJobDetails,
   handleChangeShippedDetails,
+  handleLogoutFromAllTabs,
 } from "../redux/globalStates";
+import { handleLogout } from "../redux/AuthSlice";
+import { toast } from "react-hot-toast";
 
 const SideBar = () => {
   const {
@@ -35,6 +38,15 @@ const SideBar = () => {
     { id: 7, title: "Policy", icon: PiFileText },
     { id: 8, title: "Logout", icon: FiLogOut },
   ];
+
+  const handleChangeLogout = () => {
+    toast.loading("logout...");
+    setTimeout(() => {
+      toast.remove();
+      dispatch(handleLogout());
+      dispatch(handleLogoutFromAllTabs());
+    }, 1000);
+  };
 
   return (
     <div className="w-full bg-lightBlue min-h-screen max-h-screen p-4 space-y-4 h-full">
@@ -102,10 +114,11 @@ const SideBar = () => {
           {accountTabs.map((tab) => (
             <div
               onClick={() => {
-                tab.title !== "Logout" &&
-                  dispatch(
-                    handleChangeActiveComponent(tab.title.toLocaleLowerCase())
-                  );
+                tab.title === "Logout"
+                  ? handleChangeLogout()
+                  : dispatch(
+                      handleChangeActiveComponent(tab.title.toLocaleLowerCase())
+                    );
               }}
               className={`sidebar_tab ${
                 tab.title.toLocaleLowerCase() ===

@@ -2,17 +2,29 @@ import React from "react";
 import SideBar from "../components/SideBar";
 import Jobs from "../components/Jobs/Jobs";
 import Header from "../components/Header";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Shipped from "../components/Shipped/Shipped";
 import { Helmet } from "react-helmet";
 import MyAccount from "../components/MyAccount/MyAccount";
 import Search from "../components/Search";
 import RequestBid from "../components/RequestForBid/RequestBid";
 import Chat from "../components/Chat";
+import { useEffect } from "react";
+import { handleGetChat } from "../redux/GetContentSlice";
+import useAbortApiCall from "../hooks/useAbortApiCall";
 
 const Home = () => {
+  const dispatch = useDispatch();
+
+  const { AbortControllerRef } = useAbortApiCall();
+
   const { activeComponent, showSearchComponent, showBidUploadComponent } =
     useSelector((state) => state.root.globalStates);
+
+  useEffect(() => {
+    dispatch(handleGetChat({ signal: AbortControllerRef }));
+  }, []);
+
   return (
     <>
       <Helmet title={`${activeComponent} | Logisx`} />
