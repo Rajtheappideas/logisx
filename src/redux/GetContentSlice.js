@@ -58,11 +58,12 @@ export const handleGetPrivacy = createAsyncThunk(
 
 export const handleGetChat = createAsyncThunk(
   "auth/handleGetChat",
-  async ({ signal }, { rejectWithValue }) => {
+  async ({ token, signal }, { rejectWithValue }) => {
     try {
       signal.current = new AbortController();
       const response = await GetUrl("get-chats", {
         signal: signal.current.signal,
+        headers: { token },
       });
       return response.data;
     } catch (error) {

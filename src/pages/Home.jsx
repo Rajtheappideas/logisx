@@ -10,7 +10,12 @@ import Search from "../components/Search";
 import RequestBid from "../components/RequestForBid/RequestBid";
 import Chat from "../components/Chat";
 import { useEffect } from "react";
-import { handleGetChat, handleGetFaqs, handleGetPrivacy, handleGetTerms } from "../redux/GetContentSlice";
+import {
+  handleGetChat,
+  handleGetFaqs,
+  handleGetPrivacy,
+  handleGetTerms,
+} from "../redux/GetContentSlice";
 import useAbortApiCall from "../hooks/useAbortApiCall";
 
 const Home = () => {
@@ -20,12 +25,11 @@ const Home = () => {
 
   const { activeComponent, showSearchComponent, showBidUploadComponent } =
     useSelector((state) => state.root.globalStates);
-  const { user } =
-    useSelector((state) => state.root.auth);
+  const { user, token } = useSelector((state) => state.root.auth);
 
   useEffect(() => {
     if (user !== null) {
-      dispatch(handleGetChat({ signal: AbortControllerRef }));
+      dispatch(handleGetChat({ token, signal: AbortControllerRef }));
     }
     dispatch(handleGetFaqs({ signal: AbortControllerRef }));
     dispatch(handleGetTerms({ signal: AbortControllerRef }));
