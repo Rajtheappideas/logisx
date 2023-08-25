@@ -47,7 +47,7 @@ const Chat = () => {
     socket.emit("join", { id: "64e84677fedac5e0ce329f90" });
   }, []);
 
-  console.log(socket);
+  // console.log(socket);
 
   return (
     <div
