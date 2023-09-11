@@ -12,11 +12,13 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   handleChangeActiveComponent,
   handleChangeActiveJobDetails,
-  handleChangeShippedDetails,
   handleLogoutFromAllTabs,
 } from "../redux/globalStates";
 import { handleLogout } from "../redux/AuthSlice";
 import { toast } from "react-hot-toast";
+import { socket } from "../Socket";
+import { AiOutlinePlus } from "react-icons/ai";
+import { handleChangeShowBidProposal } from "../redux/BidSlice";
 
 const SideBar = () => {
   const {
@@ -45,6 +47,7 @@ const SideBar = () => {
       toast.remove();
       dispatch(handleLogout());
       dispatch(handleLogoutFromAllTabs());
+      socket.disconnect();
     }, 1000);
   };
 
@@ -85,20 +88,23 @@ const SideBar = () => {
         <div className="space-y-3">
           <div
             onClick={() => {
-              dispatch(handleChangeActiveComponent("shipped"));
-              showShippedDetails && dispatch(handleChangeShippedDetails(false));
+              dispatch(handleChangeActiveComponent("request for bid"));
+              dispatch(handleChangeShowBidProposal(false));
             }}
             className={`sidebar_tab ${
-              activeComponent === "shipped" && "bg-primaryBlue text-white"
+              activeComponent === "request for bid" &&
+              "bg-primaryBlue text-white"
             } `}
           >
-            <LiaTruckMovingSolid className="text-xl" />
-            <p className="lg:text-lg text-sm font-semibold mx-5">Shipped</p>
+            {/* <LiaTruckMovingSolid className="text-xl" /> */}
+            {/* <p className="lg:text-lg text-sm font-semibold mx-5">Shipped</p> */}
+            <AiOutlinePlus className="text-xl" />
+            <p className="font-semibold ml-4 capitalize">Request for bid</p>
           </div>
           <div
             onClick={() => {
               dispatch(handleChangeActiveComponent("pending bids"));
-              showShippedDetails && dispatch(handleChangeShippedDetails(false));
+              dispatch(handleChangeShowBidProposal(false));
             }}
             className={`sidebar_tab ${
               activeComponent === "pending bids" && "bg-primaryBlue text-white"

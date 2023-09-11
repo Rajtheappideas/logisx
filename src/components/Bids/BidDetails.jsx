@@ -3,17 +3,18 @@ import { HiOutlineXMark } from "react-icons/hi2";
 import Details from "./Details";
 import Timeline from "./Timeline";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  handleChangeShippedDetails,
-  handleChangeShowChatSidebar,
-} from "../../redux/globalStates";
+import { handleChangeShowChatSidebar } from "../../redux/globalStates";
 
-const ShippedDetails = () => {
+const BidDetails = ({ setShowBidProposalDetails, singleBidProposal }) => {
   const [activeTab, setActiveTab] = useState("details");
 
   const { activeComponent } = useSelector((state) => state.root.globalStates);
 
   const dispatch = useDispatch();
+
+  const handleDispatchOnclick = () => {
+    setShowBidProposalDetails(false);
+  };
 
   return (
     <div className="w-full">
@@ -50,23 +51,27 @@ const ShippedDetails = () => {
             </button>
           </div>
         ) : (
-          <div className=" w-full"></div>
+          <div className="w-full"></div>
         )}
 
         <div>
           <span>
             <HiOutlineXMark
               role="button"
-              onClick={() => dispatch(handleChangeShippedDetails(false))}
+              onClick={() => {
+                handleDispatchOnclick();
+              }}
               className="text-2xl"
             />
           </span>
         </div>
       </div>
-      {activeTab === "details" && <Details />}
+      {activeTab === "details" && (
+        <Details singleBidProposal={singleBidProposal} />
+      )}
       {activeTab === "timeline" && <Timeline />}
     </div>
   );
 };
 
-export default ShippedDetails;
+export default BidDetails;

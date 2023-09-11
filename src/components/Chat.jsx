@@ -5,12 +5,15 @@ import { useDispatch, useSelector } from "react-redux";
 import { handleChangeShowChatSidebar } from "../redux/globalStates";
 import { useState } from "react";
 import SingelChat from "./SingelChat";
+import { socket } from "../Socket";
 
 const Chat = () => {
   const [showChatDetails, setShowChatDetails] = useState(false);
+  const [messages, setMessages] = useState([]);
 
   const { showChatSidebar } = useSelector((state) => state.root.globalStates);
   const { chats, loading } = useSelector((state) => state.root.content);
+  const { user } = useSelector((state) => state.root.auth);
 
   const dispatch = useDispatch();
   const chatRef = useRef(null);
@@ -40,6 +43,34 @@ const Chat = () => {
     showChatSidebar && dispatch(handleChangeShowChatSidebar(false));
   }
 
+  // useEffect(() => {
+  //   if (!socket.connected) {
+  //     socket.connect();
+  //   } else {
+  //     socket.emit("getChatMessages", { jobId: "64ede108c65399cf1330a068" });
+  //   }
+  // }, [socket]);
+
+  // useEffect(() => {
+  //   socket.on("chatMessages", (data) => setMessages([...messages, data]));
+  // }, [socket, messages]);
+
+  const sendMessage = () => {
+    socket.emit(
+      "sendMessage",
+      {
+        jobId: "64ede108c65399cf1330a068",
+        sender: user?._id,
+        receiver: user?._id,
+        message: "lorem ipsum",
+      },
+      (data) => {
+        console.log(data);
+      }
+    );
+  };
+
+  // console.log(socket);
   return (
     <div
       className={`fixed bg-black/10 duration-300 z-50 ease-out w-full h-screen inset-0 backdrop-blur-sm ${
@@ -50,6 +81,7 @@ const Chat = () => {
         ref={chatRef}
         className="xl:w-3/12 lg:w-4/12 md:w-1/2 w-full min-h-screen max-h-screen absolute top-0 right-0"
       >
+        <button onClick={() => sendMessage()}>send</button>
         {/* title + close btn */}
         <div className="bg-primaryBlue w-full p-4 sticky top-0">
           <div className="flex justify-between items-center">

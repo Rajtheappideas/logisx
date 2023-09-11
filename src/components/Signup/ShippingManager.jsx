@@ -133,7 +133,7 @@ const ShippingManager = memo(({ setStep, setValue, getValues }) => {
             }}
             render={({ field: { onChange, value } }) => (
               <PhoneInput
-                country={"us"}
+                country={"in"}
                 onChange={(value) => {
                   onChange((e) => {
                     setPhoneNumber("+".concat(value));

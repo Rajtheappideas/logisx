@@ -43,6 +43,7 @@ const Signup = ({ fcmToken, setOpenTab }) => {
 
   const handleResetStates = () => {
     dispatch(handleChangeShowSignupProcess(false));
+    setStep(0);
   };
 
   return (

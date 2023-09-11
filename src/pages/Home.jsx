@@ -3,7 +3,7 @@ import SideBar from "../components/SideBar";
 import Jobs from "../components/Jobs/Jobs";
 import Header from "../components/Header";
 import { useDispatch, useSelector } from "react-redux";
-import Shipped from "../components/Shipped/Shipped";
+import Bids from "../components/Bids/Bids";
 import { Helmet } from "react-helmet";
 import MyAccount from "../components/MyAccount/MyAccount";
 import Search from "../components/Search";
@@ -17,11 +17,13 @@ import {
   handleGetTerms,
 } from "../redux/GetContentSlice";
 import useAbortApiCall from "../hooks/useAbortApiCall";
+import { handleGetDocuments } from "../redux/DocumentSlice";
+import { handleGetFavorites } from "../redux/FavoriteSlice";
 
 const Home = () => {
   const dispatch = useDispatch();
 
-  const { AbortControllerRef } = useAbortApiCall();
+  const { AbortControllerRef, abortApiCall } = useAbortApiCall();
 
   const { activeComponent, showSearchComponent, showBidUploadComponent } =
     useSelector((state) => state.root.globalStates);
@@ -30,10 +32,16 @@ const Home = () => {
   useEffect(() => {
     if (user !== null) {
       dispatch(handleGetChat({ token, signal: AbortControllerRef }));
+      dispatch(handleGetDocuments({ token, signal: AbortControllerRef }));
+      dispatch(handleGetFavorites({ token, signal: AbortControllerRef }));
     }
     dispatch(handleGetFaqs({ signal: AbortControllerRef }));
     dispatch(handleGetTerms({ signal: AbortControllerRef }));
     dispatch(handleGetPrivacy({ signal: AbortControllerRef }));
+
+    return () => {
+      abortApiCall();
+    };
   }, []);
 
   return (
@@ -41,8 +49,8 @@ const Home = () => {
       <Helmet title={`${activeComponent} | Logisx`} />
       <Header />
       {showSearchComponent && <Search />}
-      {showBidUploadComponent && <RequestBid />}
-      <Chat />
+      {/* {showBidUploadComponent && <RequestBid />} */}
+      {/* <Chat /> */}
 
       {!showSearchComponent && !showBidUploadComponent && (
         <div className="w-full flex items-start">
@@ -52,8 +60,8 @@ const Home = () => {
           <div className="xl:w-10/12 lg:w-9/12 w-full md:p-5 p-2 bg-bgLight min-h-screen max-h-fit">
             {(activeComponent === "active jobs" ||
               activeComponent === "completed jobs") && <Jobs />}
-            {(activeComponent === "shipped" ||
-              activeComponent === "pending bids") && <Shipped />}
+            {(activeComponent === "request for bid" ||
+              activeComponent === "pending bids") && <Bids />}
             {(activeComponent === "profile" ||
               activeComponent === "documents" ||
               activeComponent === "favorites" ||

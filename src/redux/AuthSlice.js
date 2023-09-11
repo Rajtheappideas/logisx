@@ -30,6 +30,7 @@ export const handleRegisterUser = createAsyncThunk(
   ) => {
     try {
       signal.current = new AbortController();
+
       const formdata = new FormData();
       formdata.append("email", email);
       formdata.append("password", password);
@@ -46,9 +47,12 @@ export const handleRegisterUser = createAsyncThunk(
       formdata.append("ein", ein);
       formdata.append("totalDocks", totalDocks);
       formdata.append("dockNumbers", dockNumbers);
-      formdata.append("photo", photo);
+      for (let i = 0; i < photo.length; i++) {
+        formdata.append("photo", photo[i]);
+      }
       formdata.append("profile", profile);
       formdata.append("fcmToken", fcmToken);
+
       const response = await PostUrl("signup", {
         data: formdata,
         signal: signal.current.signal,
@@ -144,12 +148,13 @@ export const handleVerifyOtp = createAsyncThunk(
 
 export const handleChangePassword = createAsyncThunk(
   "auth/handleChangePassword",
-  async ({ oldPassword, newPassword, signal }, { rejectWithValue }) => {
+  async ({ oldPassword, newPassword, token, signal }, { rejectWithValue }) => {
     try {
       signal.current = new AbortController();
       const response = await PostUrl("change_password", {
         data: { oldPassword, newPassword },
         signal: signal.current.signal,
+        headers: { token },
       });
       return response.data;
     } catch (error) {
@@ -163,12 +168,15 @@ export const handleChangePassword = createAsyncThunk(
 
 export const handleEditProfile = createAsyncThunk(
   "auth/handleEditProfile",
-  async ({ fname, lname, companyName, signal }, { rejectWithValue }) => {
+  async ({ fname, lname, companyName, token, signal }, { rejectWithValue }) => {
     try {
       signal.current = new AbortController();
       const response = await PostUrl("edit_profile", {
         data: { fname, lname, companyName },
         signal: signal.current.signal,
+        headers: {
+          token,
+        },
       });
       return response.data;
     } catch (error) {

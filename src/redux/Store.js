@@ -4,11 +4,14 @@ import { persistReducer, persistStore } from "redux-persist";
 import GlobalStates from "./globalStates";
 import AuthSlice from "./AuthSlice";
 import GetContentSlice from "./GetContentSlice";
+import BidSlice from "./BidSlice";
+import DocumentSlice from "./DocumentSlice";
+import FavoriteSlice from "./FavoriteSlice";
 
 const rootPersistConfig = {
   key: "root",
   storage,
-  blacklist: ["auth","content"],
+  blacklist: ["auth", "content", "bid", "documents", "favorite"],
 };
 
 const authConfig = {
@@ -21,6 +24,9 @@ const rootReducer = combineReducers({
   globalStates: GlobalStates,
   auth: persistReducer(authConfig, AuthSlice),
   content: GetContentSlice,
+  bid: BidSlice,
+  documents: DocumentSlice,
+  favorite: FavoriteSlice,
 });
 
 const persisteRoot = persistReducer(rootPersistConfig, rootReducer);

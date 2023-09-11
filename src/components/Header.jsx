@@ -1,12 +1,16 @@
 import React, { useEffect, useRef, useState } from "react";
 import logo from "../assets/images/logisX-2-png 3.svg";
-import { AiOutlineClose, AiOutlineMenu, AiOutlineSearch } from "react-icons/ai";
+import {
+  AiOutlineClose,
+  AiOutlineMenu,
+  AiOutlinePlus,
+  AiOutlineSearch,
+} from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
 import {
   handleChangeActiveComponent,
   handleChangeActiveHeader,
   handleChangeActiveJobDetails,
-  handleChangeShippedDetails,
   handleChangeShowBidUploadComponent,
   handleChangeShowChatSidebar,
   handleLogoutFromAllTabs,
@@ -26,6 +30,8 @@ import { GoChecklist } from "react-icons/go";
 import { PiFileText } from "react-icons/pi";
 import { toast } from "react-hot-toast";
 import { handleLogout } from "../redux/AuthSlice";
+import { socket } from "../Socket";
+import { handleChangeShowBidProposal } from "../redux/BidSlice";
 
 const Header = () => {
   const [openSidebar, setOpenSidebar] = useState(false);
@@ -78,7 +84,6 @@ const Header = () => {
 
   const handleChangeCloseComponent = () => {
     dispatch(handleChangeActiveJobDetails(false));
-    dispatch(handleChangeShippedDetails(false));
     dispatch(handleChangeShowBidUploadComponent(false));
   };
 
@@ -88,7 +93,27 @@ const Header = () => {
       toast.remove();
       dispatch(handleLogout());
       dispatch(handleLogoutFromAllTabs());
+      socket.disconnect();
     }, 1000);
+  };
+
+  const handleDispatchClickOnBids = () => {
+    dispatch(handleChangeActiveHeader("bids"));
+    dispatch(handleChangeActiveComponent("pending bids"));
+    dispatch(handleChangeShowBidProposal(false));
+    handleChangeCloseComponent();
+  };
+
+  const handleDispatchClickOnJobs = () => {
+    dispatch(handleChangeActiveHeader("jobs"));
+    dispatch(handleChangeActiveComponent("active jobs"));
+    handleChangeCloseComponent();
+  };
+
+  const handleDispatchClickOnMyaccount = () => {
+    dispatch(handleChangeActiveHeader("my_account"));
+    dispatch(handleChangeActiveComponent("profile"));
+    handleChangeCloseComponent();
   };
 
   return (
@@ -106,9 +131,7 @@ const Header = () => {
           <ul className="lg:flex hidden mx-6 space-x-6 whitespace-nowrap items-center  text-textColorGray font-semibold">
             <li
               onClick={() => {
-                dispatch(handleChangeActiveHeader("jobs"));
-                dispatch(handleChangeActiveComponent("active jobs"));
-                handleChangeCloseComponent();
+                handleDispatchClickOnJobs();
               }}
               className={`hover:text-primaryBlue ${
                 activeHeader === "jobs" && "text-primaryBlue text-lg"
@@ -118,9 +141,7 @@ const Header = () => {
             </li>
             <li
               onClick={() => {
-                dispatch(handleChangeActiveHeader("bids"));
-                dispatch(handleChangeActiveComponent("shipped"));
-                handleChangeCloseComponent();
+                handleDispatchClickOnBids();
               }}
               className={`hover:text-primaryBlue ${
                 activeHeader === "bids" && "text-primaryBlue text-lg"
@@ -128,7 +149,7 @@ const Header = () => {
             >
               Bids
             </li>
-            <li
+            {/* <li
               onClick={() => {
                 dispatch(handleChangeShowChatSidebar(true));
               }}
@@ -137,12 +158,10 @@ const Header = () => {
               } cursor-pointer transition duration-300 ease-in-out`}
             >
               Chat
-            </li>
+            </li> */}
             <li
               onClick={() => {
-                dispatch(handleChangeActiveHeader("my_account"));
-                dispatch(handleChangeActiveComponent("profile"));
-                handleChangeCloseComponent();
+                handleDispatchClickOnMyaccount();
               }}
               className={`hover:text-primaryBlue ${
                 activeHeader === "my_account" && "text-primaryBlue text-lg"
@@ -265,17 +284,24 @@ const Header = () => {
                   <li>
                     <div
                       onClick={() => {
-                        dispatch(handleChangeActiveComponent("shipped"));
+                        dispatch(
+                          handleChangeActiveComponent("request for bid")
+                        );
                         setOpenSidebar(false);
                         handleChangeCloseComponent();
+                        dispatch(handleChangeShowBidProposal(false));
                       }}
                       className={`header_tab_mobile ${
-                        activeComponent === "shipped" &&
+                        activeComponent === "request for bid" &&
                         "bg-primaryBlue text-white"
                       } `}
                     >
-                      <LiaTruckMovingSolid className="text-base mr-4" />
-                      <p className="font-normal text-sm p-1.5">Shipped</p>
+                      {/* <LiaTruckMovingSolid className="text-base mr-4" />
+                      <p className="font-normal text-sm p-1.5">Shipped</p> */}
+                      <AiOutlinePlus className="text-base mr-4" />
+                      <p className="font-normal text-sm p-1.5">
+                        Request for bid
+                      </p>
                     </div>
                     <hr className="my-1" />
 
@@ -284,6 +310,7 @@ const Header = () => {
                         dispatch(handleChangeActiveComponent("pending bids"));
                         setOpenSidebar(false);
                         handleChangeCloseComponent();
+                        dispatch(handleChangeShowBidProposal(false));
                       }}
                       className={`header_tab_mobile ${
                         activeComponent === "pending bids" &&
@@ -298,7 +325,7 @@ const Header = () => {
               )}
             </li>
             {/* chat */}
-            <li
+            {/* <li
               onClick={() => {
                 setActiveHeaderTabMobile("chat");
                 setOpenSidebar(false);
@@ -308,7 +335,7 @@ const Header = () => {
               className="hover:text-primaryBlue px-4 border-b text-left cursor-pointer transition duration-300 ease-in-out"
             >
               Chat
-            </li>
+            </li> */}
             {/* my aaccount */}
             <li
               onClick={() => setActiveHeaderTabMobile("my_account")}

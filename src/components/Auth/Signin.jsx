@@ -15,6 +15,7 @@ import {
   handleChangeActiveComponent,
   handleSuccess,
 } from "../../redux/globalStates";
+import { socket } from "../../Socket";
 
 const Signin = ({ fcmToken }) => {
   const [showPassword, setshowPassword] = useState(false);
@@ -61,6 +62,7 @@ const Signin = ({ fcmToken }) => {
           toast.success("Sign in Successfully.", { duration: 2000 });
           dispatch(handleSuccess());
           dispatch(handleChangeShowSignupProcess(false));
+          socket.emit("join", { id: res.payload?.shipper?._id }).connect();
           navigate("/");
         } else if (res?.payload?.status === "error") {
           toast.error(res?.payload?.message);
@@ -68,6 +70,7 @@ const Signin = ({ fcmToken }) => {
       });
     }
   };
+
   useEffect(() => {
     return () => {
       abortApiCall();

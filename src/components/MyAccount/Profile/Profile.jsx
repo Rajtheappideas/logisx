@@ -7,8 +7,6 @@ const Profile = () => {
 
   const { user } = useSelector((state) => state.root.auth);
 
-  const { fname, lname, email, companyName, shipperPhone } = user;
-
   return (
     <>
       {showProfile ? (
@@ -34,13 +32,13 @@ const Profile = () => {
               <div className="tracking-wide">
                 <p className="text-textColorGray font-semibold">First Name</p>
                 <p className="text-textBlackcolor font-normal">
-                  {fname ?? "-"}
+                  {user?.fname ?? "-"}
                 </p>
               </div>
               <div className="tracking-wide">
                 <p className="text-textColorGray font-semibold">Last Name</p>
                 <p className="text-textBlackcolor font-normal">
-                  {lname ?? "-"}
+                  {user?.lname ?? "-"}
                 </p>
               </div>
             </div>
@@ -48,7 +46,7 @@ const Profile = () => {
             <div className="tracking-wide">
               <p className="text-textColorGray font-semibold">Company</p>
               <p className="text-textBlackcolor font-normal">
-                {companyName ?? "-"}
+                {user?.companyName ?? "-"}
               </p>
             </div>
             {/* email & phone */}
@@ -56,13 +54,13 @@ const Profile = () => {
               <div className="tracking-wide">
                 <p className="text-textColorGray font-semibold">Email</p>
                 <p className="text-textBlackcolor font-normal">
-                  {email ?? "-"}
+                  {user?.email ?? "-"}
                 </p>
               </div>
               <div className="tracking-wide">
                 <p className="text-textColorGray font-semibold">Phone</p>
                 <p className="text-textBlackcolor font-normal">
-                  {shipperPhone ?? "-"}
+                  {user?.shipperPhone ?? "-"}
                 </p>
               </div>
             </div>

@@ -15,11 +15,11 @@ const RequestBid = () => {
   const { activeHeader } = useSelector((state) => state.root.globalStates);
 
   return (
-    <div className="bg-bgLight w-full min-h-screen lg:p-10 md:p-5 p-2 space-y-3">
-      <p className="md:text-2xl text-lg font-semibold xl:px-32 lg:px-10 md:px-5 px-3">
+    <div className="w-full min-h-screen lg:p-10 md:p-5 p-2 space-y-3">
+      {/* <p className="md:text-2xl text-lg font-semibold xl:px-32 lg:px-10 md:px-5 px-3">
         Request for BID
-      </p>
-      <div className="bg-white min-h-screen md:p-6 p-2 rounded-lg xl:mx-32 lg:mx-10 md:mx-5 mx-3">
+      </p> */}
+      <div className="bg-white min-h-screen md:p-6 p-2 rounded-lg">
         {activeBidComponent === "bid_upload" && activeHeader === "bids" && (
           <RequestForBid
             setBidUploadType={setBidUploadType}

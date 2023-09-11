@@ -9,15 +9,18 @@ import { useDispatch, useSelector } from "react-redux";
 import { GetToken } from "../firebase/firebase-messaging-sw";
 import useAbortApiCall from "../hooks/useAbortApiCall";
 import { toast } from "react-hot-toast";
+import { handleChangeFcmToken } from "../redux/globalStates";
 
 const Auth = () => {
   const [openTab, setOpenTab] = useState("sign-up");
   const [fcmToken, setFcmToken] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  const { showSignupProcess } = useSelector((state) => state.root.auth);
+  const { showSignupProcess, user, error } = useSelector(
+    (state) => state.root.auth
+  );
 
-  const { user, error } = useSelector((state) => state.root.auth);
+  const globalState = useSelector((state) => state.root.globalStates);
 
   const { abortApiCall } = useAbortApiCall();
 
@@ -25,8 +28,12 @@ const Auth = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    GetToken(setFcmToken, setLoading);
+    if (fcmToken === null) {
+      GetToken(setFcmToken, setLoading);
+    }
+  }, [fcmToken]);
 
+  useEffect(() => {
     if (user !== null) {
       toast("You already logged in.", { duration: 3000 });
       navigate("/");
@@ -42,9 +49,14 @@ const Auth = () => {
       (error !== null && error?.message === "fcmToken is required.")
     ) {
       GetToken(setFcmToken, setLoading);
+      if (error !== null && error?.message === "fcmToken is required.") {
+        toast.error("Please try again!");
+      }
+    }
+    if (fcmToken !== null && globalState.fcmToken === null) {
+      dispatch(handleChangeFcmToken(fcmToken));
     }
   }, [openTab, fcmToken, error]);
-  
 
   return (
     <>

@@ -10,9 +10,7 @@ const UploadDocs = memo(({ setStep, setValue, getValues }) => {
   const { ein, totalDocks, dockNumbers, photo } = getValues();
 
   const [photos, setPhotos] = useState(photo.length > 0 ? photo : []);
-  const [displayImages, setDisplayImages] = useState(
-    photo.length > 0 ? photo : []
-  );
+  const [displayImages, setDisplayImages] = useState([]);
 
   const uploadDocsSchema = yup.object({
     ein: yup
@@ -93,7 +91,10 @@ const UploadDocs = memo(({ setStep, setValue, getValues }) => {
         ) {
           return toast.error("you can upload 3 images maximum!!!");
         } else {
-          setPhotos([...photos, Object.values(e.target.files)]);
+          setPhotos([
+            ...photos.flat(Infinity),
+            Object.values(e.target.files).flat(Infinity),
+          ]);
           let imageUrls = [];
           for (const iterator of Object.values(e.target.files)) {
             const objectUrl = window.URL.createObjectURL(iterator);
@@ -122,14 +123,16 @@ const UploadDocs = memo(({ setStep, setValue, getValues }) => {
 
   useEffect(() => {
     let imageUrls = [];
-    for (const iterator of photos) {
-      const objectUrl = window.URL.createObjectURL(iterator);
-      imageUrls.push({
-        url: objectUrl,
-        name: iterator.name,
-      });
+    if (displayImages.length === 0) {
+      for (const iterator of photos) {
+        const objectUrl = window.URL.createObjectURL(iterator);
+        imageUrls.push({
+          url: objectUrl,
+          name: iterator.name,
+        });
+      }
+      setDisplayImages(imageUrls);
     }
-    setDisplayImages(imageUrls);
   }, []);
 
   useEffect(() => {

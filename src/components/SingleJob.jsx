@@ -2,39 +2,35 @@ import React, { memo } from "react";
 import { FiHeart } from "react-icons/fi";
 import { TfiLocationPin } from "react-icons/tfi";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  handleChangeActiveJobDetails,
-  handleChangeShippedDetails,
-} from "../redux/globalStates";
+import { handleChangeActiveJobDetails } from "../redux/globalStates";
 import { RiTimerLine } from "react-icons/ri";
+import { handleChangeShowBidProposal } from "../redux/BidSlice";
 
-const SingleJob = memo(({ status, jobDescription }) => {
+const SingleJob = memo(({ setActiveBidId, jobDescription, data }) => {
   const { activeHeader, activeComponent } = useSelector(
     (state) => state.root.globalStates
   );
 
   const dispatch = useDispatch();
 
-  const handleDispatch = () => {
+  const handleDispatch = (id) => {
     if (
       activeComponent === "active jobs" ||
       activeComponent === "completed jobs"
     ) {
       return dispatch(handleChangeActiveJobDetails(true));
-    } else if (
-      activeComponent === "shipped" ||
-      activeComponent === "pending bids"
-    ) {
-      return dispatch(handleChangeShippedDetails(true));
+    } else if (activeComponent === "pending bids") {
+      dispatch(handleChangeShowBidProposal(true));
+      setActiveBidId(data?._id);
     }
   };
 
   return (
-    <div className="w-full border border-[#B8D2E0] md:p-4 p-2 rounded-2xl space-y-3">
+    <div className="w-full border border-[#B8D2E0] md:p-4 p-2 rounded-2xl space-y-2">
       {/* title + icon */}
       <div className="flex justify-between items-center">
         <p className="lg:text-2xl text-base text-textBlackcolor font-semibold">
-          Bid RW3342D
+          {data?.bidId}
         </p>
         <div className="flex items-center gap-x-1">
           {(activeHeader === "bids" || jobDescription !== undefined) && (
@@ -47,66 +43,63 @@ const SingleJob = memo(({ status, jobDescription }) => {
         </div>
       </div>
       {/* departure */}
-      <div className="flex justify-between relative">
-        <div className="flex items-start">
+      <div className="flex justify-between relative w-full">
+        <div className="flex items-start w-1/3">
           <TfiLocationPin className="text-primaryBlue text-2xl" />
           <div className="ml-2">
             <p className="lg:text-md text-sm font-semibold">
-              East Chicago Port
-            </p>
-            <p className="text-textLightGray lg:text-md text-sm">
-              Chicago, IL 69070
+              {data?.departureLocation}
             </p>
           </div>
         </div>
-        <div className="">
-          <p className="flex justify-end">Mar 7</p>
-          <p className="text-textLightGray lg:text-md text-sm ">7:00 am CST</p>
+        <div className="w-1/3 text-right">
+          <p>{data?.departureDate}</p>
+          <p className="text-textLightGray lg:text-md text-sm">
+            {data?.departureTime}
+          </p>
         </div>
 
-        {/* line */}
+        {/*vertical line */}
         <div className="absolute z-0 top-[26px] left-[11px] h-7 w-0.5 bg-gray-400 rounded-sm"></div>
       </div>
-      {/* destination */}
-      <div className="flex justify-between">
-        <div className="flex items-start">
+      {/* arrival */}
+      <div className="flex justify-between w-full">
+        <div className="flex items-start w-1/3">
           <TfiLocationPin className="text-greenColor text-2xl" />
           <div className="ml-2">
             <p className="lg:text-md text-sm  font-semibold">
-              Kalamazoo Distribution
-            </p>
-            <p className="text-textLightGray lg:text-md text-sm">
-              Kalamazoo, MI 28904
+              {data?.arrivalLocation}
             </p>
           </div>
         </div>
-        <div className="">
-          <p className="flex justify-end">Mar 9</p>
-          <p className="text-textLightGray lg:text-md text-sm">4:00 pm CST</p>
+        <div className="w-1/3 text-right">
+          <p>{data?.arrivalDate}</p>
+          <p className="text-textLightGray lg:text-md text-sm">
+            {data?.arrivalTime}
+          </p>
         </div>
       </div>
+
       {/* status */}
       <div className="flex items-center">
-        {status === undefined ? (
-          <p className="text-sm text-gray-500">{jobDescription}</p>
-        ) : (
-          <p className="text-lg font-semibold">Status :</p>
-        )}
-        {status === "in-transit" && (
-          <span className="bg-primaryBlue text-white font-medium text-center md:w-32 md:ml-2 ml-1 w-24 md:h-10 md:leading-10 align-middle h-9 leading-9 rounded-3xl ">
-            In-Transit
-          </span>
-        )}
-        {status === "completed" && (
-          <span className="bg-greenColor text-white font-medium text-center md:w-32 md:ml-2 ml-1 w-24 md:h-10 md:leading-10 align-middle h-9 leading-9 rounded-3xl ">
-            Completed
-          </span>
-        )}
+        <p className="text-lg font-semibold">Status :</p>
+        <span
+          className={`${
+            (data?.status === "in-transit" || "pending") && "bg-primaryBlue"
+          }
+          ${data?.status === "complete" && "bg-greenColor"}
+          ${data?.status === "cancelled" && "bg-gray-300"}
+          capitalize text-white font-medium text-center md:w-32 md:ml-2 ml-1 w-24 md:h-10 md:leading-10 align-middle h-9 leading-9 rounded-3xl`}
+        >
+          {data?.status}
+        </span>
       </div>
+      {/* description */}
+      <p className="text-sm text-gray-500">{data?.jobDescription}</p>
       {/* amount */}
       <div className="flex items-center justify-between">
         <p className="lg:text-2xl text-lg font-semibold text-textPurple">
-          $ 1000
+          $ {data?.price}
         </p>
         <button
           className="blue_button uppercase tracking-wide"

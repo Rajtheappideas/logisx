@@ -1,8 +1,11 @@
 import React, { useState } from "react";
 import EditDocument from "./EditDocument";
+import { useSelector } from "react-redux";
 
 const Document = () => {
   const [showEditDocument, setShowEditDocument] = useState(false);
+
+  const { documents, loading } = useSelector((state) => state.root.documents);
 
   return (
     <div className="min-h-screen">
@@ -21,7 +24,7 @@ const Document = () => {
                     <p className="text-primaryBlue text-sm font-semibold">
                       EIN number
                     </p>
-                    <p className="font-semibold">123456</p>
+                    <p className="font-semibold">{documents?.ein ?? "-"}</p>
                   </div>
                   <button
                     type="button"
@@ -35,56 +38,11 @@ const Document = () => {
                   <p className="text-primaryBlue text-sm font-semibold">
                     Loading docks
                   </p>
-                  <p className="font-semibold">1</p>
-                </div>
-              </div>
-              <div className="w-full border border-[#B8D2E0] rounded-xl md:p-3 p-2 space-y-2">
-                <div className="flex justify-between items-center">
-                  <div>
-                    <p className="text-primaryBlue text-sm font-semibold">
-                      EIN number
-                    </p>
-                    <p className="font-semibold">123456</p>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => setShowEditDocument(true)}
-                    className="bg-primaryBlue uppercase text-white font-medium px-5 py-1 rounded-lg hover:bg-primaryBlue/80 active:scale-95 transition"
-                  >
-                    Edit
-                  </button>
-                </div>
-                <div>
-                  <p className="text-primaryBlue text-sm font-semibold">
-                    Loading docks
+                  <p className="font-semibold">
+                    {documents?.totalDocks ?? "-"}
                   </p>
-                  <p className="font-semibold">1</p>
                 </div>
               </div>
-              <div className="w-full border border-[#B8D2E0] rounded-xl md:p-3 p-2 space-y-2">
-                <div className="flex justify-between items-center">
-                  <div>
-                    <p className="text-primaryBlue text-sm font-semibold">
-                      EIN number
-                    </p>
-                    <p className="font-semibold">123456</p>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => setShowEditDocument(true)}
-                    className="bg-primaryBlue uppercase text-white font-medium px-5 py-1 rounded-lg hover:bg-primaryBlue/80 active:scale-95 transition"
-                  >
-                    Edit
-                  </button>
-                </div>
-                <div>
-                  <p className="text-primaryBlue text-sm font-semibold">
-                    Loading docks
-                  </p>
-                  <p className="font-semibold">1</p>
-                </div>
-              </div>
-             
             </div>
           </div>
         </div>

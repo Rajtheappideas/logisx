@@ -5,10 +5,10 @@ const initialState = {
   showActiveJobDetails: false,
   activeComponent: "active jobs",
   activeHeader: "jobs",
-  showShippedDetails: false,
   showSearchComponent: false,
   showBidUploadComponent: false,
   showChatSidebar: false,
+  fcmToken: null,
 };
 
 const logoutChannel = new BroadcastChannel("handleLogout");
@@ -21,9 +21,7 @@ const globalStates = createSlice({
     handleChangeActiveJobDetails: (state, { payload }) => {
       state.showActiveJobDetails = payload;
     },
-    handleChangeShippedDetails: (state, { payload }) => {
-      state.showShippedDetails = payload;
-    },
+
     handleChangeActiveComponent: (state, { payload }) => {
       state.activeComponent = payload;
     },
@@ -63,6 +61,9 @@ const globalStates = createSlice({
         loginChannel.close();
       };
     },
+    handleChangeFcmToken: (state, { payload }) => {
+      state.fcmToken = payload;
+    },
   },
 });
 
@@ -70,7 +71,6 @@ export const {
   handleChangeActiveJobDetails,
   handleChangeActiveComponent,
   handleChangeActiveHeader,
-  handleChangeShippedDetails,
   handleChangeShowBidUploadComponent,
   handleChangeShowSearchComponent,
   handleChangeShowChatSidebar,
@@ -78,6 +78,7 @@ export const {
   handleSuccess,
   loginAllTabsEventListener,
   logoutAllTabsEventListener,
+  handleChangeFcmToken,
 } = globalStates.actions;
 
 export default globalStates.reducer;

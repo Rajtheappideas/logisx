@@ -10,7 +10,7 @@ import { useEffect } from "react";
 import useAbortApiCall from "../../../hooks/useAbortApiCall";
 
 const EditProfile = ({ setShowProfile }) => {
-  const { loading, user } = useSelector((state) => state.root.auth);
+  const { loading, user, token } = useSelector((state) => state.root.auth);
 
   const { AbortControllerRef, abortApiCall } = useAbortApiCall();
 
@@ -72,6 +72,7 @@ const EditProfile = ({ setShowProfile }) => {
         fname,
         lname,
         companyName,
+        token,
         signal: AbortControllerRef,
       })
     );

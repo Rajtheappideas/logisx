@@ -14,7 +14,7 @@ const ChangePassword = () => {
   const [showCurrentPassword, setshowCurrentPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
 
-  const { loading } = useSelector((state) => state.root.auth);
+  const { loading, token } = useSelector((state) => state.root.auth);
 
   const { AbortControllerRef, abortApiCall } = useAbortApiCall();
 
@@ -49,6 +49,7 @@ const ChangePassword = () => {
     register,
     handleSubmit,
     getValues,
+    reset,
     formState: { errors },
   } = useForm({
     shouldFocusError: true,
@@ -66,6 +67,7 @@ const ChangePassword = () => {
       handleChangePassword({
         oldPassword: currentPassword,
         newPassword,
+        token,
         signal: AbortControllerRef,
       })
     );
@@ -73,6 +75,7 @@ const ChangePassword = () => {
       response.then((res) => {
         if (res?.payload?.status === "success") {
           toast.success("Password change successfully.", { duration: 2000 });
+          reset();
         } else if (res?.payload?.status === "error") {
           toast.error(res?.payload?.message);
         }

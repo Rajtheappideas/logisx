@@ -1,6 +1,6 @@
-// import { io } from "socket.io-client";
+import { io } from "socket.io-client";
 
-// const URL =
-//   process.env.NODE_ENV === "production" ? undefined : "http://localhost:3000";
-
-// export const socket = io("https://logisx.uc.r.appspot.com");
+export const socket = io("https://logisx.uc.r.appspot.com", {
+  transports: ["websocket", "polling", "flashsocket"],
+  autoConnect: false,
+});

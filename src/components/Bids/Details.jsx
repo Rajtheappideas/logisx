@@ -5,11 +5,13 @@ import CounterOfferModal from "../CounterOfferModal";
 import { useSelector } from "react-redux";
 import CancelBidModal from "../CancelBidModal";
 
-const Details = () => {
+const Details = ({ singleBidProposal }) => {
   const [showCounterOfferModal, setShowCounterOfferModal] = useState(false);
   const [showCancelBidModal, setShowCancelBidModal] = useState(false);
 
   const { activeComponent } = useSelector((state) => state.root.globalStates);
+
+  // console.log(singleBidProposal);
 
   return (
     <>
@@ -32,10 +34,11 @@ const Details = () => {
             />
             <div>
               <p className="lg:text-2xl text-sm text-[#4D4D4D] font-bold">
-                Kate Smith
+                {singleBidProposal?.truckerId?.fname}{" "}
+                {singleBidProposal?.truckerId?.lname}
               </p>
               <p className="text-disableGray text-sm font-semibold">
-                Company, LLC
+                {singleBidProposal?.truckerId?.companyName}
               </p>
             </div>
           </div>
@@ -48,31 +51,30 @@ const Details = () => {
           </div>
           {/* amount */}
           <p className="text-textPurple md:text-2xl text-sm font-semibold flex justify-end mx-2">
-            $ 1000
+            $ {singleBidProposal?.amount}
           </p>
         </div>
         <p className="text-sm text-disableGray">Trip detail</p>
+        {/* departure */}
         <div className="flex justify-between relative">
           <div className="flex items-start">
             <TfiLocationPin className="text-primaryBlue text-2xl" />
             <div className="mx-2">
               <p className="lg:text-md text:sm font-semibold">
-                East Chicago Port
-              </p>
-              <p className="text-textColorGray lg:text-md text-sm">
-                Chicago, IL 69070
+                {singleBidProposal?.jobId?.departureLocation}
               </p>
             </div>
           </div>
           <div className="">
-            <p className="flex justify-end">Mar 7</p>
+            {/* <p className="flex justify-end">{singleActiveBid?.}</p> */}
             <p className="text-textColorGray lg:text-md text-sm ">
-              7:00 am CST
+              {singleBidProposal?.jobId?.departureTime}
             </p>
           </div>
           {/* line */}
           <div className="absolute top-[26px] left-[11px] h-8 w-0.5 bg-gray-400 rounded-sm"></div>
         </div>
+        {/* check in  */}
         <div className="flex justify-between relative">
           <div className="flex items-start">
             <BsCircleFill className="text-textColorGray text-sm ml-1.5 mt-0.5 pr-0.5" />
@@ -83,44 +85,58 @@ const Details = () => {
           </div>
           <div className="">
             <p className="flex justify-end">Mar 8</p>
-            <p className="text-textColorGray lg:text-md text-sm ">
-              12:00 am CST
-            </p>
+            <p className="text-textColorGray lg:text-md text-sm ">12:00 am</p>
           </div>
           {/* line */}
           <div className="absolute top-[21px] left-[11px] h-9 w-0.5 bg-gray-400 rounded-sm"></div>
         </div>
+        {/* arrival */}
         <div className="flex justify-between">
           <div className="flex items-start">
             <TfiLocationPin className="text-greenColor text-2xl" />
             <div className="mx-2">
               <p className="lg:text-md text-sm font-semibold">
-                East Chicago Port
+                {singleBidProposal?.jobId?.arrivalLocation}
               </p>
-              <p className="text-textColorGray lg:text-md text-sm">
+              {/* <p className="text-textColorGray lg:text-md text-sm">
                 Chicago, IL 69070
-              </p>
+              </p> */}
             </div>
           </div>
-          <div className="">
-            <p className="flex justify-end">Mar 7</p>
+          <div className="text-right">
+            <p>{singleBidProposal?.jobId?.arrivalDate}</p>
             <p className="text-textColorGray lg:text-md text-sm ">
-              7:00 am CST
+              {singleBidProposal?.jobId?.arrivalTime}
             </p>
           </div>
         </div>
+        {/* equipment */}
         <p className="text-textColorGray lg:text-md text-sm">
           Equipment needed
         </p>
-        <div className="flex">
-          <input type="checkbox" className="" />
-          <p className="mx-2 font-semibold">Dry van</p>
-        </div>
+        {singleBidProposal?.jobId?.equipment.length > 0 ? (
+          singleBidProposal?.jobId?.equipment.map((equip) => (
+            <div className="flex items-center gap-2" key={equip}>
+              <input type="checkbox" className="" />
+              <p className=" font-semibold">{equip}</p>
+            </div>
+          ))
+        ) : (
+          <div>No Equipment</div>
+        )}
+        {/* endorment */}
         <p className="text-textColorGray lg:text-md text-sm">Endorsements</p>
-        <div className="flex">
-          <input type="checkbox" className="" />
-          <p className="mx-2 font-semibold">TWIC</p>
-        </div>
+        {singleBidProposal?.jobId?.endorsement.length > 0 ? (
+          singleBidProposal?.jobId?.endorsement.map((endorsment) => (
+            <div className="flex items-center gap-2" key={endorsment}>
+              <input type="checkbox" className="" />
+              <p className=" font-semibold">{endorsment}</p>
+            </div>
+          ))
+        ) : (
+          <div>No endrosment</div>
+        )}
+        {/* specification */}
         <p className="text-textColorGray lg:text-md text-sm">Specification</p>
         <div className="flex">
           <p className="text-sm font-semibold">
@@ -132,47 +148,7 @@ const Details = () => {
         <p className="text-textColorGray lg:text-md text-sm">
           Delivery history
         </p>
-        <div className="w-full border border-boxBroder rounded-xl md:p-4 p-2">
-          <div className="flex justify-between relative">
-            <div className="flex items-start">
-              <TfiLocationPin className="text-primaryBlue text-2xl" />
-              <div className="mx-2">
-                <p className="lg:text-sm text:sm font-semibold">
-                  East Chicago Port
-                </p>
-                <p className="text-textColorGray text-sm">Chicago, IL 69070</p>
-              </div>
-            </div>
-            <div className="">
-              <p className="flex justify-end">Mar 7</p>
-              <p className="text-textColorGray lg:text-md text-sm ">
-                7:00 am CST
-              </p>
-            </div>
-            {/* line */}
-            <div className="absolute top-[26px] left-[11px] h-8 w-0.5 bg-gray-400 rounded-sm"></div>
-          </div>
-          <div className="flex justify-between pt-4">
-            <div className="flex items-start">
-              <TfiLocationPin className="text-greenColor text-2xl" />
-              <div className="mx-2">
-                <p className="text-sm font-semibold">Kalamazoo Distribution</p>
-                <p className="text-textColorGray text-sm">
-                  Kalamazoo, MI 28904
-                </p>
-              </div>
-            </div>
-            <div className="">
-              <p className="flex justify-end">Mar 9</p>
-              <p className="text-textColorGray  text-sm">4:00 pm CST</p>
-            </div>
-          </div>
-          <p className="text-sm pt-3">
-            Job description placed here. This is just a text holder for the
-            meant time.
-          </p>
-        </div>
-        {activeComponent === "pending bids" && (
+        {singleBidProposal?.jobId?.history.length > 0 ? (
           <div className="w-full border border-boxBroder rounded-xl md:p-4 p-2">
             <div className="flex justify-between relative">
               <div className="flex items-start">
@@ -193,7 +169,7 @@ const Details = () => {
                 </p>
               </div>
               {/* line */}
-              <div className="absolute top-[26px] left-[11px] h-7 w-0.5 bg-gray-400 rounded-sm"></div>
+              <div className="absolute top-[26px] left-[11px] h-8 w-0.5 bg-gray-400 rounded-sm"></div>
             </div>
             <div className="flex justify-between pt-4">
               <div className="flex items-start">
@@ -217,7 +193,10 @@ const Details = () => {
               meant time.
             </p>
           </div>
+        ) : (
+          <div>No Histroy.</div>
         )}
+       
 
         {/* btns */}
         {activeComponent === "pending bids" && (

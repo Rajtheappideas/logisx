@@ -3,7 +3,7 @@ import { GetUrl, commonGetUrl } from "../Baseurl";
 import { toast } from "react-hot-toast";
 
 export const handleGetFaqs = createAsyncThunk(
-  "auth/handleGetFaqs",
+  "getContent/handleGetFaqs",
   async ({ signal }, { rejectWithValue }) => {
     try {
       signal.current = new AbortController();
@@ -21,7 +21,7 @@ export const handleGetFaqs = createAsyncThunk(
 );
 
 export const handleGetTerms = createAsyncThunk(
-  "auth/handleGetTerms",
+  "getContent/handleGetTerms",
   async ({ signal }, { rejectWithValue }) => {
     try {
       signal.current = new AbortController();
@@ -39,7 +39,7 @@ export const handleGetTerms = createAsyncThunk(
 );
 
 export const handleGetPrivacy = createAsyncThunk(
-  "auth/handleGetPrivacy",
+  "getContent/handleGetPrivacy",
   async ({ signal }, { rejectWithValue }) => {
     try {
       signal.current = new AbortController();
@@ -57,7 +57,7 @@ export const handleGetPrivacy = createAsyncThunk(
 );
 
 export const handleGetChat = createAsyncThunk(
-  "auth/handleGetChat",
+  "getContent/handleGetChat",
   async ({ token, signal }, { rejectWithValue }) => {
     try {
       signal.current = new AbortController();

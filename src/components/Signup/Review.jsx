@@ -2,12 +2,8 @@ import React, { memo } from "react";
 import { useEffect } from "react";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import {
-  handleChangeShowSignupProcess,
-  handleRegisterUser,
-} from "../../redux/AuthSlice";
+import { handleRegisterUser } from "../../redux/AuthSlice";
 import useAbortApiCall from "../../hooks/useAbortApiCall";
-import bcrypt from "bcryptjs";
 import { toast } from "react-hot-toast";
 
 const Review = memo(({ setStep, getValues, fcmToken, reset }) => {
@@ -28,7 +24,6 @@ const Review = memo(({ setStep, getValues, fcmToken, reset }) => {
     totalDocks,
     dockNumbers,
     photo,
-    profile,
   } = getValues();
 
   const [displayImages, setDisplayImages] = useState([]);
@@ -79,6 +74,9 @@ const Review = memo(({ setStep, getValues, fcmToken, reset }) => {
             toast.success("Account created successfully");
             setStep(6);
             reset();
+          } else if (res.payload.status === "error") {
+            toast.error(res.payload.message);
+          
           }
           setLoading(false);
         })

@@ -8,12 +8,14 @@ const PrivateRoute = ({ children }) => {
   const { user } = useSelector((state) => state.root.auth);
 
   const navigate = useNavigate();
+
   useEffect(() => {
     if (user === null) {
-      toast.error("Please sign-in first!!!");
+      // toast.error("Please sign-in first!!!");
       navigate("/auth");
     }
   }, []);
+
   return <div>{children}</div>;
 };
 
