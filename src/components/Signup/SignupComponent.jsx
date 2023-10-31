@@ -4,30 +4,14 @@ import { useDispatch } from "react-redux";
 import { BsEyeFill, BsEyeSlashFill } from "react-icons/bs";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
 import { handleChangeShowSignupProcess } from "../../redux/AuthSlice";
-import { handleChangeActiveComponent } from "../../redux/globalStates";
-import { useNavigate } from "react-router-dom";
+import { signUpComponentSchema } from "../../yupValidations/validation";
 
 const SignupComponent = memo(({ setStep, setValue, getValues }) => {
   const [showPassword, setshowPassword] = useState(false);
   const dispatch = useDispatch();
 
-  const signinSchema = yup.object({
-    email: yup.string().email().required("Email is required").trim(),
-    password: yup
-      .string()
-      .required("Password is required")
-      .matches(
-        /^(?=.*?[A-Z])(?=.*?[a-z])(?!.*?[=?<>()'"\/\&]).{10,20}$/,
-        "Please create a strong password."
-      )
-      .trim(),
-  });
-
   const { email, password } = getValues();
-
-  const navigate = useNavigate();
 
   const {
     handleSubmit,
@@ -35,7 +19,7 @@ const SignupComponent = memo(({ setStep, setValue, getValues }) => {
     formState: { errors },
   } = useForm({
     shouldFocusError: true,
-    resolver: yupResolver(signinSchema),
+    resolver: yupResolver(signUpComponentSchema),
     defaultValues: { email, password },
   });
 

@@ -15,7 +15,7 @@ const RequestBid = () => {
   const { activeHeader } = useSelector((state) => state.root.globalStates);
 
   return (
-    <div className="w-full min-h-screen lg:p-10 md:p-5 p-2 space-y-3">
+    <div className="w-full min-h-screen space-y-3">
       {/* <p className="md:text-2xl text-lg font-semibold xl:px-32 lg:px-10 md:px-5 px-3">
         Request for BID
       </p> */}
@@ -29,7 +29,9 @@ const RequestBid = () => {
         )}
         {/* single bid upload components */}
         {activeBidComponent === "pick_up_info" &&
-          bidUploadType === "single_bid" && <PickUpinfo />}
+          bidUploadType === "single_bid" && (
+            <PickUpinfo setActiveBidComponent={setActiveBidComponent} />
+          )}
 
         {/* mutilple bid upload */}
         {activeBidComponent === "upload_docs" &&

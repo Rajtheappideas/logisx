@@ -4,42 +4,12 @@ import { handleChangeShowSignupProcess } from "../../redux/AuthSlice";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
+import { tellusschema } from "../../yupValidations/validation";
 
 const TellUsAbout = memo(({ setStep, setValue, getValues, setOpenTab }) => {
   const { fname, lname, companyName } = getValues();
 
   const dispatch = useDispatch();
-
-  const tellusschema = yup.object({
-    fname: yup
-      .string()
-      .required("firstname is required")
-      .trim()
-      .max(60, "Max character limit reached")
-      .min(2, "minimum two character required")
-      .typeError("Only characters allowed")
-      .matches(
-        /^([A-Za-z\u00C0-\u00D6\u00D8-\u00f6\u00f8-\u00ff\s]*)$/gi,
-        "only contain Latin letters."
-      ),
-    lname: yup
-      .string()
-      .required("lastname is required")
-      .trim()
-      .max(60, "Max character limit reached")
-      .min(2, "minimum two character required")
-      .typeError("Only characters allowed")
-      .matches(
-        /^([A-Za-z\u00C0-\u00D6\u00D8-\u00f6\u00f8-\u00ff\s]*)$/gi,
-        "only contain Latin letters."
-      ),
-    companyName: yup
-      .string()
-      .required("companyname is required")
-      .max(60, "Max character limit reached")
-      .min(2, "minimum three character required")
-      .trim(),
-  });
 
   const {
     handleSubmit,

@@ -106,7 +106,7 @@ const SingleJob = memo(({ setActiveBidId, jobDescription, data }) => {
           onClick={() => handleDispatch()}
         >
           view{" "}
-          {(activeComponent === "pending_bids" ||
+          {(activeComponent === "pending bids" ||
             jobDescription !== undefined) &&
             "Bids"}
         </button>

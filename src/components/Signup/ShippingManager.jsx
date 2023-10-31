@@ -10,6 +10,7 @@ import {
 } from "react-phone-number-input";
 import { toast } from "react-hot-toast";
 import { useState } from "react";
+import { shippingSchema } from "../../yupValidations/validation";
 
 const ShippingManager = memo(({ setStep, setValue, getValues }) => {
   const { shipperFname, shipperLname, shipperEmail, shipperPhone } =
@@ -18,33 +19,6 @@ const ShippingManager = memo(({ setStep, setValue, getValues }) => {
   const [phoneNumber, setPhoneNumber] = useState(
     shipperPhone !== "" ? shipperPhone : ""
   );
-
-  const shippingSchema = yup.object({
-    shipperFname: yup
-      .string()
-      .required("firstname is required")
-      .max(60, "Max character limit reached")
-      .min(2, "minimum two character required")
-      .typeError("Only characters allowed")
-      .matches(
-        /^([A-Za-z\u00C0-\u00D6\u00D8-\u00f6\u00f8-\u00ff\s]*)$/gi,
-        "only contain Latin letters."
-      )
-      .trim(),
-    shipperLname: yup
-      .string()
-      .required("lastname is required")
-      .max(60, "Max character limit reached")
-      .min(2, "minimum two character required")
-      .typeError("Only characters allowed")
-      .matches(
-        /^([A-Za-z\u00C0-\u00D6\u00D8-\u00f6\u00f8-\u00ff\s]*)$/gi,
-        "only contain Latin letters."
-      )
-      .trim(),
-    shipperEmail: yup.string().required("email is required").trim(),
-    shipperPhone: yup.string().required("phone is required").trim(),
-  });
 
   const {
     handleSubmit,

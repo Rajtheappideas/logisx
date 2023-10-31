@@ -152,6 +152,7 @@ const initialState = {
   favorites: [],
   bidProposals: [],
   showBidProposal: false,
+  showBidDetails: false,
 };
 
 const BidSlice = createSlice({
@@ -160,6 +161,9 @@ const BidSlice = createSlice({
   reducers: {
     handleChangeShowBidProposal: (state, { payload }) => {
       state.showBidProposal = payload;
+    },
+    handleChangeShowBidDetails: (state, { payload }) => {
+      state.showBidDetails = payload;
     },
   },
   extraReducers: (builder) => {
@@ -285,6 +289,7 @@ const BidSlice = createSlice({
   },
 });
 
-export const { handleChangeShowBidProposal } = BidSlice.actions;
+export const { handleChangeShowBidProposal, handleChangeShowBidDetails } =
+  BidSlice.actions;
 
 export default BidSlice.reducer;

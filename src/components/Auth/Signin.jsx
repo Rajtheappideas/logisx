@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
 import { BsEyeFill, BsEyeSlashFill } from "react-icons/bs";
 import { Link, useNavigate } from "react-router-dom";
 import {
@@ -11,11 +10,9 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-hot-toast";
 import useAbortApiCall from "../../hooks/useAbortApiCall";
-import {
-  handleChangeActiveComponent,
-  handleSuccess,
-} from "../../redux/globalStates";
+import { handleSuccess } from "../../redux/globalStates";
 import { socket } from "../../Socket";
+import { signinSchema } from "../../yupValidations/validation";
 
 const Signin = ({ fcmToken }) => {
   const [showPassword, setshowPassword] = useState(false);
@@ -26,11 +23,6 @@ const Signin = ({ fcmToken }) => {
   const navigate = useNavigate();
 
   const { AbortControllerRef, abortApiCall } = useAbortApiCall();
-
-  const signinSchema = yup.object({
-    email: yup.string().email().required("Email is required").trim(),
-    password: yup.string().required("Password is required").trim(),
-  });
 
   const {
     register,
@@ -62,7 +54,7 @@ const Signin = ({ fcmToken }) => {
           toast.success("Sign in Successfully.", { duration: 2000 });
           dispatch(handleSuccess());
           dispatch(handleChangeShowSignupProcess(false));
-          socket.emit("join", { id: res.payload?.shipper?._id }).connect();
+          // socket.emit("join", { id: res.payload?.shipper?._id }).connect();
           navigate("/");
         } else if (res?.payload?.status === "error") {
           toast.error(res?.payload?.message);

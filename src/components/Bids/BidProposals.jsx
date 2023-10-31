@@ -1,14 +1,19 @@
 import React, { memo, useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Baseurl from "../../Baseurl";
 import BidDetails from "./BidDetails";
+import { BsArrowLeft } from "react-icons/bs";
+import { handleChangeActiveComponent } from "../../redux/globalStates";
+import { handleChangeShowBidProposal } from "../../redux/BidSlice";
 
-const BidProposals = () => {
+const BidProposals = ({ setActiveBidId }) => {
   const [showBidProposalDetails, setShowBidProposalDetails] = useState(false);
   const [singleBidProposal, setSingleBidProposal] = useState(null);
   const [showTruckerDetails, setShowTruckerDetails] = useState(false);
 
   const { bidProposals } = useSelector((state) => state.root.bid);
+
+  const dispatch = useDispatch();
 
   const findProposal = (id) => {
     const proposal = bidProposals.find((proposal) => proposal._id === id);
@@ -26,6 +31,10 @@ const BidProposals = () => {
     }
   };
 
+  const handleBackToBids = () => {
+    dispatch(handleChangeShowBidProposal(false));
+  };
+
   return (
     <>
       {showBidProposalDetails ? (
@@ -35,8 +44,14 @@ const BidProposals = () => {
         />
       ) : (
         <div className="w-full space-y-3">
-          <p className="md:text-2xl text-lg text-primaryBlue font-semibold capitalize">
-            Bid proposals
+          <p
+            onClick={() => {
+              handleBackToBids();
+            }}
+            className="md:text-2xl text-lg inline-block cursor-pointer text-primaryBlue font-semibold capitalize"
+          >
+            <BsArrowLeft size={30} className="inline-block mb-1" /> Bid
+            proposals
           </p>
           <div className="w-full grid xl:grid-cols-2 place-items-start items-start gap-3">
             {bidProposals.length > 0 ? (

@@ -21,6 +21,7 @@ import BidProposals from "./BidProposals";
 const Bids = () => {
   const [view, setView] = useState("grid");
   const [activeBidId, setActiveBidId] = useState(null);
+  const [shwoBidDetails, setShwoBidDetails] = useState(false);
 
   const { activeComponent } = useSelector((state) => state.root.globalStates);
 
@@ -37,6 +38,7 @@ const Bids = () => {
     dispatch(handleGetPendingBids({ token, signal: AbortControllerRef }));
     // dispatch(handleGetShippedBids({ token, signal: AbortControllerRef }));
     // dispatch(handleGetCancelledBids({ token, signal: AbortControllerRef }));
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
 
   useEffect(() => {
@@ -58,11 +60,9 @@ const Bids = () => {
           <div className="loading">Loading...</div>
         ) : (
           <>
-            {showBidProposal &&
-              activeComponent === "pending bids" &&
-              activeBidId !== null && (
-                <BidProposals setActiveBidId={setActiveBidId} />
-              )}
+            {showBidProposal && activeBidId !== null && (
+              <BidProposals setActiveBidId={setActiveBidId} />
+            )}
             {!showBidProposal && (
               <div className="md:space-y-3 space-y-2">
                 {/* title + btns */}
@@ -140,7 +140,7 @@ const Bids = () => {
                         )}
                       </div>
                     ) : (
-                      <TableViewBid />
+                      <TableViewBid setShowBidDetails={setShwoBidDetails} />
                     )}
                   </>
                 )}

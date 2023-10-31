@@ -44,7 +44,6 @@ const ForgotPassword = ({ setOpenComponent }) => {
         if (res?.payload?.status === "success") {
           setOpenComponent("verification");
           toast.success(res.payload.message);
-          console.log(res.payload.otp);
           dispatch(handleChangeEmail(getValues().email));
         } else if (res?.payload?.status === "error") {
           toast.error(res?.payload?.message);

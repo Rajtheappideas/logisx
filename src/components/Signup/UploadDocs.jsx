@@ -5,48 +5,13 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { toast } from "react-hot-toast";
 import { useEffect } from "react";
+import { uploadDocsSchema } from "../../yupValidations/validation";
 
 const UploadDocs = memo(({ setStep, setValue, getValues }) => {
   const { ein, totalDocks, dockNumbers, photo } = getValues();
 
   const [photos, setPhotos] = useState(photo.length > 0 ? photo : []);
   const [displayImages, setDisplayImages] = useState([]);
-
-  const uploadDocsSchema = yup.object({
-    ein: yup
-      .string()
-      .required("ein is required")
-      .max(20, "20 Max limit reached")
-      .min(2, "minimum two digits required")
-      .typeError("Only characters allowed")
-      .trim(),
-    totalDocks: yup
-      .string()
-      .required("totaldocks is required")
-      .matches(/[0-9]{1,3}$/, "Max 3 digit allowed ")
-      .typeError("totaldocks is required, only numbers allowed"),
-    dockNumbers: yup
-      .string()
-      .required("totaldocks is required")
-      .max(10, "only 10 digit number allowed")
-      .min(1, "add atleast 1 digit number")
-      .matches(/[0-9]{1,10}$/, "Max 10 digit allowed ")
-      .typeError("totaldocks is required, only numbers allowed"),
-    photo: yup
-      .mixed()
-      .required("photo is required")
-      .test("is-valid-size", "Max allowed size is 1 MB", (value) => {
-        for (const item of value) {
-          return item?.size < 1_000_000;
-        }
-      })
-      .test("is_valid_type", "Not valid image type", (value) => {
-        for (const item of value) {
-          return item.name.includes("png", "jpg", "jpeg");
-        }
-      })
-      .typeError("Photos is required."),
-  });
 
   const {
     handleSubmit,

@@ -23,7 +23,7 @@ const Favourites = () => {
               />
             ))
           ) : (
-            <div className="loading">No Favorites here.</div>
+            <div className="loading col-span-full">No Favorites here.</div>
           )}
         </div>
       </div>

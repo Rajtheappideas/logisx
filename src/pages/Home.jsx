@@ -19,6 +19,9 @@ import {
 import useAbortApiCall from "../hooks/useAbortApiCall";
 import { handleGetDocuments } from "../redux/DocumentSlice";
 import { handleGetFavorites } from "../redux/FavoriteSlice";
+import toast from "react-hot-toast";
+import { handleLogout } from "../redux/AuthSlice";
+import { handleLogoutFromAllTabs } from "../redux/globalStates";
 
 const Home = () => {
   const dispatch = useDispatch();
@@ -29,10 +32,27 @@ const Home = () => {
     useSelector((state) => state.root.globalStates);
   const { user, token } = useSelector((state) => state.root.auth);
 
+  const handleFetchDocuments = () => {
+    const response = dispatch(
+      handleGetChat({ token, signal: AbortControllerRef })
+    );
+    if (response) {
+      response.then((res) => {
+        if (res?.payload?.status === "fail" && res?.payload?.code === 423) {
+          window.localStorage.clear();
+          toast.error(res?.payload?.message);
+          dispatch(handleLogout());
+          dispatch(handleLogoutFromAllTabs());
+        }
+      });
+    }
+  };
+
   useEffect(() => {
     if (user !== null) {
       dispatch(handleGetChat({ token, signal: AbortControllerRef }));
-      dispatch(handleGetDocuments({ token, signal: AbortControllerRef }));
+      // dispatch(handleGetDocuments({ token, signal: AbortControllerRef }));
+      handleFetchDocuments();
       dispatch(handleGetFavorites({ token, signal: AbortControllerRef }));
     }
     dispatch(handleGetFaqs({ signal: AbortControllerRef }));

@@ -1,10 +1,15 @@
 import React from "react";
+import { useEffect } from "react";
 
 const RequestForBid = ({
   setBidUploadType,
   bidUploadType,
   setActiveBidComponent,
 }) => {
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
+
   return (
     <div>
       <p className="md:text-2xl text-lg text-primaryBlue font-semibold">

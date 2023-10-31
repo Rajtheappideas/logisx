@@ -1,12 +1,42 @@
+import { yupResolver } from "@hookform/resolvers/yup";
 import React from "react";
+import { useForm } from "react-hook-form";
+import { useDispatch } from "react-redux";
 
-const PickUpinfoStep1 = () => {
+const PickUpinfoStep1 = ({
+  setStep,
+  getValues,
+  setValue,
+  setActiveBidComponent,
+}) => {
+  const dispatch = useDispatch();
+
+  const { email, password } = getValues();
+
+  const {
+    handleSubmit,
+    register,
+    formState: { errors },
+  } = useForm({
+    shouldFocusError: true,
+    // resolver: yupResolver(signUpComponentSchema),
+    defaultValues: { email, password },
+  });
+
+  const onSubmit = (data) => {
+    const { email, password } = data;
+    setValue("email", email);
+    setValue("password", password);
+    // dispatch(handleChangeShowSignupProcess(true));
+    setStep(2);
+  };
+
   return (
     <>
       <p className="md:text-2xl text-lg text-primaryBlue font-semibold">
         Pick-up info
       </p>
-      <form className="w-full">
+      <form onSubmit={handleSubmit(onSubmit)} className="w-full">
         <div className="grid lg:grid-cols-2 md:gap-5 gap-3 w-full">
           {/* Departure location */}
           <div className="w-full md:space-y-3 space-y-2">
@@ -158,6 +188,20 @@ const PickUpinfoStep1 = () => {
               placeholder="$1000"
               className="w-full p-3 rounded-lg focus:border-primaryBlue focus:border-2 border outline-none"
             />
+          </div>
+          <div className="w-full col-span-full flex items-center justify-between md:flex-row flex-col gap-2">
+            <button
+              onClick={() => setActiveBidComponent("bid_upload")}
+              type="button"
+              className="blue_button w-1/4 uppercase"
+            >
+              back
+            </button>
+
+            <div>1 of 3</div>
+            <button type="submit" className="blue_button w-1/4 uppercase">
+              NEXT
+            </button>
           </div>
         </div>
       </form>

@@ -16,7 +16,6 @@ export function GetToken(setToken, setLoading) {
       }
     })
     .catch((err) => {
-      console.log(err);
       toast.error("Allowed notification for go further");
       setLoading(false);
     });
@@ -33,7 +32,6 @@ export function GetToken(setToken, setLoading) {
           }
         })
         .catch((err) => {
-          console.log(err);
           toast.error("Allowed notification for go further");
           setLoading(false);
         });

@@ -1,12 +1,16 @@
 import React from "react";
+import { useState } from "react";
 import { BiChevronsLeft, BiChevronsRight } from "react-icons/bi";
 import { BsEye } from "react-icons/bs";
 import { FaHeart } from "react-icons/fa";
 import { FiHeart } from "react-icons/fi";
 import ReactPaginate from "react-paginate";
 import { useDispatch, useSelector } from "react-redux";
+import { handleChangeShowBidDetails } from "../../redux/BidSlice";
 
 const TableViewBid = ({ setShowBidDetails }) => {
+  const [pageNumber, setPageNumber] = useState(0);
+
   const dispatch = useDispatch();
 
   const { activeComponent } = useSelector((state) => state.root.globalStates);
@@ -17,6 +21,16 @@ const TableViewBid = ({ setShowBidDetails }) => {
 
   const handleDispatchOnclick = (id) => {
     setShowBidDetails(true);
+  };
+
+  // pagination logic
+  const bisPerPage = 8;
+  const pageVisited = pageNumber * bisPerPage;
+  const displayBids = pendingBids.slice(pageVisited, bisPerPage + pageVisited);
+  const pageCount = Math.ceil(pendingBids.length / bisPerPage);
+  const changePage = ({ selected }) => {
+    setPageNumber(selected);
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   return (
@@ -38,8 +52,8 @@ const TableViewBid = ({ setShowBidDetails }) => {
             </tr>
           </thead>
           <tbody className="w-full">
-            {activeComponent === "shipped" && pendingBids.length > 0 ? (
-              pendingBids.map((bid) => (
+            {activeComponent === "pending bids" && pendingBids.length > 0 ? (
+              displayBids.map((bid) => (
                 <tr
                   key={bid?._id}
                   className="border-b border-gray-200 w-full text-left"
@@ -82,6 +96,7 @@ const TableViewBid = ({ setShowBidDetails }) => {
                     <button
                       onClick={() => {
                         handleDispatchOnclick(bid?._id);
+                        dispatch(handleChangeShowBidDetails(true));
                       }}
                       type="button"
                       className="hover:bg-gray-200 p-1 rounded-full h-10 w-10"
@@ -99,10 +114,22 @@ const TableViewBid = ({ setShowBidDetails }) => {
       </div>
       <div className="flex items-center justify-between py-5">
         <p className="font-medium md:text-base text-sm text-textBlack">
-          Showing 4 from 4 data
+          Showing{" "}
+          {pendingBids.length > 0
+            ? pageNumber * bisPerPage === 0
+              ? 1
+              : pageNumber * bisPerPage + 1
+            : 0}{" "}
+          from{" "}
+          {pendingBids.length < bisPerPage
+            ? pendingBids.length
+            : bisPerPage * (pageNumber + 1) > pendingBids.length
+            ? pendingBids?.length
+            : bisPerPage * (pageNumber + 1)}{" "}
+          bids
         </p>
         <ReactPaginate
-          //   onPageChange={changePage}
+          onPageChange={changePage}
           previousLabel={
             <BiChevronsLeft className="text-blue-500 text-2xl" role="button" />
           }
@@ -115,7 +142,8 @@ const TableViewBid = ({ setShowBidDetails }) => {
           breakLinkClassName="page-link"
           pageRangeDisplayed={1}
           marginPagesDisplayed={1}
-          pageCount={1}
+          pageCount={pageCount}
+          forcePage={pageNumber}
           containerClassName="pagination"
           activeClassName="py-2 px-4 bg-primaryBlue cursor-pointer text-white rounded-lg text-center"
           className="shadow-sm p-2 font-semibold text-textColor rounded-lg flex items-center md:gap-x-2 gap-x-1"
