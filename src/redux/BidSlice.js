@@ -21,6 +21,33 @@ export const handleGetPendingBids = createAsyncThunk(
   }
 );
 
+export const handleRequestBid = createAsyncThunk(
+  "bid/handleRequestBid",
+  async ({ data, token, signal }, { rejectWithValue }) => {
+    try {
+      signal.current = new AbortController();
+
+      const formData = new FormData();
+
+      for (const key in data) {
+        formData.append(key, data[key]);
+      }
+
+      const response = await PostUrl("request_bid", {
+        data: formData,
+        signal: signal.current.signal,
+        headers: { token, "Content-Type": "multipart/form-data" },
+      });
+      return response.data;
+    } catch (error) {
+      if (error?.response) {
+        toast.error(error?.response?.data?.message);
+      }
+      return rejectWithValue(error?.response?.data);
+    }
+  }
+);
+
 export const handleBidProposals = createAsyncThunk(
   "bid/handleBidProposals",
   async ({ jobId, token, signal }, { rejectWithValue }) => {
@@ -138,11 +165,54 @@ export const handleGetFavorites = createAsyncThunk(
   }
 );
 
+export const handleAddtoFavorites = createAsyncThunk(
+  "bid/handleAddtoFavorites",
+  async ({ id, token, signal }, { rejectWithValue }) => {
+    try {
+      signal.current = new AbortController();
+      const response = await PostUrl("favorites/add", {
+        data: { id },
+        signal: signal.current.signal,
+        headers: { token },
+      });
+      return response.data;
+    } catch (error) {
+      if (error?.response) {
+        toast.error(error?.response?.data?.message);
+      }
+      return rejectWithValue(error?.response?.data);
+    }
+  }
+);
+
+export const handleRemoveFromFavorites = createAsyncThunk(
+  "bid/handleRemoveFromFavorites",
+  async ({ id, token, signal }, { rejectWithValue }) => {
+    try {
+      signal.current = new AbortController();
+      const response = await PostUrl("favorites/remove", {
+        data: { id },
+        signal: signal.current.signal,
+        headers: { token },
+      });
+      return response.data;
+    } catch (error) {
+      if (error?.response) {
+        toast.error(error?.response?.data?.message);
+      }
+      return rejectWithValue(error?.response?.data);
+    }
+  }
+);
+
 const initialState = {
   loading: false,
   jobLoading: false,
   bidLoading: false,
+  createBidLoading: false,
   favoriteLoading: false,
+  addFavoriteLoading: false,
+  removeFavoriteLoading: false,
   error: null,
   success: false,
   pendingBids: [],
@@ -164,6 +234,25 @@ const BidSlice = createSlice({
     },
     handleChangeShowBidDetails: (state, { payload }) => {
       state.showBidDetails = payload;
+    },
+    handelRemoveFavourite: (state, { payload }) => {
+      const modArr = state.favorites.filter((item) => item?._id !== payload);
+
+      if (modArr) {
+        state.favorites = modArr;
+        state.pendingBids = state.pendingBids.map((i) =>
+          i?._id === payload ? { ...i, isFavourite: false } : i
+        );
+      }
+    },
+    handelAddFavourite: (state, { payload }) => {
+      state.favorites = [...state.favorites, payload];
+      const modArr = state.pendingBids.map((i) =>
+        i?._id === payload ? { ...i, isFavourite: true } : i
+      );
+      if (modArr) {
+        state.pendingBids = modArr;
+      }
     },
   },
   extraReducers: (builder) => {
@@ -286,10 +375,72 @@ const BidSlice = createSlice({
       state.success = false;
       state.error = payload ?? null;
     });
+
+    // add favorites
+    builder.addCase(handleAddtoFavorites.pending, (state, {}) => {
+      state.addFavoriteLoading = true;
+      state.success = false;
+      state.error = null;
+    });
+    builder.addCase(handleAddtoFavorites.fulfilled, (state, { payload }) => {
+      state.addFavoriteLoading = false;
+      state.success = true;
+      state.error = null;
+    });
+    builder.addCase(handleAddtoFavorites.rejected, (state, { payload }) => {
+      state.addFavoriteLoading = false;
+      state.success = false;
+      state.error = payload ?? null;
+    });
+
+    // remove favorites
+    builder.addCase(handleRemoveFromFavorites.pending, (state, {}) => {
+      state.removeFavoriteLoading = true;
+      state.success = false;
+      state.error = null;
+    });
+    builder.addCase(
+      handleRemoveFromFavorites.fulfilled,
+      (state, { payload }) => {
+        state.removeFavoriteLoading = false;
+        state.success = true;
+        state.error = null;
+      }
+    );
+    builder.addCase(
+      handleRemoveFromFavorites.rejected,
+      (state, { payload }) => {
+        state.removeFavoriteLoading = false;
+        state.success = false;
+        state.error = payload ?? null;
+      }
+    );
+
+    // request bid
+    builder.addCase(handleRequestBid.pending, (state, {}) => {
+      state.createBidLoading = true;
+      state.success = false;
+      state.error = null;
+    });
+    builder.addCase(handleRequestBid.fulfilled, (state, { payload }) => {
+      state.createBidLoading = false;
+      state.success = true;
+      state.error = null;
+      state.pendingBids = [payload?.job, ...state.pendingBids];
+    });
+    builder.addCase(handleRequestBid.rejected, (state, { payload }) => {
+      state.createBidLoading = false;
+      state.success = false;
+      state.error = payload ?? null;
+    });
   },
 });
 
-export const { handleChangeShowBidProposal, handleChangeShowBidDetails } =
-  BidSlice.actions;
+export const {
+  handleChangeShowBidProposal,
+  handelRemoveFavourite,
+  handleChangeShowBidDetails,
+  handelAddFavourite,
+} = BidSlice.actions;
 
 export default BidSlice.reducer;

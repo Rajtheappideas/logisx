@@ -1,15 +1,32 @@
 import React, { memo } from "react";
-import { FiHeart } from "react-icons/fi";
 import { TfiLocationPin } from "react-icons/tfi";
 import { useDispatch, useSelector } from "react-redux";
 import { handleChangeActiveJobDetails } from "../redux/globalStates";
-import { RiTimerLine } from "react-icons/ri";
-import { handleChangeShowBidProposal } from "../redux/BidSlice";
+import { RiHeartFill, RiHeartLine, RiTimerLine } from "react-icons/ri";
+import {
+  handelAddFavourite,
+  handelRemoveFavourite,
+  handleAddtoFavorites,
+  handleChangeShowBidProposal,
+  handleRemoveFromFavorites,
+} from "../redux/BidSlice";
+import useAbortApiCall from "../hooks/useAbortApiCall";
+import toast from "react-hot-toast";
+import { useState } from "react";
+import { useEffect } from "react";
 
 const SingleJob = memo(({ setActiveBidId, jobDescription, data }) => {
+  const [IsFavourite, setIsFavourite] = useState(false);
+
   const { activeHeader, activeComponent } = useSelector(
     (state) => state.root.globalStates
   );
+  const { token } = useSelector((state) => state.root.auth);
+  const { addFavoriteLoading, removeFavoriteLoading } = useSelector(
+    (state) => state.root.bid
+  );
+
+  const { AbortControllerRef } = useAbortApiCall();
 
   const dispatch = useDispatch();
 
@@ -25,6 +42,53 @@ const SingleJob = memo(({ setActiveBidId, jobDescription, data }) => {
     }
   };
 
+  const handleAddAndRemoveFavourite = () => {
+    if (removeFavoriteLoading || addFavoriteLoading) return;
+    if (IsFavourite) {
+      toast.loading("Removing...");
+      const response = dispatch(
+        handleRemoveFromFavorites({
+          id: data?._id,
+          token,
+          signal: AbortControllerRef,
+        })
+      );
+      if (response) {
+        response.then((res) => {
+          if (res?.payload?.status === "success") {
+            toast.remove();
+            toast.success(data?.bidId + " " + "remove from favourites.");
+            dispatch(handelRemoveFavourite(data?._id));
+            setIsFavourite(false);
+          }
+        });
+      }
+    } else {
+      toast.loading("Adding...");
+      const response = dispatch(
+        handleAddtoFavorites({
+          id: data?._id,
+          token,
+          signal: AbortControllerRef,
+        })
+      );
+      if (response) {
+        response.then((res) => {
+          if (res?.payload?.status === "success") {
+            toast.remove();
+            toast.success(data?.bidId + " " + "Added to favourites.");
+            dispatch(handelAddFavourite(data?._id));
+            setIsFavourite(true);
+          }
+        });
+      }
+    }
+  };
+
+  useEffect(() => {
+    setIsFavourite(data?.isFavourite);
+  }, []);
+
   return (
     <div className="w-full border border-[#B8D2E0] md:p-4 p-2 rounded-2xl space-y-2">
       {/* title + icon */}
@@ -39,47 +103,53 @@ const SingleJob = memo(({ setActiveBidId, jobDescription, data }) => {
               <RiTimerLine className="mr-1 text-xl" />
             </>
           )}
-          <FiHeart role="button" className="text-2xl" />
+          <button type="button" onClick={handleAddAndRemoveFavourite}>
+            {IsFavourite ? (
+              <RiHeartFill size={30} color="red" />
+            ) : (
+              <RiHeartLine size={30} />
+            )}
+          </button>
         </div>
       </div>
-      {/* departure */}
-      <div className="flex justify-between relative w-full">
-        <div className="flex items-start w-1/3">
-          <TfiLocationPin className="text-primaryBlue text-2xl" />
-          <div className="ml-2">
-            <p className="lg:text-md text-sm font-semibold">
-              {data?.departureLocation}
+      <div className="relative w-full">
+        {/* departure */}
+        <div className="flex justify-between relative w-full">
+          <div className="flex items-start w-1/2">
+            <TfiLocationPin className="text-primaryBlue min-h-[1.5rem] min-w-[1.5rem]" />
+            <div className="ml-2">
+              <p className="lg:text-md text-sm font-semibold">
+                {data?.departureLocation}
+              </p>
+            </div>
+          </div>
+          <div className="w-1/3 text-right">
+            <p>{data?.departureDate}</p>
+            <p className="text-textLightGray lg:text-md text-sm">
+              {data?.departureTime}
             </p>
           </div>
         </div>
-        <div className="w-1/3 text-right">
-          <p>{data?.departureDate}</p>
-          <p className="text-textLightGray lg:text-md text-sm">
-            {data?.departureTime}
-          </p>
-        </div>
-
         {/*vertical line */}
-        <div className="absolute z-0 top-[26px] left-[11px] h-7 w-0.5 bg-gray-400 rounded-sm"></div>
-      </div>
-      {/* arrival */}
-      <div className="flex justify-between w-full">
-        <div className="flex items-start w-1/3">
-          <TfiLocationPin className="text-greenColor text-2xl" />
-          <div className="ml-2">
-            <p className="lg:text-md text-sm  font-semibold">
-              {data?.arrivalLocation}
+        <div className="absolute z-0 left-[11px] top-7 bottom-9 h-auto border-[1px] w-0.5 bg-textLightGray rounded-sm"></div>
+        {/* arrival */}
+        <div className="flex justify-between items-center w-full mt-5">
+          <div className="flex items-center w-1/2">
+            <TfiLocationPin className="text-greenColor min-h-[1.5rem] min-w-[1.5rem]" />
+            <div className="ml-2">
+              <p className="lg:text-md text-sm  font-semibold">
+                {data?.arrivalLocation}
+              </p>
+            </div>
+          </div>
+          <div className="w-1/3 text-right">
+            <p>{data?.arrivalDate}</p>
+            <p className="text-textLightGray lg:text-md text-sm">
+              {data?.arrivalTime}
             </p>
           </div>
         </div>
-        <div className="w-1/3 text-right">
-          <p>{data?.arrivalDate}</p>
-          <p className="text-textLightGray lg:text-md text-sm">
-            {data?.arrivalTime}
-          </p>
-        </div>
       </div>
-
       {/* status */}
       <div className="flex items-center">
         <p className="text-lg font-semibold">Status :</p>
@@ -94,8 +164,9 @@ const SingleJob = memo(({ setActiveBidId, jobDescription, data }) => {
           {data?.status}
         </span>
       </div>
+    
       {/* description */}
-      <p className="text-sm text-gray-500">{data?.jobDescription}</p>
+      <p className="text-sm text-gray-500 line-clamp-3">{data?.jobDescription}</p>
       {/* amount */}
       <div className="flex items-center justify-between">
         <p className="lg:text-2xl text-lg font-semibold text-textPurple">

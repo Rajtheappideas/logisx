@@ -63,6 +63,7 @@ const Bids = () => {
             {showBidProposal && activeBidId !== null && (
               <BidProposals setActiveBidId={setActiveBidId} />
             )}
+       
             {!showBidProposal && (
               <div className="md:space-y-3 space-y-2">
                 {/* title + btns */}
@@ -124,7 +125,7 @@ const Bids = () => {
                 {activeComponent === "pending bids" && !showBidProposal && (
                   <>
                     {view === "grid" ? (
-                      <div className="grid lg:grid-cols-2 md:gap-5 gap-3 w-full">
+                      <div className="grid 2xl:grid-cols-3 lg:grid-cols-2 md:gap-5 gap-3 w-full">
                         {pendingBids.length > 0 ? (
                           pendingBids.map((bid) => (
                             <SingleJob
@@ -140,7 +141,10 @@ const Bids = () => {
                         )}
                       </div>
                     ) : (
-                      <TableViewBid setShowBidDetails={setShwoBidDetails} />
+                      <TableViewBid
+                        setActiveBidId={setActiveBidId}
+                        setShowBidDetails={setShwoBidDetails}
+                      />
                     )}
                   </>
                 )}

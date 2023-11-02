@@ -1,14 +1,11 @@
 import React from "react";
 import { useState } from "react";
 import { BiChevronsLeft, BiChevronsRight } from "react-icons/bi";
-import { BsEye } from "react-icons/bs";
-import { FaHeart } from "react-icons/fa";
-import { FiHeart } from "react-icons/fi";
 import ReactPaginate from "react-paginate";
 import { useDispatch, useSelector } from "react-redux";
-import { handleChangeShowBidDetails } from "../../redux/BidSlice";
+import SinlgeRowOfBid from "./SinlgeRowOfBid";
 
-const TableViewBid = ({ setShowBidDetails }) => {
+const TableViewBid = ({ setShowBidDetails, setActiveBidId }) => {
   const [pageNumber, setPageNumber] = useState(0);
 
   const dispatch = useDispatch();
@@ -18,10 +15,6 @@ const TableViewBid = ({ setShowBidDetails }) => {
   const { pendingBids, loading, shippedBids } = useSelector(
     (state) => state.root.bid
   );
-
-  const handleDispatchOnclick = (id) => {
-    setShowBidDetails(true);
-  };
 
   // pagination logic
   const bisPerPage = 8;
@@ -54,57 +47,11 @@ const TableViewBid = ({ setShowBidDetails }) => {
           <tbody className="w-full">
             {activeComponent === "pending bids" && pendingBids.length > 0 ? (
               displayBids.map((bid) => (
-                <tr
+                <SinlgeRowOfBid
+                  setActiveBidId={setActiveBidId}
                   key={bid?._id}
-                  className="border-b border-gray-200 w-full text-left"
-                >
-                  <td className="md:p-4 p-2 whitespace-nowrap">{bid?.bidId}</td>
-
-                  <td className="text-left md:p-4 p-2 whitespace-nowrap">
-                    {bid?.poNumber}
-                  </td>
-                  <td className="text-left md:p-4 p-2 whitespace-nowrap">
-                    ${bid?.price}
-                  </td>
-                  <td className="text-left md:p-4 p-2 whitespace-nowrap">
-                    {bid?.arrivalLocation}
-                  </td>
-                  <td className="text-left md:p-4 p-2 whitespace-nowrap">
-                    {bid?.departureDate}
-                  </td>
-                  <td className="text-left md:p-4 p-2">
-                    <span
-                      className={`${
-                        (bid?.status === "pending" || "in-transit") &&
-                        "bg-primaryBlue"
-                      } 
-                      ${bid?.status === "cancelled" && "bg-gray-300"}
-                      ${bid?.status === "complete" && "bg-greenColor"}
-                      text-white font-medium text-center whitespace-nowrap p-2 rounded-3xl`}
-                    >
-                      {bid?.status}
-                    </span>
-                  </td>
-                  <td className="text-left md:p-4 p-2">
-                    {bid?.isFavourite ? (
-                      <FaHeart color="red" className="mx-auto text-2xl" />
-                    ) : (
-                      <FiHeart color="red" className="mx-auto text-2xl" />
-                    )}
-                  </td>
-                  <td className="flex items-center justify-start md:p-4 p-2">
-                    <button
-                      onClick={() => {
-                        handleDispatchOnclick(bid?._id);
-                        dispatch(handleChangeShowBidDetails(true));
-                      }}
-                      type="button"
-                      className="hover:bg-gray-200 p-1 rounded-full h-10 w-10"
-                    >
-                      <BsEye color="gray" size={30} className="inline-block" />
-                    </button>
-                  </td>
-                </tr>
+                  bid={bid}
+                />
               ))
             ) : (
               <tr className="loading w-full">No bids here.</tr>

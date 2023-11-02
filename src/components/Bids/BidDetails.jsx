@@ -21,7 +21,7 @@ const BidDetails = ({ setShowBidProposalDetails, singleBidProposal }) => {
       {/* tabs + icon */}
       <div className="flex w-full justify-around items-center md:mb-4 mb-2">
         <div className="xl:w-1/3 lg:w-1/5"></div>
-        {activeComponent === "shipped" ? (
+        {activeComponent === "pending bids" && singleBidProposal?.isAccepted ? (
           <div className="flex-1 space-x-2 space-y-2">
             <button
               onClick={() => setActiveTab("details")}
@@ -44,7 +44,7 @@ const BidDetails = ({ setShowBidProposalDetails, singleBidProposal }) => {
               Timeline
             </button>
             <button
-              onClick={() => dispatch(handleChangeShowChatSidebar(true))}
+              // onClick={() => dispatch(handleChangeShowChatSidebar(true))}
               className="bg-disableGray rounded-full md:w-36 w-28 md:p-3 p-1"
             >
               Chat

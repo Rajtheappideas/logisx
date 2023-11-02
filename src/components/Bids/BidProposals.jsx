@@ -1,10 +1,11 @@
 import React, { memo, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import Baseurl from "../../Baseurl";
+import { imageUrl } from "../../Baseurl";
 import BidDetails from "./BidDetails";
 import { BsArrowLeft } from "react-icons/bs";
 import { handleChangeActiveComponent } from "../../redux/globalStates";
 import { handleChangeShowBidProposal } from "../../redux/BidSlice";
+import TruckerProfile from "./TruckerProfile";
 
 const BidProposals = ({ setActiveBidId }) => {
   const [showBidProposalDetails, setShowBidProposalDetails] = useState(false);
@@ -23,7 +24,7 @@ const BidProposals = ({ setActiveBidId }) => {
     }
   };
 
-  const findTrucker = (id) => {
+  const findtrucker = (id) => {
     const proposal = bidProposals.find((proposal) => proposal._id === id);
     if (proposal) {
       setSingleBidProposal(proposal);
@@ -37,9 +38,14 @@ const BidProposals = ({ setActiveBidId }) => {
 
   return (
     <>
-      {showBidProposalDetails ? (
+      {showBidProposalDetails && !showTruckerDetails ? (
         <BidDetails
           setShowBidProposalDetails={setShowBidProposalDetails}
+          singleBidProposal={singleBidProposal}
+        />
+      ) : !showBidProposalDetails && showTruckerDetails ? (
+        <TruckerProfile
+          setShowTruckerDetails={setShowTruckerDetails}
           singleBidProposal={singleBidProposal}
         />
       ) : (
@@ -63,7 +69,7 @@ const BidProposals = ({ setActiveBidId }) => {
                   {/* img / name / company / view profiel */}
                   <div className="md:w-1/2 w-full flex md:flex-row flex-col md:items-center items-center md:gap-3 gap-1">
                     <img
-                      src={Baseurl.concat(proposal.truckerId?.profile)}
+                      src={imageUrl.concat(proposal.truckerId?.profile)}
                       alt={proposal?.truckerId?.fname}
                       className="rounded-full md:h-24 md:w-24 h-16 w-16 object-contain object-center border"
                     />
@@ -77,7 +83,7 @@ const BidProposals = ({ setActiveBidId }) => {
                       </p>
                       <p
                         onClick={() => {
-                          findProposal(proposal?._id);
+                          findtrucker(proposal?._id);
                         }}
                         className="text-blue-600 font-medium cursor-pointer"
                       >

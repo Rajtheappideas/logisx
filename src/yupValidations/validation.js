@@ -105,3 +105,29 @@ export const uploadDocsSchema = yup.object({
     })
     .typeError("Photos is required."),
 });
+
+export const pickUpInfoStepOne = yup.object({
+  departureLocation: yup.string().required("departure locations is required"),
+  arrivalLocation: yup.string().required("arrival locations is required"),
+  departureDate: yup.string().required("departure date is required"),
+  departureTime: yup.string().required("departure time is required"),
+  arrivalDate: yup.string().required("arrival date is required"),
+  arrivalTime: yup.string().required("arrival time is required"),
+  emptyAtBidding: yup.string().required("please choose from above options"),
+  jobDescription: yup.string().required("job description is required"),
+  receiverAddress: yup.string().required("address is required"),
+  receiverName: yup
+    .string()
+    .required("name is required")
+    .max(60, "Max character limit reached")
+    .min(2, "minimum two character required")
+    .typeError("Only characters allowed")
+    .matches(
+      /^([A-Za-z\u00C0-\u00D6\u00D8-\u00f6\u00f8-\u00ff\s]*)$/gi,
+      "only contain Latin letters."
+    ),
+  receiverEmail: yup.string().email().required("email is required"),
+  receiverPhone: yup.string().required("phone is required"),
+  bidExpriry: yup.string().required("expiry date is required"),
+  price: yup.string().required("price is required"),
+});

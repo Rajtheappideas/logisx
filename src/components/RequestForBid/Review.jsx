@@ -1,6 +1,70 @@
-import React from "react";
+import moment from "moment";
+import React, { useEffect } from "react";
+import Success from "../ForgotPassword/Success";
+import RequestBidSuccessPopup from "../Bids/RequestBidSuccessPopup";
+import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { handleRequestBid } from "../../redux/BidSlice";
+import useAbortApiCall from "../../hooks/useAbortApiCall";
+import toast from "react-hot-toast";
 
-const Review = ({ setStep }) => {
+const Review = ({ setStep, step, getValues, setShowSuccessPopup }) => {
+  const { createBidLoading } = useSelector((s) => s.root.bid);
+  const { token } = useSelector((s) => s.root.auth);
+
+  const dispatch = useDispatch();
+
+  const { AbortControllerRef, abortApiCall } = useAbortApiCall();
+
+  const {
+    departureLocation,
+    departureLat,
+    departureLng,
+    arrivalLocation,
+    arrivalLat,
+    arrivalLng,
+    departureDate,
+    departureTime,
+    arrivalDate,
+    arrivalTime,
+    emptyAtBidding,
+    jobDescription,
+    receiverName,
+    receiverAddress,
+    receiverEmail,
+    receiverPhone,
+    bidExpriry,
+    price,
+    equipment,
+    endorsement,
+    specification,
+    loadNotes,
+    poNumber,
+    refrenceNumber,
+  } = getValues();
+
+  const handleCreateRequestForBid = () => {
+    const response = dispatch(
+      handleRequestBid({
+        data: getValues(),
+        token,
+        signal: AbortControllerRef,
+      })
+    );
+    if (response) {
+      response.then((res) => {
+        if (res?.payload?.status === "success") {
+          setShowSuccessPopup(true);
+        }
+      });
+    }
+  };
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    return () => abortApiCall();
+  }, []);
+
   return (
     <div className="w-full md:space-y-5 space-y-3 md:text-base text-sm">
       <p className="md:text-2xl text-lg text-primaryBlue font-semibold">
@@ -21,34 +85,45 @@ const Review = ({ setStep }) => {
               EDIT
             </p>
           </div>
-          <p>
-            East Chicago St <br />
-            Chicago.IL 69070
-          </p>
+          <p>{departureLocation}</p>
         </div>
         {/* Arrival location */}
         <div>
           <p className="text-sm text-disableGray font-semibold">
             Arrival location
           </p>
-          <p>
-            Kalamazoo Distribution <br />
-            Kalamazoo, MI 28904
-          </p>
+          <p>{arrivalLocation}</p>
         </div>
-        {/* Delivery pick-up & delivery */}
+        {/* Delivery pick-up & delivery date */}
         <div className="grid place-items-start items-start w-full md:grid-cols-2">
           <div>
             <p className="text-sm text-disableGray font-semibold">
-              Delivery pick-up
+              Departure pick-up date
             </p>
-            <p className="font-semibold">March 7</p>
+            <p className="font-semibold">
+              {moment(departureDate).format("LL")}
+            </p>
           </div>
           <div>
             <p className="text-sm text-disableGray font-semibold">
-              Delivery arrival
+              Departure pick-up time
             </p>
-            <p className="font-semibold">March 9</p>
+            <p className="font-semibold">{departureTime}</p>
+          </div>
+        </div>
+        {/* arrival pick-up & delivery date*/}
+        <div className="grid place-items-start items-start w-full md:grid-cols-2">
+          <div>
+            <p className="text-sm text-disableGray font-semibold">
+              Arrival delivery date
+            </p>
+            <p className="font-semibold">{moment(arrivalDate).format("LL")}</p>
+          </div>
+          <div>
+            <p className="text-sm text-disableGray font-semibold">
+              Arrival delivery time
+            </p>
+            <p className="font-semibold">{arrivalTime}</p>
           </div>
         </div>
         {/* Empty at time of pick up? */}
@@ -56,21 +131,19 @@ const Review = ({ setStep }) => {
           <p className="text-sm text-disableGray font-semibold">
             Empty at time of pick up?
           </p>
-          <p className="font-semibold">Yes</p>
+          <p>{emptyAtBidding}</p>
         </div>
         {/* Job description */}
         <div>
           <p className="text-sm text-disableGray font-semibold">
             Job description
           </p>
-          <p className="font-semibold">
-            Job description goes here. This is just a placeholder
-          </p>
+          <p>{jobDescription}</p>
         </div>
         {/* Bid ends */}
         <div>
           <p className="text-sm text-disableGray font-semibold">Bid ends</p>
-          <p className="font-semibold">March 1,2023 at 3:00 pm CST</p>
+          <p className="font-semibold">{moment(bidExpriry).format("LL")}</p>
         </div>
         {/* Receiver’s name & address */}
         <div className="grid place-items-start items-start w-full md:grid-cols-2">
@@ -78,15 +151,13 @@ const Review = ({ setStep }) => {
             <p className="text-sm text-disableGray font-semibold">
               Receiver’s name
             </p>
-            <p className="font-semibold">Carlos Mitchell</p>
+            <p>{receiverName}</p>
           </div>
           <div>
             <p className="text-sm text-disableGray font-semibold">
               Receiver’s address
             </p>
-            <p className="font-semibold mx-auto">
-              Kalamazoo Distribution, Kalamazoo, MI 28904
-            </p>
+            <p className="mx-auto">{receiverAddress}</p>
           </div>
         </div>
         {/* Receiver’s phone number  & email address */}
@@ -95,19 +166,19 @@ const Review = ({ setStep }) => {
             <p className="text-sm text-disableGray font-semibold">
               Receiver’s phone number
             </p>
-            <p className="font-semibold">123-4567890</p>
+            <p>{receiverPhone}</p>
           </div>
           <div>
             <p className="text-sm text-disableGray font-semibold">
               Receiver’s email address
             </p>
-            <p className="font-semibold mx-auto">loremipsum@mail.com</p>
+            <p className=" mx-auto">{receiverEmail}</p>
           </div>
         </div>
         {/* price */}
         <div>
           <p className="text-sm text-disableGray font-semibold">Price</p>
-          <p className="font-semibold">1000</p>
+          <p className="font-semibold">{price}</p>
         </div>
       </div>
       {/* step 2 */}
@@ -124,21 +195,21 @@ const Review = ({ setStep }) => {
               EDIT
             </p>
           </div>
-          <div className="flex">
-            <input type="checkbox" className="space-y-5" />
-            <p className="mx-2 lg:text-md text-sm font-semibold">Dry van</p>
-          </div>
+          {equipment.map((list, i) => (
+            <p key={i}>{list}</p>
+          ))}
         </div>
         <div className="space-y-1">
           <p className="text-sm text-disableGray font-semibold">Endorsements</p>
-          <div className="flex items-center">
-            <input type="checkbox" />
-            <p className="mx-2 lg:text-md text-sm font-semibold">TWIC</p>
-          </div>
-          <p>
-            53 ft dry van with swing doors, Food grade, No damages or holes
-            Floor loaded
+          {endorsement.map((list, i) => (
+            <p key={i}>{list}</p>
+          ))}
+        </div>
+        <div className="space-y-1">
+          <p className="text-sm text-disableGray font-semibold">
+            Specification
           </p>
+          <p>{specification}</p>
         </div>
       </div>
       {/* step 3 */}
@@ -153,18 +224,42 @@ const Review = ({ setStep }) => {
               EDIT
             </p>
           </div>
-          <p>Load notes goes here. This is just a placeholder</p>
+          <p>{loadNotes}</p>
         </div>
         <div>
           <p className="text-sm text-disableGray font-semibold">P.O. number</p>
-          <p className="font-semibold">12345</p>
+          <p className="font-semibold">{poNumber}</p>
         </div>
         <div>
           <p className="text-sm text-disableGray font-semibold">
             Reference number
           </p>
-          <p className="font-semibold">123-4567890</p>
+          <p>{refrenceNumber}</p>
         </div>
+      </div>
+      {/* btns */}
+      <div className="w-full col-span-full flex items-center justify-between md:flex-row flex-col md:gap-0 gap-2">
+        <button
+          onClick={() => setStep(step - 1)}
+          type="button"
+          className={`blue_button w-1/4 uppercase  ${
+            createBidLoading && "cursor-not-allowed opacity-40"
+          } `}
+          disabled={createBidLoading}
+        >
+          back
+        </button>
+
+        <button
+          type="button"
+          onClick={() => handleCreateRequestForBid()}
+          className={`blue_button w-1/4 uppercase  ${
+            createBidLoading && "cursor-not-allowed opacity-40"
+          } `}
+          disabled={createBidLoading}
+        >
+          {createBidLoading ? "Creating Bid..." : "Done"}
+        </button>
       </div>
     </div>
   );

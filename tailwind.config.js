@@ -20,6 +20,20 @@ module.exports = {
         bgGray: "#F0F0F0",
       },
     },
+    keyframes: {
+      verticalLine: {
+        "0%": {
+          height: " 0px",
+        },
+        "100%": {
+          height: "auto",
+        },
+      },
+      
+    },
+    animation:{
+      verticalLine:'verticalLine 2s alternate'
+    }
   },
   plugins: [],
 };

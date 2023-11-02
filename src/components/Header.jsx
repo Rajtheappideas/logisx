@@ -117,7 +117,7 @@ const Header = () => {
   };
 
   return (
-    <div className="h-auto bg-white drop-shadow relative z-20">
+    <div className="h-auto bg-white drop-shadow relative z-10">
       {/* desktop */}
       <section className="flex items-center justify-between w-full">
         <div className="logo w-auto">

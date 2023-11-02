@@ -34,7 +34,7 @@ const Home = () => {
 
   const handleFetchDocuments = () => {
     const response = dispatch(
-      handleGetChat({ token, signal: AbortControllerRef })
+      handleGetDocuments({ token, signal: AbortControllerRef })
     );
     if (response) {
       response.then((res) => {
@@ -51,14 +51,11 @@ const Home = () => {
   useEffect(() => {
     if (user !== null) {
       dispatch(handleGetChat({ token, signal: AbortControllerRef }));
-      // dispatch(handleGetDocuments({ token, signal: AbortControllerRef }));
       handleFetchDocuments();
-      dispatch(handleGetFavorites({ token, signal: AbortControllerRef }));
     }
     dispatch(handleGetFaqs({ signal: AbortControllerRef }));
     dispatch(handleGetTerms({ signal: AbortControllerRef }));
     dispatch(handleGetPrivacy({ signal: AbortControllerRef }));
-
     return () => {
       abortApiCall();
     };

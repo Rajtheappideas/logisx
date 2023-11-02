@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Background from "../assets/images/BG.png";
 import Logo from "../assets/images/logisX-2-png 3.svg";
 import { Helmet } from "react-helmet";
@@ -15,6 +15,11 @@ const Auth = () => {
   const [openTab, setOpenTab] = useState("sign-up");
   const [fcmToken, setFcmToken] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [activeTabIndex, setActiveTabIndex] = useState(0);
+  const [tabUnderlineWidth, setTabUnderlineWidth] = useState(0);
+  const [tabUnderlineLeft, setTabUnderlineLeft] = useState(0);
+
+  const tabsRef = useRef([]);
 
   const { showSignupProcess, user, error } = useSelector(
     (state) => state.root.auth
@@ -58,6 +63,19 @@ const Auth = () => {
     }
   }, [openTab, fcmToken, error]);
 
+  useEffect(() => {
+    function setTabPosition() {
+      const currentTab = tabsRef.current[activeTabIndex];
+      setTabUnderlineLeft(currentTab?.offsetLeft ?? 0);
+      setTabUnderlineWidth(currentTab?.clientWidth ?? 0);
+    }
+
+    setTabPosition();
+    window.addEventListener("resize", setTabPosition);
+
+    return () => window.removeEventListener("resize", setTabPosition);
+  }, [activeTabIndex]);
+
   return (
     <>
       <Helmet>
@@ -84,10 +102,14 @@ const Auth = () => {
         <div className="bg-white shadow-lg md:p-4 p-2 2xl:w-1/3 xl:w-1/2 md:w-3/4 mx-auto md:space-y-3 space-y-2 md:rounded-3xl rounded-2xl w-11/12">
           {/* tabs sign in / sign up */}
           {!showSignupProcess && (
-            <div className="justify-around flex text-black lg:text-lg text-sm w-full">
+            <div className="justify-around flex text-black lg:text-lg text-sm w-full relative">
               <p
-                onClick={() => setOpenTab("sign-up")}
-                className={`w-1/2 cursor-pointer  ${
+                onClick={() => {
+                  setOpenTab("sign-up");
+                  setActiveTabIndex(0);
+                }}
+                ref={(el) => (tabsRef.current[0] = el)}
+                className={`w-1/3 cursor-pointer ${
                   openTab === "sign-up"
                     ? "border-primaryBlue border-b-4 text-primaryBlue md:text-lg text-base font-bold"
                     : "border-gray-200 border-b text-gray-300 text-base"
@@ -96,8 +118,12 @@ const Auth = () => {
                 Sign up
               </p>
               <p
-                onClick={() => setOpenTab("sign-in")}
-                className={`w-1/2 cursor-pointer  ${
+                onClick={() => {
+                  setOpenTab("sign-in");
+                  setActiveTabIndex(1);
+                }}
+                ref={(el) => (tabsRef.current[1] = el)}
+                className={`w-1/3 cursor-pointer ${
                   openTab === "sign-in"
                     ? "border-primaryBlue border-b-4 text-primaryBlue md:text-lg font-bold"
                     : "border-gray-200 border-b text-gray-300 text-base"
@@ -105,6 +131,24 @@ const Auth = () => {
               >
                 Log in
               </p>
+              <p
+                onClick={() => {
+                  setOpenTab("hello");
+                  setActiveTabIndex(2);
+                }}
+                ref={(el) => (tabsRef.current[2] = el)}
+                className={`w-1/3 cursor-pointer ${
+                  openTab === "hello"
+                    ? "border-primaryBlue border-b-4 text-primaryBlue md:text-lg font-bold"
+                    : "border-gray-200 border-b text-gray-300 text-base"
+                }  transition duration-300 pb-3 text-center`}
+              >
+               hello
+              </p>
+              <span
+                className="absolute bottom-0 block h-1 border-primaryBlue border-b-4 transition-all duration-300"
+                style={{ left: tabUnderlineLeft, width: tabUnderlineWidth }}
+              />
             </div>
           )}
           {openTab === "sign-in" ? (

@@ -19,21 +19,57 @@ const TerminalLocation = memo(({ setStep, setValue, getValues }) => {
   });
   const [searchValue, setSearchValue] = useState(null);
   const [userLocation, setUserLocation] = useState(location);
+  const [selectFirstLocation, setSelectFirstLocation] = useState(null);
 
   const { isLoaded, loadError } = useJsApiLoader({
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAP_API_KEY,
     libraries,
   });
 
+  // set up geocode
   useEffect(() => {
     Geocode.setApiKey(process.env.REACT_APP_GOOGLE_MAP_API_KEY);
     Geocode.setLanguage("en");
     Geocode.fromLatLng(center.lat, center.lng).then((res) => {
       const address = res?.results[0]?.formatted_address;
       setUserLocation(address);
+      setSelectFirstLocation(address);
       setValue("location", address);
     });
   }, []);
+
+  async function searchLocation() {
+    try {
+      if (selectFirstLocation === null) {
+        Geocode.setApiKey(process.env.REACT_APP_GOOGLE_MAP_API_KEY);
+        Geocode.setLanguage("en");
+        const res = await Geocode.fromAddress(userLocation);
+        const { formatted_address, geometry } = res?.results[0];
+        const { lat, lng } = geometry?.location;
+        setUserLocation(formatted_address);
+        setSelectFirstLocation(formatted_address);
+        setCenter({ lat, lng });
+      }
+    } catch (error) {
+      const { formatted_address, geometry } = searchValue?.getPlace();
+      const place = searchValue?.getPlace();
+      const lat = geometry?.location?.lat();
+      const lng = geometry?.location?.lng();
+      setCenter({ lat, lng });
+      setUserLocation(formatted_address);
+      setSelectFirstLocation(formatted_address);
+      setValue("location", formatted_address);
+    }
+  }
+
+  // debounce select first location
+  useEffect(() => {
+    let timer;
+    timer = setTimeout(() => {
+      searchLocation();
+    }, [5000]);
+    return () => clearTimeout(timer);
+  }, [userLocation]);
 
   function getUserCurrentLocation() {
     if (navigator.geolocation) {
@@ -79,6 +115,7 @@ const TerminalLocation = memo(({ setStep, setValue, getValues }) => {
         Geocode.fromLatLng(lat, lng).then((res) => {
           const address = res?.results[0]?.formatted_address;
           setUserLocation(address);
+          setSelectFirstLocation(address);
           setValue("location", address);
         });
       }
@@ -130,6 +167,7 @@ const TerminalLocation = memo(({ setStep, setValue, getValues }) => {
               onChange={(e) => {
                 setUserLocation(e.target.value);
                 setValue("location", e.target.value);
+                setSelectFirstLocation(null);
               }}
               name="location"
               id="location"
