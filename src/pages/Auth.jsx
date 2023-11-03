@@ -109,7 +109,7 @@ const Auth = () => {
                   setActiveTabIndex(0);
                 }}
                 ref={(el) => (tabsRef.current[0] = el)}
-                className={`w-1/3 cursor-pointer ${
+                className={`w-1/2 cursor-pointer ${
                   openTab === "sign-up"
                     ? "border-primaryBlue border-b-4 text-primaryBlue md:text-lg text-base font-bold"
                     : "border-gray-200 border-b text-gray-300 text-base"
@@ -123,27 +123,13 @@ const Auth = () => {
                   setActiveTabIndex(1);
                 }}
                 ref={(el) => (tabsRef.current[1] = el)}
-                className={`w-1/3 cursor-pointer ${
+                className={`w-1/2 cursor-pointer ${
                   openTab === "sign-in"
                     ? "border-primaryBlue border-b-4 text-primaryBlue md:text-lg font-bold"
                     : "border-gray-200 border-b text-gray-300 text-base"
                 }  transition duration-300 pb-3 text-center`}
               >
                 Log in
-              </p>
-              <p
-                onClick={() => {
-                  setOpenTab("hello");
-                  setActiveTabIndex(2);
-                }}
-                ref={(el) => (tabsRef.current[2] = el)}
-                className={`w-1/3 cursor-pointer ${
-                  openTab === "hello"
-                    ? "border-primaryBlue border-b-4 text-primaryBlue md:text-lg font-bold"
-                    : "border-gray-200 border-b text-gray-300 text-base"
-                }  transition duration-300 pb-3 text-center`}
-              >
-               hello
               </p>
               <span
                 className="absolute bottom-0 block h-1 border-primaryBlue border-b-4 transition-all duration-300"
