@@ -6,7 +6,7 @@ import { FiMenu } from "react-icons/fi";
 import BidDetails from "./BidDetails";
 import { useDispatch, useSelector } from "react-redux";
 import TableViewBid from "./TableViewBid";
-import { handleChangeShowBidUploadComponent } from "../../redux/globalStates";
+import { handleChangeShowBidUploadComponent, handleLogoutFromAllTabs } from "../../redux/globalStates";
 import {
   handleBidProposals,
   handleGetCancelledBids,
@@ -18,6 +18,8 @@ import useAbortApiCall from "../../hooks/useAbortApiCall";
 import RequestForBid from "../RequestForBid/RequestForBid";
 import RequestBid from "../RequestForBid/RequestBid";
 import BidProposals from "./BidProposals";
+import { handleLogout } from "../../redux/AuthSlice";
+import toast from "react-hot-toast";
 
 const Bids = () => {
   const [view, setView] = useState("grid");
@@ -40,8 +42,30 @@ const Bids = () => {
 
   const dispatch = useDispatch();
 
+  const handleFetchBids = () => {
+    const response = dispatch(
+      handleGetPendingBids({ token, signal: AbortControllerRef })
+    );
+    if (response) {
+      response.then((res) => {
+        if (
+          res?.payload?.status === "fail" &&
+          (res?.payload?.code === 423 ||
+            (res?.payload?.code === 400 &&
+              res?.payload?.message === "Please login first."))
+        ) {
+          window.localStorage.clear();
+          toast.error(res?.payload?.message);
+          dispatch(handleLogout());
+          dispatch(handleLogoutFromAllTabs());
+        }
+      });
+    }
+  };
+
   useEffect(() => {
-    dispatch(handleGetPendingBids({ token, signal: AbortControllerRef }));
+    // dispatch(handleGetPendingBids({ token, signal: AbortControllerRef }));
+    handleFetchBids();
     window.scrollTo({ top: 0, behavior: "smooth" });
     if (singleBidDetails !== null) {
       setActiveBidId(singleBidDetails?._id);
@@ -61,7 +85,6 @@ const Bids = () => {
       );
     }
   }, [activeBidId]);
-
 
   return (
     <>

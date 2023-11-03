@@ -1,12 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import { BiChevronsLeft, BiChevronsRight } from "react-icons/bi";
-import { BsEye } from "react-icons/bs";
 import ReactPaginate from "react-paginate";
-import { handleChangeActiveJobDetails } from "../../redux/globalStates";
 import { useDispatch, useSelector } from "react-redux";
 import SingleJobViewRow from "./SingleJobViewRow";
 
 const TableViewActiveJobs = () => {
+  const [pageNumber, setPageNumber] = useState(0);
+
   const dispatch = useDispatch();
 
   const { activeComponent } = useSelector((state) => state.root.globalStates);
@@ -15,9 +15,15 @@ const TableViewActiveJobs = () => {
     (state) => state.root.bid
   );
 
-  // const handleDispatchOnclick = (id) => {
-  //   setShowBidDetails(true);
-  // };
+  // pagination logic
+  const jobsPerPage = 8;
+  const pageVisited = pageNumber * jobsPerPage;
+  const displayBids = inTransitJobs.slice(pageVisited, jobsPerPage + pageVisited);
+  const pageCount = Math.ceil(inTransitJobs.length / jobsPerPage);
+  const changePage = ({ selected }) => {
+    setPageNumber(selected);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   return (
     <>
@@ -39,7 +45,7 @@ const TableViewActiveJobs = () => {
           </thead>
           <tbody className="w-full">
             {inTransitJobs.length > 0 ? (
-              inTransitJobs.map((job) => (
+              displayBids.map((job) => (
                 <SingleJobViewRow job={job} key={job?._id} />
               ))
             ) : (
@@ -50,10 +56,22 @@ const TableViewActiveJobs = () => {
       </div>
       <div className="flex items-center justify-between py-5">
         <p className="font-medium md:text-base text-sm text-textBlack">
-          Showing 4 from 4 data
+          Showing{" "}
+          {inTransitJobs.length > 0
+            ? pageNumber * jobsPerPage === 0
+              ? 1
+              : pageNumber * jobsPerPage + 1
+            : 0}{" "}
+          from{" "}
+          {inTransitJobs.length < jobsPerPage
+            ? inTransitJobs.length
+            : jobsPerPage * (pageNumber + 1) > inTransitJobs.length
+            ? inTransitJobs?.length
+            : jobsPerPage * (pageNumber + 1)}{" "}
+          jobs
         </p>
         <ReactPaginate
-          //   onPageChange={changePage}
+            onPageChange={changePage}
           previousLabel={
             <BiChevronsLeft className="text-blue-500 text-2xl" role="button" />
           }
@@ -66,7 +84,8 @@ const TableViewActiveJobs = () => {
           breakLinkClassName="page-link"
           pageRangeDisplayed={1}
           marginPagesDisplayed={1}
-          pageCount={1}
+          pageCount={pageCount}
+          forcePage={pageNumber}
           containerClassName="pagination"
           activeClassName="py-2 px-4 bg-primaryBlue cursor-pointer text-white rounded-lg text-center"
           className="shadow-sm p-2 font-semibold text-textColor rounded-lg flex items-center md:gap-x-2 gap-x-1"

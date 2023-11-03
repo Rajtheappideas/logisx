@@ -7,6 +7,9 @@ import JobDetails from "./JobDetails";
 import { useDispatch, useSelector } from "react-redux";
 import { handleGetInTransitJobs } from "../../redux/BidSlice";
 import useAbortApiCall from "../../hooks/useAbortApiCall";
+import { handleLogout } from "../../redux/AuthSlice";
+import { handleLogoutFromAllTabs } from "../../redux/globalStates";
+import toast from "react-hot-toast";
 
 const Jobs = () => {
   const [view, setView] = useState("grid");
@@ -27,8 +30,30 @@ const Jobs = () => {
 
   const dispatch = useDispatch();
 
+  const handleFetchJobs = () => {
+    const response = dispatch(
+      handleGetInTransitJobs({ token, signal: AbortControllerRef })
+    );
+    if (response) {
+      response.then((res) => {
+        if (
+          res?.payload?.status === "fail" &&
+          (res?.payload?.code === 423 ||
+            (res?.payload?.code === 400 &&
+              res?.payload?.message === "Please login first."))
+        ) {
+          window.localStorage.clear();
+          toast.error(res?.payload?.message);
+          dispatch(handleLogout());
+          dispatch(handleLogoutFromAllTabs());
+        }
+      });
+    }
+  };
+  
   useEffect(() => {
-    dispatch(handleGetInTransitJobs({ token, signal: AbortControllerRef }));
+    // dispatch(handleGetInTransitJobs({ token, signal: AbortControllerRef }));
+    handleFetchJobs()
   }, []);
 
   return (

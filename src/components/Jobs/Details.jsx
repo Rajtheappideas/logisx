@@ -9,7 +9,6 @@ const Details = () => {
   const { activeComponent } = useSelector((state) => state.root.globalStates);
 
   const { singleJobDetails } = useSelector((s) => s.root.bid);
-  console.log(singleJobDetails);
 
   return (
     <div className="w-full md:space-y-4 space-y-2">
