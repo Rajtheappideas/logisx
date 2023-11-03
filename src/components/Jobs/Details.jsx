@@ -12,7 +12,7 @@ const Details = () => {
       {/* id + timer */}
       <div className="flex justify-between items-start">
         <p className="lg:text-2xl text-md text-[#4D4D4D] font-bold">
-          Bid RW3342D
+          RW3342D
         </p>
         <div className="">
           <div className="flex items-center justify-end">

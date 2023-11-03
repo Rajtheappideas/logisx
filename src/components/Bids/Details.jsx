@@ -1,22 +1,99 @@
 import React, { useState } from "react";
 import { TfiLocationPin } from "react-icons/tfi";
 import CounterOfferModal from "../CounterOfferModal";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import CancelBidModal from "../CancelBidModal";
 import moment from "moment/moment";
 import { imageUrl } from "../../Baseurl";
+import {
+  handleAcceptBid,
+  handleCancelBid,
+  handleChangeShowBidProposal,
+  handleGetPendingBids,
+} from "../../redux/BidSlice";
+import useAbortApiCall from "../../hooks/useAbortApiCall";
+import toast from "react-hot-toast";
+import { useEffect } from "react";
 
-const Details = ({ singleBidProposal }) => {
+const Details = ({ singleBidProposal, setActiveBidId }) => {
   const [showCounterOfferModal, setShowCounterOfferModal] = useState(false);
   const [showCancelBidModal, setShowCancelBidModal] = useState(false);
 
   const { activeComponent } = useSelector((state) => state.root.globalStates);
+  const { cancelBidLoading, acceptBidLoading } = useSelector(
+    (state) => state.root.bid
+  );
+  const { token } = useSelector((state) => state.root.auth);
+
+  const { abortApiCall, AbortControllerRef } = useAbortApiCall();
+
+  const dispatch = useDispatch();
+
+  const handlecancelBid = () => {
+    if (cancelBidLoading) return;
+    if (window.confirm("Are you sure?")) {
+      toast.loading("Cancelling...");
+      const response = dispatch(
+        handleCancelBid({
+          jobId: singleBidProposal?.jobId?._id,
+          token,
+          signal: AbortControllerRef,
+        })
+      );
+      if (response) {
+        response.then((res) => {
+          if (res?.payload?.status === "success") {
+            toast.remove();
+            toast.success("Bid canceled successfully.");
+            dispatch(
+              handleGetPendingBids({ token, signal: AbortControllerRef })
+            );
+            setTimeout(() => {
+              setActiveBidId(null);
+              dispatch(handleChangeShowBidProposal(false));
+            }, 500);
+          }
+        });
+      }
+    }
+  };
+
+  const handleacceptBid = () => {
+    if (acceptBidLoading) return;
+    toast.loading("Accepting...");
+    const response = dispatch(
+      handleAcceptBid({
+        bidId: singleBidProposal?._id,
+        token,
+        signal: AbortControllerRef,
+      })
+    );
+    if (response) {
+      response.then((res) => {
+        if (res?.payload?.status === "success") {
+          toast.remove();
+          toast.success("Bid accepted successfully.");
+          setTimeout(() => {
+            setActiveBidId(null);
+            dispatch(handleChangeShowBidProposal(false));
+          }, 500);
+        }
+      });
+    }
+  };
+
+  useEffect(() => {
+    // return () => abortApiCall();
+  }, []);
+
+  console.log(singleBidProposal);
 
   return (
     <>
       <CounterOfferModal
         setShowCounterOfferModal={setShowCounterOfferModal}
         showCounterOfferModal={showCounterOfferModal}
+        singleBidProposal={singleBidProposal}
       />
       <CancelBidModal
         setShowCancelBidModal={setShowCancelBidModal}
@@ -42,12 +119,34 @@ const Details = ({ singleBidProposal }) => {
             </div>
           </div>
           {/* counter offer */}
-          <div
-            onClick={() => setShowCounterOfferModal(true)}
-            className="cursor-pointer font-semibold uppercase md:text-base text-sm lg:w-60 md:w-40 md:p-3 p-1 rounded-lg transition duration-100 active:scale-95 hover:bg-primaryBlue hover:text-white border border-primaryBlue text-primaryBlue text-center"
-          >
-            counter offer
-          </div>
+          {!singleBidProposal?.isAccepted ? (
+            <div>
+              {singleBidProposal?.counterOffer != 0 &&
+              singleBidProposal?.isCounterOffer ? (
+                <div className="font-semibold uppercase md:text-base text-sm w-auto md:p-2 p-1 rounded-lg border border-primaryBlue text-primaryBlue text-center">
+                  your counter offer: ${singleBidProposal?.counterOffer}
+                </div>
+              ) : (
+                <div
+                  onClick={() => setShowCounterOfferModal(true)}
+                  className="cursor-pointer font-semibold uppercase md:text-base text-sm lg:w-60 md:w-40 md:p-3 p-1 rounded-lg transition duration-100 active:scale-95 hover:bg-primaryBlue hover:text-white border border-primaryBlue text-primaryBlue text-center"
+                >
+                  counter offer
+                </div>
+              )}
+            </div>
+          ) : (
+            <div>
+              {singleBidProposal?.counterOffer != 0 &&
+              singleBidProposal?.isCounterOffer ? (
+                <div className="font-semibold uppercase md:text-base text-sm w-auto md:p-2 p-1 rounded-lg border border-primaryBlue text-primaryBlue text-center">
+                  your counter offer: ${singleBidProposal?.counterOffer}
+                </div>
+              ) : (
+                <div className=""></div>
+              )}
+            </div>
+          )}
           {/* amount */}
           <p className="text-textPurple md:text-2xl text-sm font-semibold flex justify-end mx-2">
             $ {singleBidProposal?.amount}
@@ -119,7 +218,7 @@ const Details = ({ singleBidProposal }) => {
         <p className="text-textColorGray lg:text-base text-sm">
           Equipment needed
         </p>
-        {singleBidProposal?.jobId?.equipment.length > 0 ? (
+        {singleBidProposal?.jobId?.equipment[0] !== "" ? (
           singleBidProposal?.jobId?.equipment.map((equip) => (
             <div key={equip}>
               {equip.split(",").map((list, i) => (
@@ -135,14 +234,14 @@ const Details = ({ singleBidProposal }) => {
         )}
         {/* endorment */}
         <p className="text-textColorGray lg:text-base text-sm">Endorsements</p>
-        {singleBidProposal?.jobId?.endorsement.length > 0 ? (
+        {singleBidProposal?.jobId?.endorsement[0] !== "" ? (
           singleBidProposal?.jobId?.endorsement.map((endorsment) => (
             <div key={endorsment}>
               {endorsment.split(",").map((list, i) => (
-                 <p className="font-semibold flex items-center gap-2" key={i}>
-                 <input type="checkbox" readOnly checked color="blue" />
-                 <span>{list}</span>
-               </p>
+                <p className="font-semibold flex items-center gap-2" key={i}>
+                  <input type="checkbox" readOnly checked color="blue" />
+                  <span>{list}</span>
+                </p>
               ))}
             </div>
           ))
@@ -153,7 +252,9 @@ const Details = ({ singleBidProposal }) => {
         <p className="text-textColorGray lg:text-base text-sm">Specification</p>
         <div className="flex">
           <p className="text-sm font-semibold">
-            {singleBidProposal?.jobId?.specification}
+            {singleBidProposal?.jobId?.specification !== ""
+              ? singleBidProposal?.jobId?.specification
+              : "-"}
           </p>
         </div>
         {/* <p className="text-textColorGray lg:text-base text-sm">
@@ -209,17 +310,29 @@ const Details = ({ singleBidProposal }) => {
         )} */}
 
         {/* btns */}
-        {activeComponent === "pending bids" && (
-          <div className="flex w-full justify-end items-center gap-x-2">
-            <button
-              onClick={() => setShowCancelBidModal(true)}
-              className="red_button_outline"
-            >
-              Cancel bid
-            </button>
-            <button className="blue_button">Accept</button>
-          </div>
-        )}
+        {activeComponent === "pending bids" &&
+          singleBidProposal?.bidStatus !== "accepted" &&
+          !singleBidProposal?.isAccepted &&
+          !singleBidProposal?.isDenied && (
+            <div className="flex w-full justify-end items-center gap-x-2">
+              <button
+                onClick={() => handlecancelBid()}
+                className="red_button_outline"
+                disabled={cancelBidLoading || acceptBidLoading}
+              >
+                Cancel bid
+              </button>
+              <button
+                disabled={cancelBidLoading || acceptBidLoading}
+                className={`blue_button ${
+                  acceptBidLoading && "cursor-not-allowed opacity-50"
+                }`}
+                onClick={() => handleacceptBid()}
+              >
+                Accept
+              </button>
+            </div>
+          )}
       </div>
     </>
   );

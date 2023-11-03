@@ -4,15 +4,22 @@ import { imageUrl } from "../../Baseurl";
 import BidDetails from "./BidDetails";
 import { BsArrowLeft } from "react-icons/bs";
 import { handleChangeActiveComponent } from "../../redux/globalStates";
-import { handleChangeShowBidProposal } from "../../redux/BidSlice";
+import {
+  handleBidProposals,
+  handleChangeShowBidProposal,
+} from "../../redux/BidSlice";
 import TruckerProfile from "./TruckerProfile";
+import useAbortApiCall from "../../hooks/useAbortApiCall";
 
-const BidProposals = ({ setActiveBidId }) => {
+const BidProposals = ({ setActiveBidId, activeBidId }) => {
   const [showBidProposalDetails, setShowBidProposalDetails] = useState(false);
   const [singleBidProposal, setSingleBidProposal] = useState(null);
   const [showTruckerDetails, setShowTruckerDetails] = useState(false);
 
   const { bidProposals } = useSelector((state) => state.root.bid);
+  const { token } = useSelector((state) => state.root.auth);
+
+  const { AbortControllerRef } = useAbortApiCall();
 
   const dispatch = useDispatch();
 
@@ -36,12 +43,14 @@ const BidProposals = ({ setActiveBidId }) => {
     dispatch(handleChangeShowBidProposal(false));
   };
 
+
   return (
     <>
       {showBidProposalDetails && !showTruckerDetails ? (
         <BidDetails
           setShowBidProposalDetails={setShowBidProposalDetails}
           singleBidProposal={singleBidProposal}
+          setActiveBidId={setActiveBidId}
         />
       ) : !showBidProposalDetails && showTruckerDetails ? (
         <TruckerProfile
@@ -89,6 +98,11 @@ const BidProposals = ({ setActiveBidId }) => {
                       >
                         View profile
                       </p>
+                      {proposal?.isAccepted && (
+                        <p className="text-greenColor w-fit bg-green-50 rounded-lg p-1 font-semibold">
+                          Accepted
+                        </p>
+                      )}
                     </div>
                   </div>
                   {/* price / view proposal */}

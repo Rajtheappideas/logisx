@@ -3,7 +3,9 @@ import SingleJob from "../SingleJob";
 import { useSelector } from "react-redux";
 
 const Favourites = () => {
-  const { favoriteLoading, favorites } = useSelector((state) => state.root.bid);
+  const { favoriteLoading, favorites, searchData } = useSelector(
+    (state) => state.root.bid
+  );
 
   return (
     <div className="bg-bgLight w-full min-h-screen">
@@ -14,7 +16,15 @@ const Favourites = () => {
         <div className="w-full grid lg:grid-cols-2 md:gap-5 gap-3 place-items-start items-start">
           {favoriteLoading ? (
             <div className="loading col-span-full">Loading...</div>
-          ) : favorites !== undefined && favorites.length > 0 ? (
+          ) : favorites !== undefined && searchData.length > 0 ? (
+            searchData.map((favorite) => (
+              <SingleJob
+                data={favorite}
+                jobDescription="Job description placed here. This is just a text holder for the meant time."
+                key={favorite?._id}
+              />
+            ))
+          ) : favorites.length > 0 ? (
             favorites.map((favorite) => (
               <SingleJob
                 data={favorite}

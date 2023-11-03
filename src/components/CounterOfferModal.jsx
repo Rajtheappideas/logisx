@@ -1,9 +1,27 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import toast from "react-hot-toast";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  handleBidProposals,
+  handleCounterOffer,
+  handleGetPendingBids,
+} from "../redux/BidSlice";
+import useAbortApiCall from "../hooks/useAbortApiCall";
 
 const CounterOfferModal = ({
   setShowCounterOfferModal,
   showCounterOfferModal,
+  singleBidProposal,
 }) => {
+  const [counterOffer, setCounterOffer] = useState(0);
+
+  const { counterOfferLoading } = useSelector((s) => s.root.bid);
+  const { token } = useSelector((s) => s.root.auth);
+
+  const dispatch = useDispatch();
+
+  const { AbortControllerRef, abortApiCall } = useAbortApiCall();
+
   const modalRef = useRef(null);
 
   useEffect(() => {
@@ -20,7 +38,45 @@ const CounterOfferModal = ({
 
   function handleClickOutside() {
     setShowCounterOfferModal(false);
+    setCounterOffer(0);
   }
+
+  const handleSubmit = () => {
+    toast.remove();
+    if (counterOfferLoading) return;
+    if (counterOffer <= 0)
+      return toast.error("Please enter price more than 0 ");
+    const response = dispatch(
+      handleCounterOffer({
+        bidId: singleBidProposal?._id,
+        counterOffer,
+        signal: AbortControllerRef,
+      })
+    );
+    if (response) {
+      response.then((res) => {
+        if (res?.payload?.status === "success") {
+          toast.success("Counter offer sent successfully.");
+          setTimeout(() => {
+            setShowCounterOfferModal(false);
+            dispatch(
+              handleBidProposals({
+                jobId: singleBidProposal?.jobId?._id,
+                token,
+                signal: AbortControllerRef,
+              })
+            );
+          }, 500);
+        }
+      });
+    }
+  };
+
+  useEffect(() => {
+    return () => {
+      setCounterOffer(0);
+    };
+  }, []);
 
   return (
     <div
@@ -38,16 +94,32 @@ const CounterOfferModal = ({
           Counter offer
         </p>
         <p className="text-base text-primaryBlue text-left">Enter your offer</p>
-        <input type="text" className="input_field" placeholder="$1000" />
+        <input
+          type="number"
+          min="1"
+          value={counterOffer}
+          onChange={(e) => {
+            // if (/^[0-9._\b]+$/.test(e.target.value)) {
+            //   setCounterOffer(e.target.value);
+            // }
+            setCounterOffer(e.target.value);
+          }}
+          className="input_field"
+        />
         <div className="flex w-full justify-end items-center gap-x-2 text-sm font-semibold">
           <button
             className="text-textBlackcolor uppercase transition p-1 hover:bg-gray-200 rounded-lg"
             onClick={() => setShowCounterOfferModal(false)}
+            disabled={counterOfferLoading}
           >
             Cancel
           </button>
-          <button className="text-primaryBlue uppercase p-1 hover:bg-blue-200 rounded-lg">
-            Send
+          <button
+            onClick={() => handleSubmit()}
+            className="text-primaryBlue uppercase p-1 hover:bg-blue-200 rounded-lg"
+            disabled={counterOfferLoading}
+          >
+            {counterOfferLoading ? "sending..." : "send"}
           </button>
         </div>
       </div>

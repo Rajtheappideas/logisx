@@ -3,32 +3,39 @@ import { toast } from "react-hot-toast";
 import { useDropzone } from "react-dropzone";
 import { AiOutlineClose } from "react-icons/ai";
 import fileupload from "../assets/images/upload_icon.png";
+import { useDispatch, useSelector } from "react-redux";
+import { handleRequestMutlipleBid } from "../redux/BidSlice";
+import useAbortApiCall from "../hooks/useAbortApiCall";
 
 const UploadFile = ({
   setShowUploadFile,
   showUploadFile,
-  setImages,
-  images,
+  setMutlipleBidFile,
+  mutlipleBidFile,
 }) => {
   const [loading, setLoading] = useState(false);
+
+  const { createBidLoading } = useSelector((s) => s.root.bid);
+  const { token } = useSelector((s) => s.root.auth);
+
+  const dispatch = useDispatch();
+
+  const { AbortControllerRef, abortApiCall } = useAbortApiCall();
 
   const uploadFileRef = useRef(null);
 
   const { getInputProps, getRootProps } = useDropzone({
     accept: {
-      "image/jpeg": [],
-      "image/jpg": [],
-      "image/png": [],
-      "image/gif": [],
+      ".csv": [],
     },
     onDrop: (acceptedFiles) => {
-      setImages(acceptedFiles);
+      setMutlipleBidFile(acceptedFiles);
     },
-    maxFiles: 10,
+    maxFiles: 1,
     onDropRejected: (rejection) => {
       toast.remove();
-      if (rejection.length > 10) {
-        toast.error("You can upload maximum 10 files.");
+      if (rejection.length > 1) {
+        toast.error("You can upload maximum 1 files.");
       } else {
         toast.error(rejection[0]?.errors[0]?.message);
       }
@@ -36,25 +43,7 @@ const UploadFile = ({
   });
 
   const handleChangeFile = (e) => {
-    // const existingFile = images
-    //   .flat(Infinity)
-    //   .filter((image) =>
-    //     Object.values(e.target.files).some((img) => img.name === image.name)
-    //   );
-    // if (existingFile.length > 0) {
-    //   toast.error("File is already added!!!");
-    // } else {
-    if (Object.values(e.target.files).flat(Infinity).length > 11) {
-      return toast.error("you can upload 11 images maximum!!!");
-    } else {
-      setImages([...images, Object.values(e.target.files)]);
-    }
-    // }
-  };
-
-  const handleDeleteFile = (name) => {
-    const file = images.flat(Infinity).filter((img) => img?.name !== name);
-    setImages(file);
+    setMutlipleBidFile(e.target.files[0]);
   };
 
   useEffect(() => {
@@ -74,8 +63,33 @@ const UploadFile = ({
 
   function handleClickOutside() {
     setShowUploadFile(false);
+    setMutlipleBidFile(null);
   }
 
+  const handleUploadFile = () => {
+    if (mutlipleBidFile === null) return toast.error("Please select file");
+    if (createBidLoading) return;
+    const response = dispatch(
+      handleRequestMutlipleBid({
+        file: mutlipleBidFile[0],
+        token,
+        signal: AbortControllerRef,
+      })
+    );
+    if (response) {
+      response.then((res) => {
+        if (res?.payload?.status === "success") {
+          toast.success("File uploaded successfully");
+          toast(res?.payload?.message);
+          setShowUploadFile(false);
+        }
+      });
+    }
+  };
+
+  useEffect(() => {
+    return () => abortApiCall();
+  }, []);
   return (
     <div
       className={`fixed bg-black/10 duration-300 z-50 ease-out ${
@@ -96,45 +110,26 @@ const UploadFile = ({
               type="button"
               onClick={() => {
                 setShowUploadFile(false);
-                setImages([]);
+                setMutlipleBidFile(null);
               }}
             >
               <AiOutlineClose size={30} />
             </button>
           </div>
-          {images.length > 0 ? (
+          {mutlipleBidFile !== null ? (
             <div className="w-full h-[70%] space-y-4">
               <div className="overflow-y-scroll scrollbar h-full space-y-2 w-full">
-                {images.flat(Infinity).map((image, index) => (
-                  <div
-                    key={index}
-                    className="bg-gray-100 border border-BorderGray w-full p-3 flex justify-between items-center text-black text-base"
-                  >
-                    <p>{image?.name}</p>
+                <div className="bg-gray-100 border border-BorderGray w-full p-3 flex justify-between items-center text-black text-base">
+                  <p>{mutlipleBidFile[0]?.name}</p>
 
-                    <button
-                      type="button"
-                      onClick={() => handleDeleteFile(image?.name)}
-                    >
-                      <AiOutlineClose height={25} />
-                    </button>
-                  </div>
-                ))}
+                  <button
+                    type="button"
+                    onClick={() => setMutlipleBidFile(null)}
+                  >
+                    <AiOutlineClose height={25} />
+                  </button>
+                </div>
               </div>
-              {/* <div className="relative h-auto text-center w-full">
-                <input
-                  type="file"
-                  className="absolute w-40 cursor-pointer inset-0 h-12 z-50 opacity-0 mx-auto rounded-3xl"
-                  onChange={(e) => handleChangeFile(e)}
-                  multiple={true}
-                />
-                <button
-                  type="button"
-                  className="md:w-40 w-32 lg:h-12 h-10 z-10 mx-auto absolute cursor-pointer inset-0 rounded-3xl bg-green-500 text-white text-center"
-                >
-                  Choose Files
-                </button>
-              </div> */}
             </div>
           ) : (
             <div
@@ -154,8 +149,7 @@ const UploadFile = ({
                   type="file"
                   className="absolute w-full cursor-pointer inset-0 h-full z-50 opacity-0 mx-auto rounded-3xl"
                   onChange={(e) => handleChangeFile(e)}
-                  multiple={true}
-                  accept="image/*"
+                  accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
                 />
                 <button
                   type="button"
@@ -169,14 +163,16 @@ const UploadFile = ({
               </p>
             </div>
           )}
-          {images.length > 0 && (
+          {mutlipleBidFile !== null && (
             <button
               type="button"
-              className="w-full bg-primaryBlue font-bold text-white text-center h-10 rounded-lg"
-              //       onClick={() => handleUploadFile()}
-              disabled={loading}
+              className={`w-full bg-primaryBlue font-bold text-white text-center h-10 rounded-lg ${
+                createBidLoading && "cursor-not-allowed opacity-50"
+              }`}
+              onClick={() => handleUploadFile()}
+              disabled={createBidLoading}
             >
-              {loading ? "Uploading..." : "Upload"}
+              {createBidLoading ? "Uploading..." : "Upload"}
             </button>
           )}
         </div>

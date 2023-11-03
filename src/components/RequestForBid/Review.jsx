@@ -65,6 +65,7 @@ const Review = ({ setStep, step, getValues, setShowSuccessPopup }) => {
     return () => abortApiCall();
   }, []);
 
+
   return (
     <div className="w-full md:space-y-5 space-y-3 md:text-base text-sm">
       <p className="md:text-2xl text-lg text-primaryBlue font-semibold">
@@ -201,15 +202,15 @@ const Review = ({ setStep, step, getValues, setShowSuccessPopup }) => {
         </div>
         <div className="space-y-1">
           <p className="text-sm text-disableGray font-semibold">Endorsements</p>
-          {endorsement.map((list, i) => (
-            <p key={i}>{list}</p>
-          ))}
+          {endorsement.length > 0
+            ? endorsement.map((list, i) => <p key={i}>{list}</p>)
+            : "-"}
         </div>
         <div className="space-y-1">
           <p className="text-sm text-disableGray font-semibold">
             Specification
           </p>
-          <p>{specification}</p>
+          <p>{specification !== "" ? specification : "-"}</p>
         </div>
       </div>
       {/* step 3 */}
@@ -224,7 +225,7 @@ const Review = ({ setStep, step, getValues, setShowSuccessPopup }) => {
               EDIT
             </p>
           </div>
-          <p>{loadNotes}</p>
+          <p>{loadNotes !== "" ? loadNotes : "-"}</p>
         </div>
         <div>
           <p className="text-sm text-disableGray font-semibold">P.O. number</p>
@@ -234,7 +235,7 @@ const Review = ({ setStep, step, getValues, setShowSuccessPopup }) => {
           <p className="text-sm text-disableGray font-semibold">
             Reference number
           </p>
-          <p>{refrenceNumber}</p>
+          <p>{refrenceNumber !== "" ? refrenceNumber : "-"}</p>
         </div>
       </div>
       {/* btns */}

@@ -12,6 +12,7 @@ import {
   handleGetCancelledBids,
   handleGetPendingBids,
   handleGetShippedBids,
+  hanldeFindSingleBid,
 } from "../../redux/BidSlice";
 import useAbortApiCall from "../../hooks/useAbortApiCall";
 import RequestForBid from "../RequestForBid/RequestForBid";
@@ -21,14 +22,19 @@ import BidProposals from "./BidProposals";
 const Bids = () => {
   const [view, setView] = useState("grid");
   const [activeBidId, setActiveBidId] = useState(null);
-  const [shwoBidDetails, setShwoBidDetails] = useState(false);
 
   const { activeComponent } = useSelector((state) => state.root.globalStates);
 
   const { token } = useSelector((state) => state.root.auth);
-  const { pendingBids, loading, showBidProposal, bidLoading } = useSelector(
-    (state) => state.root.bid
-  );
+  const {
+    pendingBids,
+    loading,
+    showBidProposal,
+    bidLoading,
+    cancelLoading,
+    searchBids,
+    singleBidDetails,
+  } = useSelector((state) => state.root.bid);
 
   const { AbortControllerRef } = useAbortApiCall();
 
@@ -39,6 +45,11 @@ const Bids = () => {
     // dispatch(handleGetShippedBids({ token, signal: AbortControllerRef }));
     // dispatch(handleGetCancelledBids({ token, signal: AbortControllerRef }));
     window.scrollTo({ top: 0, behavior: "smooth" });
+    if (singleBidDetails !== null) {
+      setActiveBidId(singleBidDetails?._id);
+    }
+
+    return () => dispatch(hanldeFindSingleBid(null));
   }, []);
 
   useEffect(() => {
@@ -61,9 +72,12 @@ const Bids = () => {
         ) : (
           <>
             {showBidProposal && activeBidId !== null && (
-              <BidProposals setActiveBidId={setActiveBidId} />
+              <BidProposals
+                activeBidId={activeBidId}
+                setActiveBidId={setActiveBidId}
+              />
             )}
-       
+
             {!showBidProposal && (
               <div className="md:space-y-3 space-y-2">
                 {/* title + btns */}
@@ -125,8 +139,16 @@ const Bids = () => {
                 {activeComponent === "pending bids" && !showBidProposal && (
                   <>
                     {view === "grid" ? (
-                      <div className="grid 2xl:grid-cols-3 lg:grid-cols-2 md:gap-5 gap-3 w-full">
-                        {pendingBids.length > 0 ? (
+                      <div className="grid 2xl:grid-cols-3 xl:grid-cols-2 md:gap-5 gap-3 w-full">
+                        {searchBids.length > 0 ? (
+                          searchBids.map((bid) => (
+                            <SingleJob
+                              key={bid?._id}
+                              data={bid}
+                              setActiveBidId={setActiveBidId}
+                            />
+                          ))
+                        ) : pendingBids.length > 0 ? (
                           pendingBids.map((bid) => (
                             <SingleJob
                               key={bid?._id}
@@ -141,10 +163,7 @@ const Bids = () => {
                         )}
                       </div>
                     ) : (
-                      <TableViewBid
-                        setActiveBidId={setActiveBidId}
-                        setShowBidDetails={setShwoBidDetails}
-                      />
+                      <TableViewBid setActiveBidId={setActiveBidId} />
                     )}
                   </>
                 )}

@@ -10,7 +10,7 @@ const RequestBid = () => {
   const [bidUploadType, setBidUploadType] = useState("single_bid");
   const [activeBidComponent, setActiveBidComponent] = useState("bid_upload");
   const [showUploadFile, setShowUploadFile] = useState(false);
-  const [images, setImages] = useState([]);
+  const [mutlipleBidFile, setMutlipleBidFile] = useState(null);
 
   const { activeHeader } = useSelector((state) => state.root.globalStates);
 
@@ -46,11 +46,11 @@ const RequestBid = () => {
           <UploadFile
             setShowUploadFile={setShowUploadFile}
             showUploadFile={showUploadFile}
-            setImages={setImages}
-            images={images}
+            setMutlipleBidFile={setMutlipleBidFile}
+            mutlipleBidFile={mutlipleBidFile}
           />
         )}
-        {images.length > 0 && <MultipleBidsTable />}
+        {/* {mutlipleBidFile !== null && <MultipleBidsTable />} */}
       </div>
     </div>
   );

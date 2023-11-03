@@ -7,22 +7,33 @@ const UploadBidDocs = ({
   setBidUploadType,
 }) => {
   return (
-    <div className="w-full min-h-screen">
-      <p
-        onClick={() => {
-          setActiveBidComponent("bid_upload");
-          setBidUploadType("single_bid");
-        }}
-        className="md:text-2xl text-lg cursor-pointer flex items-center text-primaryBlue font-semibold"
-      >
-        <BsArrowLeft className="inline-block md:text-2xl text-lg mr-2" />{" "}
-        Multiple Bids Uploads
-      </p>
-      <div className="w-full min-h-screen flex items-center justify-center flex-col">
+    <div className="w-full md:space-y-5 space-y-3">
+      <div className="flex items-center text-primaryBlue font-semibold justify-between">
+        <div
+          onClick={() => {
+            setActiveBidComponent("bid_upload");
+            setBidUploadType("single_bid");
+          }}
+          className="md:text-2xl text-lg cursor-pointer flex items-center text-primaryBlue font-semibold"
+        >
+          <BsArrowLeft className="inline-block md:text-2xl text-lg mr-2 mt-1" />{" "}
+          Multiple Bids Uploads
+        </div>
+        <div>
+          <a
+            href="https://logisx.uc.r.appspot.com/Mulitple%20bid%20request%20-%20sample.csv"
+            download
+            className="hover:underline"
+          >
+            Download Sample Format
+          </a>
+        </div>
+      </div>
+      <div className="w-full max-h-fit flex items-center justify-center flex-col">
         <img
           src={require("../../assets/images/upload_docs.png")}
           alt=""
-          className="h-fit w-fit object-contain"
+          className="md:h-fit md:w-fit h-60 w-60 object-contain"
         />
         <button
           className="uppercase blue_button float-right mt-2"

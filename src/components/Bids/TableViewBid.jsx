@@ -5,7 +5,7 @@ import ReactPaginate from "react-paginate";
 import { useDispatch, useSelector } from "react-redux";
 import SinlgeRowOfBid from "./SinlgeRowOfBid";
 
-const TableViewBid = ({ setShowBidDetails, setActiveBidId }) => {
+const TableViewBid = ({ setActiveBidId }) => {
   const [pageNumber, setPageNumber] = useState(0);
 
   const dispatch = useDispatch();

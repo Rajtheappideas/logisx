@@ -4,9 +4,9 @@ import Details from "./Details";
 import Timeline from "./Timeline";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  handleChangeActiveJobDetails,
   handleChangeShowChatSidebar,
 } from "../../redux/globalStates";
+import { handleChangeShowJobDetails } from "../../redux/BidSlice";
 
 const ActiveJobsDetails = () => {
   const [activeTab, setActiveTab] = useState("details");
@@ -40,7 +40,7 @@ const ActiveJobsDetails = () => {
             Timeline
           </button>
           <button
-            onClick={() => dispatch(handleChangeShowChatSidebar(true))}
+            // onClick={() => dispatch(handleChangeShowChatSidebar(true))}
             className="bg-disableGray rounded-full md:w-36 w-28 md:p-3 p-1"
           >
             Chat
@@ -50,7 +50,7 @@ const ActiveJobsDetails = () => {
           <span>
             <HiOutlineXMark
               role="button"
-              onClick={() => dispatch(handleChangeActiveJobDetails(false))}
+              onClick={() => dispatch(handleChangeShowJobDetails(false))}
               className="text-2xl"
             />
           </span>

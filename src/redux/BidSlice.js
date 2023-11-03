@@ -48,6 +48,29 @@ export const handleRequestBid = createAsyncThunk(
   }
 );
 
+export const handleRequestMutlipleBid = createAsyncThunk(
+  "bid/handleRequestMutlipleBid",
+  async ({ file, token, signal }, { rejectWithValue }) => {
+    try {
+      signal.current = new AbortController();
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const response = await PostUrl("request_multiple_bid", {
+        data: formData,
+        signal: signal.current.signal,
+        headers: { token, "Content-Type": "multipart/form-data" },
+      });
+      return response.data;
+    } catch (error) {
+      if (error?.response) {
+        toast.error(error?.response?.data?.message);
+      }
+      return rejectWithValue(error?.response?.data);
+    }
+  }
+);
+
 export const handleBidProposals = createAsyncThunk(
   "bid/handleBidProposals",
   async ({ jobId, token, signal }, { rejectWithValue }) => {
@@ -205,6 +228,65 @@ export const handleRemoveFromFavorites = createAsyncThunk(
   }
 );
 
+export const handleCounterOffer = createAsyncThunk(
+  "bid/handleCounterOffer",
+  async ({ bidId, counterOffer, signal }, { rejectWithValue }) => {
+    try {
+      signal.current = new AbortController();
+      const response = await PostUrl("counter_offer", {
+        data: { bidId, counterOffer },
+        signal: signal.current.signal,
+      });
+      return response.data;
+    } catch (error) {
+      if (error?.response) {
+        toast.error(error?.response?.data?.message);
+      }
+      return rejectWithValue(error?.response?.data);
+    }
+  }
+);
+
+export const handleAcceptBid = createAsyncThunk(
+  "bid/handleAcceptBid",
+  async ({ bidId, token, signal }, { rejectWithValue }) => {
+    try {
+      signal.current = new AbortController();
+      const response = await PostUrl("bid_accept", {
+        data: { bidId },
+        signal: signal.current.signal,
+        headers: { token },
+      });
+      return response.data;
+    } catch (error) {
+      if (error?.response) {
+        toast.error(error?.response?.data?.message);
+      }
+      return rejectWithValue(error?.response?.data);
+    }
+  }
+);
+
+export const handleCancelBid = createAsyncThunk(
+  "bid/handleCancelBid",
+  async ({ jobId, token, signal }, { rejectWithValue }) => {
+    try {
+      signal.current = new AbortController();
+      const response = await PostUrl("cancel_bid", {
+        data: { jobId },
+        signal: signal.current.signal,
+        headers: { token },
+      });
+      return response.data;
+    } catch (error) {
+      if (error?.response) {
+        toast.error(error?.response?.data?.message);
+      }
+      return rejectWithValue(error?.response?.data);
+    }
+  }
+);
+
 const initialState = {
   loading: false,
   jobLoading: false,
@@ -213,6 +295,9 @@ const initialState = {
   favoriteLoading: false,
   addFavoriteLoading: false,
   removeFavoriteLoading: false,
+  counterOfferLoading: false,
+  cancelBidLoading: false,
+  acceptBidLoading: false,
   error: null,
   success: false,
   pendingBids: [],
@@ -221,8 +306,14 @@ const initialState = {
   completedJobs: [],
   favorites: [],
   bidProposals: [],
+  searchBids: [],
+  searchJobs: [],
+  searchData: [],
   showBidProposal: false,
   showBidDetails: false,
+  showJobDetails: false,
+  singleBidDetails: null,
+  singleJobDetails: null,
 };
 
 const BidSlice = createSlice({
@@ -232,9 +323,15 @@ const BidSlice = createSlice({
     handleChangeShowBidProposal: (state, { payload }) => {
       state.showBidProposal = payload;
     },
+
+    handleChangeShowJobDetails: (state, { payload }) => {
+      state.showJobDetails = payload;
+    },
+
     handleChangeShowBidDetails: (state, { payload }) => {
       state.showBidDetails = payload;
     },
+
     handelRemoveFavourite: (state, { payload }) => {
       const modArr = state.favorites.filter((item) => item?._id !== payload);
 
@@ -245,6 +342,7 @@ const BidSlice = createSlice({
         );
       }
     },
+
     handelAddFavourite: (state, { payload }) => {
       state.favorites = [...state.favorites, payload];
       const modArr = state.pendingBids.map((i) =>
@@ -252,6 +350,43 @@ const BidSlice = createSlice({
       );
       if (modArr) {
         state.pendingBids = modArr;
+      }
+    },
+
+    handleSearchBidAndJob: (state, { payload }) => {
+      if (payload?.from === "bids") {
+        state.searchBids = payload?.data;
+      } else if (payload?.from === "jobs") {
+        state.searchJobs = payload?.data;
+      } else {
+        state.searchData = payload?.data;
+      }
+    },
+
+    hanldeFindSingleBid: (state, { payload }) => {
+      const bid = state.pendingBids.find((bid) => bid?._id === payload);
+      if (bid) {
+        state.singleBidDetails = bid;
+      } else {
+        state.singleBidDetails = null;
+      }
+    },
+
+    hanldeFindSingleJob: (state, { payload }) => {
+      if (payload?.jobStatus === "in-transit") {
+        const job = state.inTransitJobs.find((job) => job?._id === payload?.id);
+        if (job) {
+          state.singleJobDetails = job;
+        } else {
+          state.singleJobDetails = null;
+        }
+      } else {
+        const job = state.completedJobs.find((job) => job?._id === payload?.id);
+        if (job) {
+          state.singleJobDetails = job;
+        } else {
+          state.singleJobDetails = null;
+        }
       }
     },
   },
@@ -433,6 +568,78 @@ const BidSlice = createSlice({
       state.success = false;
       state.error = payload ?? null;
     });
+
+    // request mutilpe bid
+    builder.addCase(handleRequestMutlipleBid.pending, (state, {}) => {
+      state.createBidLoading = true;
+      state.success = false;
+      state.error = null;
+    });
+    builder.addCase(
+      handleRequestMutlipleBid.fulfilled,
+      (state, { payload }) => {
+        state.createBidLoading = false;
+        state.success = true;
+        state.error = null;
+        // state.pendingBids = [payload?.job, ...state.pendingBids];
+      }
+    );
+    builder.addCase(handleRequestMutlipleBid.rejected, (state, { payload }) => {
+      state.createBidLoading = false;
+      state.success = false;
+      state.error = payload ?? null;
+    });
+
+    // counter offer
+    builder.addCase(handleCounterOffer.pending, (state, {}) => {
+      state.counterOfferLoading = true;
+      state.success = false;
+      state.error = null;
+    });
+    builder.addCase(handleCounterOffer.fulfilled, (state, { payload }) => {
+      state.counterOfferLoading = false;
+      state.success = true;
+      state.error = null;
+    });
+    builder.addCase(handleCounterOffer.rejected, (state, { payload }) => {
+      state.counterOfferLoading = false;
+      state.success = false;
+      state.error = payload ?? null;
+    });
+
+    //accept bid
+    builder.addCase(handleAcceptBid.pending, (state, {}) => {
+      state.acceptBidLoading = true;
+      state.success = false;
+      state.error = null;
+    });
+    builder.addCase(handleAcceptBid.fulfilled, (state, { payload }) => {
+      state.acceptBidLoading = false;
+      state.success = true;
+      state.error = null;
+    });
+    builder.addCase(handleAcceptBid.rejected, (state, { payload }) => {
+      state.acceptBidLoading = false;
+      state.success = false;
+      state.error = payload ?? null;
+    });
+
+    //cancel bid
+    builder.addCase(handleCancelBid.pending, (state, {}) => {
+      state.cancelBidLoading = true;
+      state.success = false;
+      state.error = null;
+    });
+    builder.addCase(handleCancelBid.fulfilled, (state, { payload }) => {
+      state.cancelBidLoading = false;
+      state.success = true;
+      state.error = null;
+    });
+    builder.addCase(handleCancelBid.rejected, (state, { payload }) => {
+      state.cancelBidLoading = false;
+      state.success = false;
+      state.error = payload ?? null;
+    });
   },
 });
 
@@ -441,6 +648,10 @@ export const {
   handelRemoveFavourite,
   handleChangeShowBidDetails,
   handelAddFavourite,
+  handleSearchBidAndJob,
+  hanldeFindSingleBid,
+  hanldeFindSingleJob,
+  handleChangeShowJobDetails,
 } = BidSlice.actions;
 
 export default BidSlice.reducer;

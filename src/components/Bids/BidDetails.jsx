@@ -5,7 +5,11 @@ import Timeline from "./Timeline";
 import { useDispatch, useSelector } from "react-redux";
 import { handleChangeShowChatSidebar } from "../../redux/globalStates";
 
-const BidDetails = ({ setShowBidProposalDetails, singleBidProposal }) => {
+const BidDetails = ({
+  setShowBidProposalDetails,
+  singleBidProposal,
+  setActiveBidId,
+}) => {
   const [activeTab, setActiveTab] = useState("details");
 
   const { activeComponent } = useSelector((state) => state.root.globalStates);
@@ -20,8 +24,14 @@ const BidDetails = ({ setShowBidProposalDetails, singleBidProposal }) => {
     <div className="w-full">
       {/* tabs + icon */}
       <div className="flex w-full justify-around items-center md:mb-4 mb-2">
-        <div className="xl:w-1/3 lg:w-1/5"></div>
-        {activeComponent === "pending bids" && singleBidProposal?.isAccepted ? (
+        {singleBidProposal?.isAccepted ? (
+          <div className="text-greenColor font-semibold md:text-xl text-lg w-full text-center">
+            <span className="bg-green-50 rounded-lg p-2">Bid is accepted</span>
+          </div>
+        ) : (
+          <div className="w-full" />
+        )}
+        {/* {activeComponent === "pending bids" && singleBidProposal?.isAccepted ? (
           <div className="flex-1 space-x-2 space-y-2">
             <button
               onClick={() => setActiveTab("details")}
@@ -52,7 +62,7 @@ const BidDetails = ({ setShowBidProposalDetails, singleBidProposal }) => {
           </div>
         ) : (
           <div className="w-full"></div>
-        )}
+        )} */}
 
         <div>
           <span>
@@ -67,7 +77,10 @@ const BidDetails = ({ setShowBidProposalDetails, singleBidProposal }) => {
         </div>
       </div>
       {activeTab === "details" && (
-        <Details singleBidProposal={singleBidProposal} />
+        <Details
+          setActiveBidId={setActiveBidId}
+          singleBidProposal={singleBidProposal}
+        />
       )}
       {activeTab === "timeline" && <Timeline />}
     </div>

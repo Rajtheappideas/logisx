@@ -31,7 +31,10 @@ import { PiFileText } from "react-icons/pi";
 import { toast } from "react-hot-toast";
 import { handleLogout } from "../redux/AuthSlice";
 import { socket } from "../Socket";
-import { handleChangeShowBidProposal } from "../redux/BidSlice";
+import {
+  handleChangeShowBidProposal,
+  handleSearchBidAndJob,
+} from "../redux/BidSlice";
 
 const Header = () => {
   const [openSidebar, setOpenSidebar] = useState(false);
@@ -40,6 +43,8 @@ const Header = () => {
   const { activeHeader, activeComponent } = useSelector(
     (state) => state.root.globalStates
   );
+  const { pendingBids, inTransitJobs, completedJobs, favorites, searchData } =
+    useSelector((state) => state.root.bid);
 
   const dispatch = useDispatch();
 
@@ -116,6 +121,121 @@ const Header = () => {
     handleChangeCloseComponent();
   };
 
+  const debounce = (mainFunction, delay) => {
+    let timer;
+
+    return function (...args) {
+      clearTimeout(timer);
+
+      timer = setTimeout(() => {
+        mainFunction(...args);
+      }, delay);
+    };
+  };
+
+  const handleSearch = (e) => {
+    if (activeComponent.includes("bids")) {
+      const searchBids = pendingBids.filter((bid) =>
+        Object.values(bid).some((val) => {
+          if (typeof val === "string") {
+            return (
+              bid?.arrivalLocation
+                .toLocaleLowerCase()
+                .includes(e.target.value.toLocaleLowerCase()) ||
+              bid?.departureLocation
+                .toLocaleLowerCase()
+                .includes(e.target.value.toLocaleLowerCase()) ||
+              bid?.status
+                .toLocaleLowerCase()
+                .includes(e.target.value.toLocaleLowerCase())
+            );
+          }
+        })
+      );
+      if (searchBids.length > 0) {
+        dispatch(handleChangeActiveComponent("pending bids"));
+        dispatch(handleSearchBidAndJob({ from: "bids", data: searchBids }));
+      }
+    } else if (activeComponent.includes("jobs")) {
+      const allJobs = [...inTransitJobs, ...completedJobs];
+      const searchJobs = allJobs.filter((job) =>
+        Object.values(job).some((val) => {
+          if (typeof val === "string") {
+            return (
+              job?.arrivalLocation
+                .toLocaleLowerCase()
+                .includes(e.target.value.toLocaleLowerCase()) ||
+              job?.departureLocation
+                .toLocaleLowerCase()
+                .includes(e.target.value.toLocaleLowerCase()) ||
+              job?.status
+                .toLocaleLowerCase()
+                .includes(e.target.value.toLocaleLowerCase())
+            );
+          }
+        })
+      );
+      if (searchJobs.length > 0) {
+        dispatch(handleSearchBidAndJob({ from: "jobs", data: searchJobs }));
+      }
+    } else if (activeComponent.includes("favorites")) {
+      const searchedData = favorites.filter((fav) =>
+        Object.values(fav).some((val) => {
+          if (typeof val === "string") {
+            return (
+              fav?.arrivalLocation
+                .toLocaleLowerCase()
+                .includes(e.target.value.toLocaleLowerCase()) ||
+              fav?.departureLocation
+                .toLocaleLowerCase()
+                .includes(e.target.value.toLocaleLowerCase()) ||
+              fav?.status
+                .toLocaleLowerCase()
+                .includes(e.target.value.toLocaleLowerCase())
+            );
+          }
+        })
+      );
+      if (searchedData.length > 0) {
+        dispatch(handleSearchBidAndJob({ from: "", data: searchedData }));
+      }
+    } else {
+      const searchBids = pendingBids.filter((bid) =>
+        Object.values(bid).some((val) => {
+          if (typeof val === "string") {
+            return (
+              bid?.arrivalLocation
+                .toLocaleLowerCase()
+                .includes(e.target.value.toLocaleLowerCase()) ||
+              bid?.departureLocation
+                .toLocaleLowerCase()
+                .includes(e.target.value.toLocaleLowerCase()) ||
+              bid?.status
+                .toLocaleLowerCase()
+                .includes(e.target.value.toLocaleLowerCase())
+            );
+          }
+        })
+      );
+      if (searchBids.length > 0) {
+        dispatch(handleChangeActiveComponent("pending bids"));
+        dispatch(handleChangeActiveHeader("bids"));
+        dispatch(handleSearchBidAndJob({ from: "", data: searchBids }));
+      }
+    }
+  };
+
+  const handleChangeSearchTerm = (e) => {
+    if (e.target.value === "") {
+      dispatch(handleSearchBidAndJob({ from: "bids", data: [] }));
+      dispatch(handleSearchBidAndJob({ from: "jobs", data: [] }));
+      dispatch(handleSearchBidAndJob({ from: "", data: [] }));
+      return;
+    } else {
+      debounce(handleSearch(e), 2000);
+    }
+  };
+
   return (
     <div className="h-auto bg-white drop-shadow relative z-10">
       {/* desktop */}
@@ -176,9 +296,13 @@ const Header = () => {
             </span>
             <input
               className=" block bg-[#F6F6F6] w-full border-none rounded-md md:py-2 py-1 pl-9 pr-3 shadow-sm outline-none sm:text-sm"
-              placeholder="Search"
+              placeholder="arrival, departure & status"
               type="text"
               name="search"
+              title="Enter Arrival location, Departure location & Status"
+              onChange={(e) => {
+                handleChangeSearchTerm(e);
+              }}
             />
           </div>
           <AiOutlineMenu
@@ -360,7 +484,7 @@ const Header = () => {
                 <ul className="">
                   <li className="space-y-0.5">
                     {accountTabs.map((tab) => (
-                      <>
+                      <div key={tab.id}>
                         <hr />
                         <div
                           onClick={() => {
@@ -389,7 +513,7 @@ const Header = () => {
                             {tab.title}
                           </p>
                         </div>
-                      </>
+                      </div>
                     ))}
                   </li>
                 </ul>

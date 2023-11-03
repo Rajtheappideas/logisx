@@ -11,14 +11,17 @@ import useAbortApiCall from "../../hooks/useAbortApiCall";
 const Jobs = () => {
   const [view, setView] = useState("grid");
 
-  const { showActiveJobDetails, activeComponent } = useSelector(
-    (state) => state.root.globalStates
-  );
+  const { activeComponent } = useSelector((state) => state.root.globalStates);
 
   const { token } = useSelector((state) => state.root.auth);
-  const { inTransitJobs, loading, jobLoading } = useSelector(
-    (state) => state.root.bid
-  );
+  const {
+    inTransitJobs,
+    completedJobs,
+    loading,
+    jobLoading,
+    searchJobs,
+    showJobDetails,
+  } = useSelector((state) => state.root.bid);
 
   const { AbortControllerRef } = useAbortApiCall();
 
@@ -34,9 +37,9 @@ const Jobs = () => {
         <div className="loading">Loading...</div>
       ) : (
         <>
-          {showActiveJobDetails && <JobDetails />}
+          {showJobDetails && <JobDetails />}
 
-          {!showActiveJobDetails && (
+          {!showJobDetails && (
             <div className="space-y-3">
               {/* title + btns */}
               <div className="flex justify-between">
@@ -70,9 +73,19 @@ const Jobs = () => {
                 </div>
               </div>
               {view === "grid" ? (
-                <div className="grid lg:grid-cols-2 md:gap-5 gap-3 w-full">
-                  {inTransitJobs.length > 0 ? (
+                <div className="grid 2xl:grid-cols-3 xl:grid-cols-2 md:gap-5 gap-3 w-full">
+                  {searchJobs.length > 0 ? (
+                    searchJobs.map((job) => (
+                      <SingleJob key={job?._id} data={job} />
+                    ))
+                  ) : activeComponent === "active jobs" &&
+                    inTransitJobs.length > 0 ? (
                     inTransitJobs.map((job) => (
+                      <SingleJob key={job?._id} data={job} />
+                    ))
+                  ) : activeComponent === "completed jobs" &&
+                    completedJobs.length > 0 ? (
+                    completedJobs.map((job) => (
                       <SingleJob key={job?._id} data={job} />
                     ))
                   ) : (

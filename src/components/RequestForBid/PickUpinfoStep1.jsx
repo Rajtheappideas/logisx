@@ -49,11 +49,13 @@ const PickUpinfoStep1 = ({
   const [phoneNumber, setPhoneNumber] = useState(
     receiverPhone !== "" ? receiverPhone : ""
   );
-  const [latAndlng, setLatAndlng] = useState({
-    depLat: "",
-    depLng: "",
-    arrLat: "",
-    arrLng: "",
+  const [latAndlngForDeparture, setLatAndlngForDeparture] = useState({
+    Lat: "",
+    Lng: "",
+  });
+  const [latAndlngForArrival, setLatAndlngForArrival] = useState({
+    Lat: "",
+    Lng: "",
   });
   const [selectFirstLocationDeparture, setSelectFirstLocationDeparture] =
     useState(null);
@@ -83,7 +85,7 @@ const PickUpinfoStep1 = ({
       const place = searchValueArrival?.getPlace();
       const lat = place?.geometry?.location?.lat();
       const lng = place?.geometry?.location?.lng();
-      setLatAndlng({ ...latAndlng, arrLat: lat, arrLng: lng });
+      setLatAndlngForArrival({ Lat: lat, Lng: lng });
       setValue("arrivalLocation", place?.formatted_address || place?.name);
       setSelectFirstLocationArrival(place?.formatted_address);
     } else {
@@ -96,7 +98,7 @@ const PickUpinfoStep1 = ({
       const place = searchValueDeparture?.getPlace();
       const lat = place?.geometry?.location?.lat();
       const lng = place?.geometry?.location?.lng();
-      setLatAndlng({ ...latAndlng, depLat: lat, depLng: lng });
+      setLatAndlngForDeparture({ Lat: lat, Lng: lng });
       setValue("departureLocation", place?.formatted_address || place?.name);
       setSelectFirstLocationDeparture(place?.formatted_address);
     } else {
@@ -164,17 +166,22 @@ const PickUpinfoStep1 = ({
       toast.error("Phone is invalid");
       return true;
     }
-    if (Object.values(latAndlng).includes("")) {
+    if (
+      latAndlngForArrival.Lat === "" ||
+      latAndlngForArrival.Lng === "" ||
+      latAndlngForDeparture.Lat === "" ||
+      latAndlngForDeparture.Lng === ""
+    ) {
       toast.remove();
       toast.error("Please select valid locations");
       return;
     } else {
       setValue("departureLocation", departureLocation);
       setValue("arrivalLocation", arrivalLocation);
-      setValue("departureLat", latAndlng.depLat);
-      setValue("departureLng", latAndlng.depLng);
-      setValue("arrivalLat", latAndlng.arrLat);
-      setValue("arrivalLng", latAndlng.arrLng);
+      setValue("departureLat", latAndlngForDeparture.Lat);
+      setValue("departureLng", latAndlngForDeparture.Lng);
+      setValue("arrivalLat", latAndlngForArrival.Lat);
+      setValue("arrivalLng", latAndlngForArrival.Lng);
       setValue("departureDate", departureDate);
       setValue(
         "departureTime",
@@ -235,13 +242,13 @@ const PickUpinfoStep1 = ({
         const { formatted_address, geometry } = res?.results[0];
         const { lat, lng } = geometry?.location;
         setValue("departureLocation", formatted_address);
-        setLatAndlng({ ...latAndlng, depLat: lat, depLng: lng });
+        setLatAndlngForDeparture({ Lat: lng, Lng: lng });
         setSelectFirstLocationDeparture(formatted_address);
       }
     } catch (error) {
       reset({ ...getValues(), departureLat: "" });
       reset({ ...getValues(), departureLng: "" });
-      setLatAndlng({ ...latAndlng, depLat: "", depLng: "" });
+      setLatAndlngForDeparture({ Lat: "", Lng: "" });
     }
   }
 
@@ -254,23 +261,25 @@ const PickUpinfoStep1 = ({
         const { formatted_address, geometry } = res?.results[0];
         const { lat, lng } = geometry?.location;
         setValue("arrivalLocation", formatted_address);
-        setLatAndlng({ ...latAndlng, arrLat: lat, arrLng: lng });
+        setLatAndlngForArrival({ Lat: lat, Lng: lng });
         setSelectFirstLocationArrival(formatted_address);
       }
     } catch (error) {
       reset({ ...getValues(), arrivalLat: "" });
       reset({ ...getValues(), arrivalLng: "" });
-      setLatAndlng({ ...latAndlng, arrLat: "", arrLng: "" });
+      setLatAndlngForArrival({ Lat: "", Lng: "" });
     }
   }
 
   useEffect(() => {
     if (departureLat && arrivalLng) {
-      setLatAndlng({
-        arrLat: arrivalLat,
-        arrLng: arrivalLng,
-        depLat: departureLat,
-        depLng: departureLng,
+      setLatAndlngForArrival({
+        Lat: arrivalLat,
+        Lng: arrivalLng,
+      });
+      setLatAndlngForDeparture({
+        Lat: departureLat,
+        Lng: departureLng,
       });
     }
     setSelectFirstLocationDeparture(departureLocation);
@@ -294,6 +303,7 @@ const PickUpinfoStep1 = ({
     }, [3000]);
     return () => clearTimeout(timer);
   }, [watch("arrivalLocation")]);
+
 
   return (
     <>
@@ -332,7 +342,7 @@ const PickUpinfoStep1 = ({
               {errors?.departureLocation?.message}
             </span>
           </div>
-      
+
           {/* Arrival location */}
           <div className="w-full md:space-y-3 space-y-2">
             <label className="Label">Arrival location</label>

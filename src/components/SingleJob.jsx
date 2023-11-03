@@ -1,14 +1,20 @@
 import React, { memo } from "react";
 import { TfiLocationPin } from "react-icons/tfi";
 import { useDispatch, useSelector } from "react-redux";
-import { handleChangeActiveJobDetails } from "../redux/globalStates";
+import {
+  handleChangeActiveComponent,
+  handleChangeActiveHeader,
+} from "../redux/globalStates";
 import { RiHeartFill, RiHeartLine, RiTimerLine } from "react-icons/ri";
 import {
   handelAddFavourite,
   handelRemoveFavourite,
   handleAddtoFavorites,
   handleChangeShowBidProposal,
+  handleChangeShowJobDetails,
   handleRemoveFromFavorites,
+  hanldeFindSingleBid,
+  hanldeFindSingleJob,
 } from "../redux/BidSlice";
 import useAbortApiCall from "../hooks/useAbortApiCall";
 import toast from "react-hot-toast";
@@ -30,15 +36,36 @@ const SingleJob = memo(({ setActiveBidId, jobDescription, data }) => {
 
   const dispatch = useDispatch();
 
-  const handleDispatch = (id) => {
+  const handleDispatch = () => {
     if (
       activeComponent === "active jobs" ||
       activeComponent === "completed jobs"
     ) {
-      return dispatch(handleChangeActiveJobDetails(true));
+      return dispatch(handleChangeShowJobDetails(true));
     } else if (activeComponent === "pending bids") {
       dispatch(handleChangeShowBidProposal(true));
       setActiveBidId(data?._id);
+    } else if (activeComponent === "favorites") {
+      if (data?.status === "pending") {
+        dispatch(handleChangeActiveComponent("pending bids"));
+        dispatch(handleChangeActiveHeader("bids"));
+        dispatch(hanldeFindSingleBid(data?._id));
+        dispatch(handleChangeShowBidProposal(true));
+      } else if (data?.status === "in-transit") {
+        dispatch(handleChangeActiveComponent("active jobs"));
+        dispatch(handleChangeActiveHeader("jobs"));
+        dispatch(
+          hanldeFindSingleJob({ id: data?._id, jobStatus: data?.status })
+        );
+        dispatch(handleChangeShowJobDetails(true));
+      } else if (data?.status === "complete") {
+        dispatch(handleChangeActiveComponent("completed jobs"));
+        dispatch(handleChangeActiveHeader("jobs"));
+        dispatch(
+          hanldeFindSingleJob({ id: data?._id, jobStatus: data?.status })
+        );
+        dispatch(handleChangeShowJobDetails(true));
+      }
     }
   };
 
@@ -115,7 +142,7 @@ const SingleJob = memo(({ setActiveBidId, jobDescription, data }) => {
       <div className="relative w-full">
         {/* departure */}
         <div className="flex justify-between relative w-full">
-          <div className="flex items-start w-1/2">
+          <div className="flex items-start w-2/3">
             <TfiLocationPin className="text-primaryBlue min-h-[1.5rem] min-w-[1.5rem]" />
             <div className="ml-2">
               <p className="lg:text-md text-sm font-semibold">
@@ -134,8 +161,8 @@ const SingleJob = memo(({ setActiveBidId, jobDescription, data }) => {
         <div className="absolute z-0 left-[11px] top-7 bottom-9 h-auto border-[1px] w-0.5 bg-textLightGray rounded-sm"></div>
         {/* arrival */}
         <div className="flex justify-between items-center w-full mt-5">
-          <div className="flex items-center w-1/2">
-            <TfiLocationPin className="text-greenColor min-h-[1.5rem] min-w-[1.5rem]" />
+          <div className="flex items-center w-2/3">
+            <TfiLocationPin className="text-greenColor min-h-[1.5rem] min-w-[1.5rem] relative z-0 bg-white" />
             <div className="ml-2">
               <p className="lg:text-md text-sm  font-semibold">
                 {data?.arrivalLocation}
@@ -155,32 +182,49 @@ const SingleJob = memo(({ setActiveBidId, jobDescription, data }) => {
         <p className="text-lg font-semibold">Status :</p>
         <span
           className={`${
-            (data?.status === "in-transit" || "pending") && "bg-primaryBlue"
+            data?.status === "in-transit"
+              ? "bg-primaryBlue"
+              : data?.status === "pending"
+              ? "bg-primaryBlue"
+              : data?.status === "complete"
+              ? "bg-greenColor"
+              : data?.status === "cancelled"
+              ? "bg-gray-300"
+              : ""
           }
-          ${data?.status === "complete" && "bg-greenColor"}
-          ${data?.status === "cancelled" && "bg-gray-300"}
           capitalize text-white font-medium text-center md:w-32 md:ml-2 ml-1 w-24 md:h-10 md:leading-10 align-middle h-9 leading-9 rounded-3xl`}
         >
           {data?.status}
         </span>
       </div>
-    
+
       {/* description */}
-      <p className="text-sm text-gray-500 line-clamp-3">{data?.jobDescription}</p>
+      <p className="text-sm text-gray-500 line-clamp-2">
+        {data?.jobDescription}
+      </p>
+      <p className="text-sm text-gray-500 line-clamp-2">{data?._id}</p>
       {/* amount */}
       <div className="flex items-center justify-between">
         <p className="lg:text-2xl text-lg font-semibold text-textPurple">
-          $ {data?.price}
+          {Intl.NumberFormat("en-US", {
+            style: "currency",
+            currency: "USD",
+            maximumFractionDigits: 2,
+            minimumFractionDigits: 2,
+          }).format(parseInt(data?.price))}
         </p>
-        <button
-          className="blue_button uppercase tracking-wide"
-          onClick={() => handleDispatch()}
-        >
-          view{" "}
-          {(activeComponent === "pending bids" ||
-            jobDescription !== undefined) &&
-            "Bids"}
-        </button>
+        {data?.status === "cancelled" ? (
+          <span className=" uppercase tracking-wide bg-red-50 text-red-500 rounded-lg p-1 w-fit">
+            Cancelled
+          </span>
+        ) : (
+          <button
+            className="blue_button uppercase tracking-wide"
+            onClick={() => handleDispatch()}
+          >
+            view {data?.status === "pending" && "Bids"}
+          </button>
+        )}
       </div>
     </div>
   );
