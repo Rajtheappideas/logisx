@@ -328,6 +328,10 @@ const BidSlice = createSlice({
       state.showJobDetails = payload;
     },
 
+    handleChangeBidProposal: (state, { payload }) => {
+      state.bidProposals = payload;
+    },
+
     handleChangeShowBidDetails: (state, { payload }) => {
       state.showBidDetails = payload;
     },
@@ -652,6 +656,7 @@ export const {
   hanldeFindSingleBid,
   hanldeFindSingleJob,
   handleChangeShowJobDetails,
+  handleChangeBidProposal,
 } = BidSlice.actions;
 
 export default BidSlice.reducer;

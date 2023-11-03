@@ -1,21 +1,20 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { BsEye } from "react-icons/bs";
 import { FaHeart } from "react-icons/fa";
 import { FiHeart } from "react-icons/fi";
 import { useDispatch, useSelector } from "react-redux";
+import useAbortApiCall from "../../hooks/useAbortApiCall";
+import toast from "react-hot-toast";
 import {
   handelAddFavourite,
   handelRemoveFavourite,
   handleAddtoFavorites,
-  handleChangeShowBidProposal,
+  handleChangeShowJobDetails,
   handleRemoveFromFavorites,
+  hanldeFindSingleJob,
 } from "../../redux/BidSlice";
-import toast from "react-hot-toast";
-import { useState } from "react";
-import useAbortApiCall from "../../hooks/useAbortApiCall";
-import { useEffect } from "react";
 
-const SinlgeRowOfBid = ({ bid, setActiveBidId }) => {
+const SingleJobViewRow = ({ job }) => {
   const [IsFavourite, setIsFavourite] = useState(false);
 
   const { token } = useSelector((state) => state.root.auth);
@@ -34,7 +33,7 @@ const SinlgeRowOfBid = ({ bid, setActiveBidId }) => {
       toast.loading("Removing...");
       const response = dispatch(
         handleRemoveFromFavorites({
-          id: bid?._id,
+          id: job?._id,
           token,
           signal: AbortControllerRef,
         })
@@ -43,8 +42,8 @@ const SinlgeRowOfBid = ({ bid, setActiveBidId }) => {
         response.then((res) => {
           if (res?.payload?.status === "success") {
             toast.remove();
-            toast.success(bid?.bidId + " " + "remove from favourites.");
-            dispatch(handelRemoveFavourite(bid?._id));
+            toast.success(job?.bidId + " " + "remove from favourites.");
+            dispatch(handelRemoveFavourite(job?._id));
             setIsFavourite(false);
           }
         });
@@ -53,7 +52,7 @@ const SinlgeRowOfBid = ({ bid, setActiveBidId }) => {
       toast.loading("Adding...");
       const response = dispatch(
         handleAddtoFavorites({
-          id: bid?._id,
+          id: job?._id,
           token,
           signal: AbortControllerRef,
         })
@@ -62,8 +61,8 @@ const SinlgeRowOfBid = ({ bid, setActiveBidId }) => {
         response.then((res) => {
           if (res?.payload?.status === "success") {
             toast.remove();
-            toast.success(bid?.bidId + " " + "Added to favourites.");
-            dispatch(handelAddFavourite(bid?._id));
+            toast.success(job?.bidId + " " + "Added to favourites.");
+            dispatch(handelAddFavourite(job?._id));
             setIsFavourite(true);
           }
         });
@@ -71,34 +70,39 @@ const SinlgeRowOfBid = ({ bid, setActiveBidId }) => {
     }
   };
 
+  const handleShowJobdetails = () => {
+    dispatch(hanldeFindSingleJob({ jobStatus: "in-transit", id: job?._id }));
+    dispatch(handleChangeShowJobDetails(true));
+  };
+
   useEffect(() => {
-    setIsFavourite(bid?.isFavourite);
+    setIsFavourite(job?.isFavourite);
   }, []);
 
   return (
-    <tr key={bid?._id} className="border-b border-gray-200 w-full text-left">
-      <td className="md:p-4 p-2 whitespace-nowrap">{bid?.bidId}</td>
+    <tr key={job?._id} className="border-b border-gray-200 w-full text-left">
+      <td className="md:p-4 p-2 whitespace-nowrap">{job?.bidId}</td>
 
       <td className="text-left md:p-4 p-2 whitespace-nowrap">
-        {bid?.poNumber}
+        {job?.poNumber}
       </td>
-      <td className="text-left md:p-4 p-2 whitespace-nowrap">${bid?.price}</td>
+      <td className="text-left md:p-4 p-2 whitespace-nowrap">${job?.price}</td>
       <td className="text-left md:p-4 p-2 whitespace-nowrap overflow-hidden text-ellipsis max-w-[10rem] trucate">
-        {bid?.arrivalLocation}
+        {job?.arrivalLocation}
       </td>
       <td className="text-left md:p-4 p-2 whitespace-nowrap">
-        {bid?.departureDate}
+        {job?.departureDate}
       </td>
       <td className="text-left md:p-4 p-2">
         <span
           className={`${
-            (bid?.status === "pending" || "in-transit") && "bg-primaryBlue"
+            (job?.status === "pending" || "in-transit") && "bg-primaryBlue"
           } 
-            ${bid?.status === "cancelled" && "bg-gray-300"}
-            ${bid?.status === "complete" && "bg-greenColor"}
-            text-white font-medium text-center whitespace-nowrap py-2 px-4 leading-1 rounded-3xl`}
+              ${job?.status === "cancelled" && "bg-gray-300"}
+              ${job?.status === "complete" && "bg-greenColor"}
+              text-white font-medium text-center whitespace-nowrap py-2 px-4 leading-1 rounded-3xl`}
         >
-          {bid?.status}
+          {job?.status}
         </span>
       </td>
       <td
@@ -114,8 +118,7 @@ const SinlgeRowOfBid = ({ bid, setActiveBidId }) => {
       <td className="flex items-center justify-start md:p-4 p-2">
         <button
           onClick={() => {
-            dispatch(handleChangeShowBidProposal(true));
-            setActiveBidId(bid?._id);
+            handleShowJobdetails();
           }}
           type="button"
           className="hover:bg-gray-200 p-1 rounded-full h-10 w-10"
@@ -127,4 +130,4 @@ const SinlgeRowOfBid = ({ bid, setActiveBidId }) => {
   );
 };
 
-export default SinlgeRowOfBid;
+export default SingleJobViewRow;

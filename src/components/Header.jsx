@@ -33,6 +33,7 @@ import { handleLogout } from "../redux/AuthSlice";
 import { socket } from "../Socket";
 import {
   handleChangeShowBidProposal,
+  handleChangeShowJobDetails,
   handleSearchBidAndJob,
 } from "../redux/BidSlice";
 
@@ -88,7 +89,7 @@ const Header = () => {
   ];
 
   const handleChangeCloseComponent = () => {
-    dispatch(handleChangeActiveJobDetails(false));
+    dispatch(handleChangeShowJobDetails(false));
     dispatch(handleChangeShowBidUploadComponent(false));
   };
 

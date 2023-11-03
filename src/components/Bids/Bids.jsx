@@ -42,8 +42,6 @@ const Bids = () => {
 
   useEffect(() => {
     dispatch(handleGetPendingBids({ token, signal: AbortControllerRef }));
-    // dispatch(handleGetShippedBids({ token, signal: AbortControllerRef }));
-    // dispatch(handleGetCancelledBids({ token, signal: AbortControllerRef }));
     window.scrollTo({ top: 0, behavior: "smooth" });
     if (singleBidDetails !== null) {
       setActiveBidId(singleBidDetails?._id);
@@ -63,6 +61,7 @@ const Bids = () => {
       );
     }
   }, [activeBidId]);
+
 
   return (
     <>

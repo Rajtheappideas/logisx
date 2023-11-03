@@ -76,17 +76,26 @@ const Jobs = () => {
                 <div className="grid 2xl:grid-cols-3 xl:grid-cols-2 md:gap-5 gap-3 w-full">
                   {searchJobs.length > 0 ? (
                     searchJobs.map((job) => (
-                      <SingleJob key={job?._id} data={job} />
+                      <SingleJob
+                        key={job?._id}
+                        data={job}
+                      />
                     ))
                   ) : activeComponent === "active jobs" &&
                     inTransitJobs.length > 0 ? (
                     inTransitJobs.map((job) => (
-                      <SingleJob key={job?._id} data={job} />
+                      <SingleJob
+                        key={job?._id}
+                        data={job}
+                      />
                     ))
                   ) : activeComponent === "completed jobs" &&
                     completedJobs.length > 0 ? (
                     completedJobs.map((job) => (
-                      <SingleJob key={job?._id} data={job} />
+                      <SingleJob
+                        key={job?._id}
+                        data={job}
+                      />
                     ))
                   ) : (
                     <div className="loading col-span-full">No jobs here.</div>

@@ -3,13 +3,13 @@ import { HiOutlineXMark } from "react-icons/hi2";
 import Details from "./Details";
 import Timeline from "./Timeline";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  handleChangeShowChatSidebar,
-} from "../../redux/globalStates";
+import { handleChangeShowChatSidebar } from "../../redux/globalStates";
 import { handleChangeShowJobDetails } from "../../redux/BidSlice";
 
 const ActiveJobsDetails = () => {
   const [activeTab, setActiveTab] = useState("details");
+
+  const { singleJobDetails } = useSelector((s) => s.root.bid);
 
   const dispatch = useDispatch();
 

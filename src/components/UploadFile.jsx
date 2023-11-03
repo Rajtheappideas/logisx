@@ -79,9 +79,10 @@ const UploadFile = ({
     if (response) {
       response.then((res) => {
         if (res?.payload?.status === "success") {
-          toast.success("File uploaded successfully");
+          // toast.success("File uploaded successfully");
           toast(res?.payload?.message);
           setShowUploadFile(false);
+          setMutlipleBidFile(null)
         }
       });
     }

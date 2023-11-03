@@ -4,6 +4,7 @@ import { BsEye } from "react-icons/bs";
 import ReactPaginate from "react-paginate";
 import { handleChangeActiveJobDetails } from "../../redux/globalStates";
 import { useDispatch, useSelector } from "react-redux";
+import SingleJobViewRow from "./SingleJobViewRow";
 
 const TableViewActiveJobs = () => {
   const dispatch = useDispatch();
@@ -32,185 +33,18 @@ const TableViewActiveJobs = () => {
               <th className="md:p-4 p-2">Arrival Location</th>
               <th className="md:p-4 p-2">Pick-up Date</th>
               <th className="md:p-4 p-2">Job status</th>
+              <th className="md:p-4 p-2">Favorite</th>
               <th className="md:p-4 p-2">Action</th>
             </tr>
           </thead>
           <tbody className="w-full">
             {inTransitJobs.length > 0 ? (
               inTransitJobs.map((job) => (
-                <tr
-                  key={job?._id}
-                  className="border-b border-gray-200 w-full text-left"
-                >
-                  <td className="md:p-4 p-2 whitespace-nowrap">RW3342D</td>
-
-                  <td className="text-left md:p-4 p-2 whitespace-nowrap">
-                    12345
-                  </td>
-                  <td className="text-left md:p-4 p-2 whitespace-nowrap">
-                    $1000
-                  </td>
-                  <td className="text-left md:p-4 p-2 whitespace-nowrap">
-                    Kalamazoo Distrib...
-                  </td>
-                  <td className="text-left md:p-4 p-2 whitespace-nowrap">
-                    March 7
-                  </td>
-                  <td className="text-left md:p-4 p-2">
-                    <span className="bg-primaryBlue text-white font-medium text-center whitespace-nowrap p-2 rounded-3xl">
-                      In-Transit
-                    </span>
-                  </td>
-                  <td className="flex items-center justify-start md:p-4 p-2">
-                    <button
-                      onClick={() =>
-                        dispatch(handleChangeActiveJobDetails(true))
-                      }
-                      type="button"
-                      className="hover:bg-gray-200 p-1 rounded-full h-10 w-10"
-                    >
-                      <BsEye color="gray" size={30} className="inline-block" />
-                    </button>
-                  </td>
-                </tr>
+                <SingleJobViewRow job={job} key={job?._id} />
               ))
             ) : (
               <tr className="loading w-full">No bids here.</tr>
             )}
-            <tr className="border-b border-gray-200 w-full text-left">
-              <td className="md:p-4 p-2 whitespace-nowrap">RW3342D</td>
-
-              <td className="text-left md:p-4 p-2 whitespace-nowrap">12345</td>
-              <td className="text-left md:p-4 p-2 whitespace-nowrap">$1000</td>
-              <td className="text-left md:p-4 p-2 whitespace-nowrap">
-                Kalamazoo Distrib...
-              </td>
-              <td className="text-left md:p-4 p-2 whitespace-nowrap">
-                March 7
-              </td>
-              <td className="text-left md:p-4 p-2">
-                <span className="bg-loddingButton whitespace-nowrap text-white font-medium text-center p-2 rounded-3xl">
-                  Loading
-                </span>
-              </td>
-              <td className="flex items-center justify-start md:p-4 p-2">
-                <button
-                  onClick={() => dispatch(handleChangeActiveJobDetails(true))}
-                  type="button"
-                  className="hover:bg-gray-200 p-1 rounded-full h-10 w-10"
-                >
-                  <BsEye color="gray" size={30} className="inline-block" />
-                </button>
-              </td>
-            </tr>
-            <tr className="border-b border-gray-200 w-full text-left">
-              <td className="md:p-4 p-2 whitespace-nowrap">RW3342D</td>
-
-              <td className="text-left md:p-4 p-2 whitespace-nowrap">12345</td>
-              <td className="text-left md:p-4 p-2 whitespace-nowrap">$1000</td>
-              <td className="text-left md:p-4 p-2 whitespace-nowrap">
-                Kalamazoo Distrib...
-              </td>
-              <td className="text-left md:p-4 p-2 whitespace-nowrap">
-                March 7
-              </td>
-              <td className="text-left md:p-4 p-2">
-                <span className="bg-greenColor whitespace-nowrap text-white font-medium text-center p-2 rounded-3xl">
-                  Completed
-                </span>
-              </td>
-              <td className="flex items-center justify-start md:p-4 p-2">
-                <button
-                  onClick={() => dispatch(handleChangeActiveJobDetails(true))}
-                  type="button"
-                  className="hover:bg-gray-200 p-1 rounded-full h-10 w-10"
-                >
-                  <BsEye color="gray" size={30} className="inline-block" />
-                </button>
-              </td>
-            </tr>
-            <tr className="border-b border-gray-200 w-full text-left">
-              <td className="md:p-4 p-2 whitespace-nowrap">RW3342D</td>
-
-              <td className="text-left md:p-4 p-2 whitespace-nowrap">12345</td>
-              <td className="text-left md:p-4 p-2 whitespace-nowrap">$1000</td>
-              <td className="text-left md:p-4 p-2 whitespace-nowrap">
-                Kalamazoo Distrib...
-              </td>
-              <td className="text-left md:p-4 p-2 whitespace-nowrap">
-                March 7
-              </td>
-              <td className="text-left md:p-4 p-2">
-                <span className="bg-loddingButton whitespace-nowrap text-white font-medium text-center p-2 rounded-3xl">
-                  In-Transit
-                </span>
-              </td>
-              <td className="flex items-center justify-start md:p-4 p-2">
-                <button
-                  onClick={() => dispatch(handleChangeActiveJobDetails(true))}
-                  type="button"
-                  className="hover:bg-gray-200 p-1 rounded-full h-10 w-10"
-                >
-                  <BsEye color="gray" size={30} className="inline-block" />
-                </button>
-              </td>
-            </tr>
-            <tr className="border-b border-gray-200 w-full text-left">
-              <td className="md:p-4 p-2 whitespace-nowrap">RW3342D</td>
-
-              <td className="text-left md:p-4 p-2 whitespace-nowrap">12345</td>
-              <td className="text-left md:p-4 p-2 whitespace-nowrap">$1000</td>
-              <td className="text-left md:p-4 p-2 whitespace-nowrap">
-                Kalamazoo Distrib...
-              </td>
-              <td className="text-left md:p-4 p-2 whitespace-nowrap">
-                March 7
-              </td>
-              <td className="text-left md:p-4 p-2">
-                <span className="bg-primaryBlue whitespace-nowrap text-white font-medium text-center p-2 rounded-3xl">
-                  In-transit
-                </span>
-              </td>
-              <td className="flex items-center justify-start md:p-4 p-2">
-                <button
-                  onClick={() => dispatch(handleChangeActiveJobDetails(true))}
-                  type="button"
-                  className="hover:bg-green-200 p-1 rounded-full h-10 w-10"
-                >
-                  <BsEye color="gray" size={30} className="inline-block" />
-                </button>
-              </td>
-            </tr>
-            <tr className="border-b border-gray-200 w-full text-left">
-              <td className="md:p-4 p-2 whitespace-nowrap">RW3342D</td>
-
-              <td className="text-left md:p-4 p-2 whitespace-nowrap">12345</td>
-              <td className="text-left md:p-4 p-2 whitespace-nowrap">$1000</td>
-              <td className="text-left md:p-4 p-2 whitespace-nowrap">
-                Kalamazoo Distrib...
-              </td>
-              <td className="text-left md:p-4 p-2 whitespace-nowrap">
-                March 7
-              </td>
-              <td className="text-left md:p-4 p-2">
-                <span className="bg-loddingButton whitespace-nowrap text-white font-medium text-center p-2 rounded-3xl">
-                  Loading
-                </span>
-              </td>
-              <td className="flex items-center justify-start md:p-4 p-2">
-                <button
-                  onClick={() => dispatch(handleChangeActiveJobDetails(true))}
-                  type="button"
-                  className="hover:bg-gray-200 p-1 rounded-full h-10 w-10"
-                >
-                  <BsEye color="gray" size={30} className="inline-block" />
-                </button>
-              </td>
-            </tr>
-
-            {/* <tr className="text-center text-2xl font-semibold py-2">
-<td colSpan="6">No Invoices here.</td>
-</tr> */}
           </tbody>
         </table>
       </div>

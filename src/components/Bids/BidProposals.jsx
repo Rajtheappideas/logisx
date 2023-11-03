@@ -6,6 +6,7 @@ import { BsArrowLeft } from "react-icons/bs";
 import { handleChangeActiveComponent } from "../../redux/globalStates";
 import {
   handleBidProposals,
+  handleChangeBidProposal,
   handleChangeShowBidProposal,
 } from "../../redux/BidSlice";
 import TruckerProfile from "./TruckerProfile";
@@ -43,7 +44,6 @@ const BidProposals = ({ setActiveBidId, activeBidId }) => {
     dispatch(handleChangeShowBidProposal(false));
   };
 
-
   return (
     <>
       {showBidProposalDetails && !showTruckerDetails ? (
@@ -62,6 +62,8 @@ const BidProposals = ({ setActiveBidId, activeBidId }) => {
           <p
             onClick={() => {
               handleBackToBids();
+              dispatch(handleChangeBidProposal([]));
+              setActiveBidId(null);
             }}
             className="md:text-2xl text-lg inline-block cursor-pointer text-primaryBlue font-semibold capitalize"
           >

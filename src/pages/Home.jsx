@@ -38,7 +38,12 @@ const Home = () => {
     );
     if (response) {
       response.then((res) => {
-        if (res?.payload?.status === "fail" && res?.payload?.code === 423) {
+        if (
+          res?.payload?.status === "fail" &&
+          (res?.payload?.code === 423 ||
+            (res?.payload?.code === 400 &&
+              res?.payload?.message === "Please login first."))
+        ) {
           window.localStorage.clear();
           toast.error(res?.payload?.message);
           dispatch(handleLogout());

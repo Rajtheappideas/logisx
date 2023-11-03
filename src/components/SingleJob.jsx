@@ -41,7 +41,8 @@ const SingleJob = memo(({ setActiveBidId, jobDescription, data }) => {
       activeComponent === "active jobs" ||
       activeComponent === "completed jobs"
     ) {
-      return dispatch(handleChangeShowJobDetails(true));
+      dispatch(hanldeFindSingleJob({ jobStatus: "in-transit", id: data?._id }));
+      dispatch(handleChangeShowJobDetails(true));
     } else if (activeComponent === "pending bids") {
       dispatch(handleChangeShowBidProposal(true));
       setActiveBidId(data?._id);

@@ -250,13 +250,11 @@ const Details = ({ singleBidProposal, setActiveBidId }) => {
         )}
         {/* specification */}
         <p className="text-textColorGray lg:text-base text-sm">Specification</p>
-        <div className="flex">
-          <p className="text-sm font-semibold">
-            {singleBidProposal?.jobId?.specification !== ""
-              ? singleBidProposal?.jobId?.specification
-              : "-"}
-          </p>
-        </div>
+        <p className="text-sm font-semibold">
+          {singleBidProposal?.jobId?.specification !== ""
+            ? singleBidProposal?.jobId?.specification
+            : "-"}
+        </p>
         {/* <p className="text-textColorGray lg:text-base text-sm">
           Delivery history
         </p> */}
