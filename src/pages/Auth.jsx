@@ -72,6 +72,8 @@ const Auth = () => {
 
     return () => window.removeEventListener("resize", setTabPosition);
   }, [activeTabIndex]);
+  console.log(loading,fcmToken);
+  
 
   return (
     <>
