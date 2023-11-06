@@ -32,11 +32,15 @@ const Auth = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    if (fcmToken === null) {
-      GetToken(setFcmToken, setLoading);
+  const handleSetFcmToken = () => {
+    if (
+      fcmToken === null ||
+      (error !== null && error?.message === "fcmToken is required.") ||
+      (fcmToken !== null && globalState.fcmToken === null)
+    ) {
+      return GetToken(setFcmToken, setLoading);
     }
-  }, [fcmToken]);
+  };
 
   useEffect(() => {
     if (user !== null) {
@@ -49,18 +53,7 @@ const Auth = () => {
   }, []);
 
   useEffect(() => {
-    if (
-      fcmToken === null ||
-      (error !== null && error?.message === "fcmToken is required.")
-    ) {
-      GetToken(setFcmToken, setLoading);
-      if (error !== null && error?.message === "fcmToken is required.") {
-        toast.error("Please try again!");
-      }
-    }
-    if (fcmToken !== null && globalState.fcmToken === null) {
-      dispatch(handleChangeFcmToken(fcmToken));
-    }
+    handleSetFcmToken();
   }, [openTab, fcmToken, error]);
 
   useEffect(() => {

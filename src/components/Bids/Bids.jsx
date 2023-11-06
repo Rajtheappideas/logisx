@@ -64,7 +64,6 @@ const Bids = () => {
   };
 
   useEffect(() => {
-    // dispatch(handleGetPendingBids({ token, signal: AbortControllerRef }));
     handleFetchBids();
     window.scrollTo({ top: 0, behavior: "smooth" });
     if (singleBidDetails !== null) {
