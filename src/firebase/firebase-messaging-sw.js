@@ -22,6 +22,10 @@ export function GetToken(setToken, setLoading) {
       toast.error("Allowed notification for go further");
       setToken(null);
       setLoading(false);
+    })
+    .finally(() => {
+      setLoading(false);
+      setToken(null);
     });
   Notification.requestPermission().then((permission) => {
     if (permission === "granted") {
@@ -41,6 +45,10 @@ export function GetToken(setToken, setLoading) {
         .catch((err) => {
           toast.remove();
           toast.error("Allowed notification for go further");
+          setLoading(false);
+          setToken(null);
+        })
+        .finally(() => {
           setLoading(false);
           setToken(null);
         });
