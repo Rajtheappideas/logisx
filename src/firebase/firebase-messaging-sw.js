@@ -6,15 +6,14 @@ const messaging = getMessaging(app);
 
 export function GetToken(setToken, setLoading) {
   toast.loading("Loading...");
-  setLoading(true);
   getToken(messaging, {
     vapidKey: process.env.REACT_APP_CLOUD_MESSAGING_KEY,
   })
     .then((currentToken) => {
       if (currentToken) {
         setToken(currentToken);
-        toast.remove();
         setLoading(false);
+        toast.remove();
       }
     })
     .catch((err) => {
@@ -25,11 +24,11 @@ export function GetToken(setToken, setLoading) {
     })
     .finally(() => {
       setLoading(false);
+      toast.remove();
       setToken(null);
     });
   Notification.requestPermission().then((permission) => {
     if (permission === "granted") {
-      toast.remove();
       toast.loading("Loading...");
       setLoading(true);
       getToken(messaging, {
@@ -38,8 +37,8 @@ export function GetToken(setToken, setLoading) {
         .then((currentToken) => {
           if (currentToken) {
             setToken(currentToken);
-            toast.remove();
             setLoading(false);
+            toast.remove();
           }
         })
         .catch((err) => {
@@ -50,6 +49,7 @@ export function GetToken(setToken, setLoading) {
         })
         .finally(() => {
           setLoading(false);
+          toast.remove();
           setToken(null);
         });
     }

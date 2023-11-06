@@ -166,7 +166,7 @@ const Signin = ({ fcmToken, FcmTokenLoading }) => {
       {/* submit btn */}
       <div className="text-center">
         <button
-          disabled={loading || FcmTokenLoading}
+          disabled={loading}
           type="submit"
           className={`blue_button w-1/2 uppercase`}
         >
