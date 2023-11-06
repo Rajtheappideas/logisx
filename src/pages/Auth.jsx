@@ -102,7 +102,6 @@ const Auth = () => {
             <div className="justify-around flex text-black lg:text-lg text-sm w-full relative">
               <p
                 onClick={() => {
-                  if (loading) return;
                   setOpenTab("sign-up");
                   setActiveTabIndex(0);
                 }}
@@ -117,7 +116,6 @@ const Auth = () => {
               </p>
               <p
                 onClick={() => {
-                  if (loading) return;
                   setOpenTab("sign-in");
                   setActiveTabIndex(1);
                 }}
