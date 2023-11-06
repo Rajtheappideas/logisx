@@ -33,7 +33,6 @@ const Auth = () => {
   const dispatch = useDispatch();
 
   const handleSetFcmToken = () => {
-    if (loading) return;
     if (fcmToken !== null) {
       return dispatch(handleChangeFcmToken(fcmToken));
     }
@@ -72,7 +71,6 @@ const Auth = () => {
 
     return () => window.removeEventListener("resize", setTabPosition);
   }, [activeTabIndex]);
-  console.log(loading,fcmToken);
   
 
   return (

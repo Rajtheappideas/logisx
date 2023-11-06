@@ -6,6 +6,7 @@ const messaging = getMessaging(app);
 
 export function GetToken(setToken, setLoading) {
   toast.loading("Loading...");
+  setLoading(true)
   getToken(messaging, {
     vapidKey: process.env.REACT_APP_CLOUD_MESSAGING_KEY,
   })
@@ -29,6 +30,7 @@ export function GetToken(setToken, setLoading) {
     });
   Notification.requestPermission().then((permission) => {
     if (permission === "granted") {
+      toast.remove()
       toast.loading("Loading...");
       setLoading(true);
       getToken(messaging, {
