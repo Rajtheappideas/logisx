@@ -14,7 +14,7 @@ import { handleChangeFcmToken } from "../redux/globalStates";
 const Auth = () => {
   const [openTab, setOpenTab] = useState("sign-up");
   const [fcmToken, setFcmToken] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [activeTabIndex, setActiveTabIndex] = useState(0);
   const [tabUnderlineWidth, setTabUnderlineWidth] = useState(0);
   const [tabUnderlineLeft, setTabUnderlineLeft] = useState(0);
@@ -33,6 +33,10 @@ const Auth = () => {
   const dispatch = useDispatch();
 
   const handleSetFcmToken = () => {
+    if (loading) return;
+    if (fcmToken !== null) {
+      return dispatch(handleChangeFcmToken(fcmToken));
+    }
     if (
       fcmToken === null ||
       (error !== null && error?.message === "fcmToken is required.") ||
@@ -98,6 +102,7 @@ const Auth = () => {
             <div className="justify-around flex text-black lg:text-lg text-sm w-full relative">
               <p
                 onClick={() => {
+                  if (loading) return;
                   setOpenTab("sign-up");
                   setActiveTabIndex(0);
                 }}
@@ -112,6 +117,7 @@ const Auth = () => {
               </p>
               <p
                 onClick={() => {
+                  if (loading) return;
                   setOpenTab("sign-in");
                   setActiveTabIndex(1);
                 }}
@@ -131,9 +137,13 @@ const Auth = () => {
             </div>
           )}
           {openTab === "sign-in" ? (
-            <Signin fcmToken={fcmToken} />
+            <Signin fcmToken={fcmToken} FcmTokenLoading={loading} />
           ) : (
-            <Signup setOpenTab={setOpenTab} fcmToken={fcmToken} />
+            <Signup
+              setOpenTab={setOpenTab}
+              fcmToken={fcmToken}
+              FcmTokenLoading={loading}
+            />
           )}
         </div>
       </div>

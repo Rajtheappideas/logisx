@@ -10,7 +10,7 @@ import SignupComponent from "../Signup/SignupComponent";
 import Success from "../ForgotPassword/Success";
 import { handleChangeShowSignupProcess } from "../../redux/AuthSlice";
 
-const Signup = ({ fcmToken, setOpenTab }) => {
+const Signup = ({ fcmToken, setOpenTab, FcmTokenLoading }) => {
   const [step, setStep] = useState(0);
 
   const { showSignupProcess } = useSelector((state) => state.root.auth);

@@ -14,7 +14,7 @@ import { handleSuccess } from "../../redux/globalStates";
 import { socket } from "../../Socket";
 import { signinSchema } from "../../yupValidations/validation";
 
-const Signin = ({ fcmToken }) => {
+const Signin = ({ fcmToken, FcmTokenLoading }) => {
   const [showPassword, setshowPassword] = useState(false);
 
   const { loading } = useSelector((state) => state.root.auth);
@@ -166,7 +166,7 @@ const Signin = ({ fcmToken }) => {
       {/* submit btn */}
       <div className="text-center">
         <button
-          disabled={loading}
+          disabled={loading || FcmTokenLoading}
           type="submit"
           className={`blue_button w-1/2 uppercase`}
         >
