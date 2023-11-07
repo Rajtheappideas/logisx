@@ -10,8 +10,8 @@ import {
   handelRemoveFavourite,
   handleAddtoFavorites,
   handleChangeShowJobDetails,
+  handleGetJobDetails,
   handleRemoveFromFavorites,
-  hanldeFindSingleJob,
 } from "../../redux/BidSlice";
 
 const SingleJobViewRow = ({ job }) => {
@@ -70,13 +70,15 @@ const SingleJobViewRow = ({ job }) => {
           if (res?.payload?.status === "success") {
             toast.remove();
             toast.success(job?.bidId + " " + "Added to favourites.");
-            dispatch(handelAddFavourite({
-              id: job?._id,
-              from:
-                job?.status === "complete"
-                  ? "completedJobs"
-                  : "inTransitJobs",
-            }));
+            dispatch(
+              handelAddFavourite({
+                id: job?._id,
+                from:
+                  job?.status === "complete"
+                    ? "completedJobs"
+                    : "inTransitJobs",
+              })
+            );
             setIsFavourite(true);
           }
         });
@@ -85,7 +87,13 @@ const SingleJobViewRow = ({ job }) => {
   };
 
   const handleShowJobdetails = () => {
-    dispatch(hanldeFindSingleJob({ jobStatus: "in-transit", id: job?._id }));
+    dispatch(
+      handleGetJobDetails({
+        token,
+        id: job?._id,
+        signal: AbortControllerRef,
+      })
+    );
     dispatch(handleChangeShowJobDetails(true));
   };
 
