@@ -43,7 +43,15 @@ const SingleJobViewRow = ({ job }) => {
           if (res?.payload?.status === "success") {
             toast.remove();
             toast.success(job?.bidId + " " + "remove from favourites.");
-            dispatch(handelRemoveFavourite(job?._id));
+            dispatch(
+              handelRemoveFavourite({
+                id: job?._id,
+                from:
+                  job?.status === "complete"
+                    ? "completedJobs"
+                    : "inTransitJobs",
+              })
+            );
             setIsFavourite(false);
           }
         });
@@ -62,7 +70,13 @@ const SingleJobViewRow = ({ job }) => {
           if (res?.payload?.status === "success") {
             toast.remove();
             toast.success(job?.bidId + " " + "Added to favourites.");
-            dispatch(handelAddFavourite(job?._id));
+            dispatch(handelAddFavourite({
+              id: job?._id,
+              from:
+                job?.status === "complete"
+                  ? "completedJobs"
+                  : "inTransitJobs",
+            }));
             setIsFavourite(true);
           }
         });

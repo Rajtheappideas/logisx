@@ -81,7 +81,6 @@ const Chat = () => {
         ref={chatRef}
         className="xl:w-3/12 lg:w-4/12 md:w-1/2 w-full min-h-screen max-h-screen absolute top-0 right-0"
       >
-        <button onClick={() => sendMessage()}>send</button>
         {/* title + close btn */}
         <div className="bg-primaryBlue w-full p-4 sticky top-0">
           <div className="flex justify-between items-center">

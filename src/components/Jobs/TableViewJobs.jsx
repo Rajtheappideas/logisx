@@ -11,15 +11,22 @@ const TableViewActiveJobs = () => {
 
   const { activeComponent } = useSelector((state) => state.root.globalStates);
 
-  const { inTransitJobs, loading, jobLoading } = useSelector(
+  const { inTransitJobs, loading, jobLoading, completedJobs } = useSelector(
     (state) => state.root.bid
   );
 
   // pagination logic
   const jobsPerPage = 8;
   const pageVisited = pageNumber * jobsPerPage;
-  const displayBids = inTransitJobs.slice(pageVisited, jobsPerPage + pageVisited);
-  const pageCount = Math.ceil(inTransitJobs.length / jobsPerPage);
+  const displayBids =
+    activeComponent === "completed jobs"
+      ? completedJobs.slice(pageVisited, jobsPerPage + pageVisited)
+      : inTransitJobs.slice(pageVisited, jobsPerPage + pageVisited);
+  const pageCount = Math.ceil(
+    activeComponent === "completed jobs"
+      ? completedJobs.length
+      : inTransitJobs.length / jobsPerPage
+  );
   const changePage = ({ selected }) => {
     setPageNumber(selected);
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -44,7 +51,15 @@ const TableViewActiveJobs = () => {
             </tr>
           </thead>
           <tbody className="w-full">
-            {inTransitJobs.length > 0 ? (
+            {activeComponent === "completed jobs" ? (
+              completedJobs.length > 0 ? (
+                displayBids.map((job) => (
+                  <SingleJobViewRow job={job} key={job?._id} />
+                ))
+              ) : (
+                <tr className="loading w-full">No bids here.</tr>
+              )
+            ) : inTransitJobs.length > 0 ? (
               displayBids.map((job) => (
                 <SingleJobViewRow job={job} key={job?._id} />
               ))
@@ -55,23 +70,41 @@ const TableViewActiveJobs = () => {
         </table>
       </div>
       <div className="flex items-center justify-between py-5">
-        <p className="font-medium md:text-base text-sm text-textBlack">
-          Showing{" "}
-          {inTransitJobs.length > 0
-            ? pageNumber * jobsPerPage === 0
-              ? 1
-              : pageNumber * jobsPerPage + 1
-            : 0}{" "}
-          from{" "}
-          {inTransitJobs.length < jobsPerPage
-            ? inTransitJobs.length
-            : jobsPerPage * (pageNumber + 1) > inTransitJobs.length
-            ? inTransitJobs?.length
-            : jobsPerPage * (pageNumber + 1)}{" "}
-          jobs
-        </p>
+        {activeComponent === "completed jobs" ? (
+          <p className="font-medium md:text-base text-sm text-textBlack">
+            Showing{" "}
+            {completedJobs.length > 0
+              ? pageNumber * jobsPerPage === 0
+                ? 1
+                : pageNumber * jobsPerPage + 1
+              : 0}{" "}
+            from{" "}
+            {completedJobs.length < jobsPerPage
+              ? completedJobs.length
+              : jobsPerPage * (pageNumber + 1) > completedJobs.length
+              ? completedJobs?.length
+              : jobsPerPage * (pageNumber + 1)}{" "}
+            jobs
+          </p>
+        ) : (
+          <p className="font-medium md:text-base text-sm text-textBlack">
+            Showing{" "}
+            {inTransitJobs.length > 0
+              ? pageNumber * jobsPerPage === 0
+                ? 1
+                : pageNumber * jobsPerPage + 1
+              : 0}{" "}
+            from{" "}
+            {inTransitJobs.length < jobsPerPage
+              ? inTransitJobs.length
+              : jobsPerPage * (pageNumber + 1) > inTransitJobs.length
+              ? inTransitJobs?.length
+              : jobsPerPage * (pageNumber + 1)}{" "}
+            jobs
+          </p>
+        )}
         <ReactPaginate
-            onPageChange={changePage}
+          onPageChange={changePage}
           previousLabel={
             <BiChevronsLeft className="text-blue-500 text-2xl" role="button" />
           }

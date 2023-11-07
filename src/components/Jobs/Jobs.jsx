@@ -5,14 +5,21 @@ import { FiMenu } from "react-icons/fi";
 import TableViewJobs from "./TableViewJobs";
 import JobDetails from "./JobDetails";
 import { useDispatch, useSelector } from "react-redux";
-import { handleGetInTransitJobs } from "../../redux/BidSlice";
+import {
+  handleGetCompletedJobs,
+  handleGetInTransitJobs,
+} from "../../redux/BidSlice";
 import useAbortApiCall from "../../hooks/useAbortApiCall";
 import { handleLogout } from "../../redux/AuthSlice";
 import { handleLogoutFromAllTabs } from "../../redux/globalStates";
 import toast from "react-hot-toast";
+import Chat from "../Chat";
+import SingelChat from "../SingelChat";
+import { socket } from "../../Socket";
 
 const Jobs = () => {
   const [view, setView] = useState("grid");
+  const [showChatSidebar, setShowChatSidebar] = useState(false);
 
   const { activeComponent } = useSelector((state) => state.root.globalStates);
 
@@ -54,6 +61,8 @@ const Jobs = () => {
 
   useEffect(() => {
     handleFetchJobs();
+    dispatch(handleGetCompletedJobs({ token, signal: AbortControllerRef }));
+    if (!socket.connected) socket.connect();
   }, []);
 
   return (
@@ -62,7 +71,13 @@ const Jobs = () => {
         <div className="loading">Loading...</div>
       ) : (
         <>
-          {showJobDetails && <JobDetails />}
+          <SingelChat
+            showChatSidebar={showChatSidebar}
+            setShowChatSidebar={setShowChatSidebar}
+          />
+          {showJobDetails && (
+            <JobDetails setShowChatSidebar={setShowChatSidebar} />
+          )}
 
           {!showJobDetails && (
             <div className="space-y-3">
@@ -71,7 +86,7 @@ const Jobs = () => {
                 <div>
                   {activeComponent === "active jobs" && (
                     <p className="md:text-2xl text-lg text-primaryBlue font-semibold">
-                      Active Jobs
+                      In-transit Jobs
                     </p>
                   )}
                   {activeComponent === "completed jobs" && (

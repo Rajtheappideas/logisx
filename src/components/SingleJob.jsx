@@ -12,6 +12,7 @@ import {
   handleAddtoFavorites,
   handleChangeShowBidProposal,
   handleChangeShowJobDetails,
+  handleGetJobDetails,
   handleRemoveFromFavorites,
   hanldeFindSingleBid,
   hanldeFindSingleJob,
@@ -41,7 +42,14 @@ const SingleJob = memo(({ setActiveBidId, jobDescription, data }) => {
       activeComponent === "active jobs" ||
       activeComponent === "completed jobs"
     ) {
-      dispatch(hanldeFindSingleJob({ jobStatus: "in-transit", id: data?._id }));
+      dispatch(
+        handleGetJobDetails({
+          token,
+          id: data?._id,
+          signal: AbortControllerRef,
+        })
+      );
+
       dispatch(handleChangeShowJobDetails(true));
     } else if (activeComponent === "pending bids") {
       dispatch(handleChangeShowBidProposal(true));
@@ -86,7 +94,17 @@ const SingleJob = memo(({ setActiveBidId, jobDescription, data }) => {
           if (res?.payload?.status === "success") {
             toast.remove();
             toast.success(data?.bidId + " " + "remove from favourites.");
-            dispatch(handelRemoveFavourite(data?._id));
+            dispatch(
+              handelRemoveFavourite({
+                id: data?._id,
+                from:
+                  data?.status === "pending"
+                    ? "pendingBids"
+                    : data?.status === "complete"
+                    ? "completedJobs"
+                    : "inTransitJobs",
+              })
+            );
             setIsFavourite(false);
           }
         });
@@ -105,7 +123,17 @@ const SingleJob = memo(({ setActiveBidId, jobDescription, data }) => {
           if (res?.payload?.status === "success") {
             toast.remove();
             toast.success(data?.bidId + " " + "Added to favourites.");
-            dispatch(handelAddFavourite(data?._id));
+            dispatch(
+              handelAddFavourite({
+                id: data?._id,
+                from:
+                  data?.status === "pending"
+                    ? "pendingBids"
+                    : data?.status === "complete"
+                    ? "completedJobs"
+                    : "inTransitJobs",
+              })
+            );
             setIsFavourite(true);
           }
         });
@@ -203,7 +231,6 @@ const SingleJob = memo(({ setActiveBidId, jobDescription, data }) => {
       <p className="text-sm text-gray-500 line-clamp-2">
         {data?.jobDescription}
       </p>
-      <p className="text-sm text-gray-500 line-clamp-2">{data?._id}</p>
       {/* amount */}
       <div className="flex items-center justify-between">
         <p className="lg:text-2xl text-lg font-semibold text-textPurple">

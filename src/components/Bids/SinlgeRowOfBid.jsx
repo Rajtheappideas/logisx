@@ -44,7 +44,13 @@ const SinlgeRowOfBid = ({ bid, setActiveBidId }) => {
           if (res?.payload?.status === "success") {
             toast.remove();
             toast.success(bid?.bidId + " " + "remove from favourites.");
-            dispatch(handelRemoveFavourite(bid?._id));
+            dispatch(
+              handelRemoveFavourite({
+                id: bid?._id,
+                from: "pendingBids",
+              })
+            );
+
             setIsFavourite(false);
           }
         });
@@ -63,7 +69,12 @@ const SinlgeRowOfBid = ({ bid, setActiveBidId }) => {
           if (res?.payload?.status === "success") {
             toast.remove();
             toast.success(bid?.bidId + " " + "Added to favourites.");
-            dispatch(handelAddFavourite(bid?._id));
+            dispatch(
+              handelAddFavourite({
+                id: bid?._id,
+                from: "pendingBids",
+              })
+            );
             setIsFavourite(true);
           }
         });

@@ -22,6 +22,7 @@ import { handleGetFavorites } from "../redux/FavoriteSlice";
 import toast from "react-hot-toast";
 import { handleLogout } from "../redux/AuthSlice";
 import { handleLogoutFromAllTabs } from "../redux/globalStates";
+import { socket } from "../Socket";
 
 const Home = () => {
   const dispatch = useDispatch();
@@ -30,7 +31,13 @@ const Home = () => {
 
   const { activeComponent, showSearchComponent, showBidUploadComponent } =
     useSelector((state) => state.root.globalStates);
-  const { user, token } = useSelector((state) => state.root.auth);
+  const {
+    user,
+    token,
+    error: AuthError,
+  } = useSelector((state) => state.root.auth);
+  const { error: bidError } = useSelector((state) => state.root.bid);
+  const { error: DocumentError } = useSelector((state) => state.root.documents);
 
   const handleFetchDocuments = () => {
     const response = dispatch(
@@ -54,6 +61,7 @@ const Home = () => {
   };
 
   useEffect(() => {
+    if (!socket.connected) socket.connect();
     if (user !== null) {
       dispatch(handleGetChat({ token, signal: AbortControllerRef }));
       handleFetchDocuments();
@@ -65,6 +73,25 @@ const Home = () => {
       abortApiCall();
     };
   }, []);
+
+  useEffect(() => {
+    if (
+      (AuthError?.status === "fail" &&
+        AuthError?.code === 423 &&
+        AuthError?.message === "You have been logged out.") ||
+      (bidError?.status === "fail" &&
+        bidError?.code === 423 &&
+        bidError?.message === "You have been logged out.") ||
+      (DocumentError?.status === "fail" &&
+        DocumentError?.code === 423 &&
+        DocumentError?.message === "You have been logged out.")
+    ) {
+      window.localStorage.clear();
+      toast.error("You have been logged out.");
+      dispatch(handleLogout());
+      dispatch(handleLogoutFromAllTabs());
+    }
+  }, [AuthError, bidError, DocumentError]);
 
   return (
     <>

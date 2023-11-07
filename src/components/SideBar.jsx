@@ -66,7 +66,7 @@ const SideBar = () => {
             } `}
           >
             <BsTruck className="text-xl" />
-            <p className="font-semibold ml-4">Active Jobs</p>
+            <p className="font-semibold ml-4">In-transit</p>
           </div>
           <div
             onClick={() => {
@@ -80,7 +80,7 @@ const SideBar = () => {
             } `}
           >
             <FiCheckCircle className="text-xl" />
-            <p className="font-semibold ml-4">Completed Jobs</p>
+            <p className="font-semibold ml-4">Completed</p>
           </div>
         </div>
       )}

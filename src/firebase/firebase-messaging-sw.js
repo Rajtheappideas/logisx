@@ -15,7 +15,6 @@ export function GetToken(setToken, setLoading) {
         toast.remove();
         setToken(currentToken);
         setLoading(false);
-        toast.success("Now you can login.");
       }
     })
     .catch((err) => {
@@ -38,7 +37,6 @@ export function GetToken(setToken, setLoading) {
             toast.remove();
             setToken(currentToken);
             setLoading(false);
-            toast.success("Now you can login.");
           }
         })
         .catch((err) => {

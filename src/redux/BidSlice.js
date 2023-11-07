@@ -287,6 +287,50 @@ export const handleCancelBid = createAsyncThunk(
   }
 );
 
+export const handleGetJobDetails = createAsyncThunk(
+  "bid/handleGetJobDetails",
+  async ({ token, id, signal }, { rejectWithValue }) => {
+    try {
+      signal.current = new AbortController();
+      const response = await GetUrl(`bid/${id}`, {
+        signal: signal.current.signal,
+        headers: { token },
+      });
+      return response.data;
+    } catch (error) {
+      if (error?.response) {
+        toast.error(error?.response?.data?.message);
+      }
+      return rejectWithValue(error?.response?.data);
+    }
+  }
+);
+
+export const handleUploadBillOfLanding = createAsyncThunk(
+  "bid/handleUploadBillOfLanding",
+  async ({ images, jobId, token, signal }, { rejectWithValue }) => {
+    try {
+      signal.current = new AbortController();
+      const formData = new FormData();
+      for (const image of images) {
+        formData.append("photo", image);
+      }
+      formData.append("jobId", jobId);
+      const response = await PostUrl("bill_of_lading", {
+        data: formData,
+        signal: signal.current.signal,
+        headers: { token, "Content-Type": "multipart/form-data" },
+      });
+      return response.data;
+    } catch (error) {
+      if (error?.response) {
+        toast.error(error?.response?.data?.message);
+      }
+      return rejectWithValue(error?.response?.data);
+    }
+  }
+);
+
 const initialState = {
   loading: false,
   jobLoading: false,
@@ -313,7 +357,9 @@ const initialState = {
   showBidDetails: false,
   showJobDetails: false,
   singleBidDetails: null,
+  singleJobLoading: false,
   singleJobDetails: null,
+  uploadBillLoading: false,
 };
 
 const BidSlice = createSlice({
@@ -337,23 +383,41 @@ const BidSlice = createSlice({
     },
 
     handelRemoveFavourite: (state, { payload }) => {
-      const modArr = state.favorites.filter((item) => item?._id !== payload);
+      const modArr = state.favorites.filter(
+        (item) => item?._id !== payload?.id
+      );
 
       if (modArr) {
         state.favorites = modArr;
-        state.pendingBids = state.pendingBids.map((i) =>
-          i?._id === payload ? { ...i, isFavourite: false } : i
-        );
+        if (payload?.from === "pendingBids") {
+          state.pendingBids = state.pendingBids.map((i) =>
+            i?._id === payload?.id ? { ...i, isFavourite: false } : i
+          );
+        } else if (payload?.from === "completedJobs") {
+          state.completedJobs = state.completedJobs.map((i) =>
+            i?._id === payload?.id ? { ...i, isFavourite: false } : i
+          );
+        } else if (payload?.from === "inTransitJobs") {
+          state.inTransitJobs = state.inTransitJobs.map((i) =>
+            i?._id === payload?.id ? { ...i, isFavourite: false } : i
+          );
+        }
       }
     },
 
     handelAddFavourite: (state, { payload }) => {
-      state.favorites = [...state.favorites, payload];
-      const modArr = state.pendingBids.map((i) =>
-        i?._id === payload ? { ...i, isFavourite: true } : i
-      );
-      if (modArr) {
-        state.pendingBids = modArr;
+      if (payload?.from === "pendingBids") {
+        state.pendingBids = state.pendingBids.map((i) =>
+          i?._id === payload?.id ? { ...i, isFavourite: true } : i
+        );
+      } else if (payload?.from === "completedJobs") {
+        state.completedJobs = state.completedJobs.map((i) =>
+          i?._id === payload?.id ? { ...i, isFavourite: true } : i
+        );
+      } else if (payload?.from === "inTransitJobs") {
+        state.inTransitJobs = state.inTransitJobs.map((i) =>
+          i?._id === payload?.id ? { ...i, isFavourite: true } : i
+        );
       }
     },
 
@@ -377,21 +441,21 @@ const BidSlice = createSlice({
     },
 
     hanldeFindSingleJob: (state, { payload }) => {
-      if (payload?.jobStatus === "in-transit") {
-        const job = state.inTransitJobs.find((job) => job?._id === payload?.id);
-        if (job) {
-          state.singleJobDetails = job;
-        } else {
-          state.singleJobDetails = null;
-        }
-      } else {
-        const job = state.completedJobs.find((job) => job?._id === payload?.id);
-        if (job) {
-          state.singleJobDetails = job;
-        } else {
-          state.singleJobDetails = null;
-        }
-      }
+      // if (payload?.jobStatus === "in-transit") {
+      //   const job = state.inTransitJobs.find((job) => job?._id === payload?.id);
+      //   if (job) {
+      //     state.singleJobDetails = job;
+      //   } else {
+      //     state.singleJobDetails = null;
+      //   }
+      // } else {
+      //   const job = state.completedJobs.find((job) => job?._id === payload?.id);
+      //   if (job) {
+      //     state.singleJobDetails = job;
+      //   } else {
+      //     state.singleJobDetails = null;
+      //   }
+      // }
     },
   },
   extraReducers: (builder) => {
@@ -644,6 +708,48 @@ const BidSlice = createSlice({
       state.success = false;
       state.error = payload ?? null;
     });
+
+    //get job by id
+    builder.addCase(handleGetJobDetails.pending, (state, {}) => {
+      state.singleJobLoading = true;
+      state.success = false;
+      state.error = null;
+    });
+    builder.addCase(handleGetJobDetails.fulfilled, (state, { payload }) => {
+      state.singleJobLoading = false;
+      state.success = true;
+      state.singleJobDetails = payload?.job;
+      state.error = null;
+    });
+    builder.addCase(handleGetJobDetails.rejected, (state, { payload }) => {
+      state.singleJobLoading = false;
+      state.success = false;
+      state.error = payload ?? null;
+      state.singleJobDetails = null;
+    });
+
+    //get job by id
+    builder.addCase(handleUploadBillOfLanding.pending, (state, {}) => {
+      state.uploadBillLoading = true;
+      state.success = false;
+      state.error = null;
+    });
+    builder.addCase(
+      handleUploadBillOfLanding.fulfilled,
+      (state, { payload }) => {
+        state.uploadBillLoading = false;
+        state.success = true;
+        state.error = null;
+      }
+    );
+    builder.addCase(
+      handleUploadBillOfLanding.rejected,
+      (state, { payload }) => {
+        state.uploadBillLoading = false;
+        state.success = false;
+        state.error = payload ?? null;
+      }
+    );
   },
 });
 

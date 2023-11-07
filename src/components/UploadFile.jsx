@@ -91,6 +91,7 @@ const UploadFile = ({
   useEffect(() => {
     return () => abortApiCall();
   }, []);
+  
   return (
     <div
       className={`fixed bg-black/10 duration-300 z-50 ease-out ${

@@ -354,6 +354,7 @@ const Header = () => {
                       onClick={() => {
                         dispatch(handleChangeActiveComponent("active jobs"));
                         setOpenSidebar(false);
+                        dispatch(handleChangeActiveHeader("jobs"));
                         handleChangeCloseComponent();
                       }}
                       className={`header_tab_mobile ${
@@ -362,13 +363,14 @@ const Header = () => {
                       } `}
                     >
                       <BsTruck className="text-base mr-4" />
-                      <p className="font-normal text-sm p-1.5">Active Jobs</p>
+                      <p className="font-normal text-sm p-1.5">In-transit</p>
                     </div>
                     <hr className="my-1" />
                     <div
                       onClick={() => {
                         dispatch(handleChangeActiveComponent("completed jobs"));
                         setOpenSidebar(false);
+                        dispatch(handleChangeActiveHeader("jobs"));
                         handleChangeCloseComponent();
                       }}
                       className={`header_tab_mobile ${
@@ -377,9 +379,7 @@ const Header = () => {
                       } `}
                     >
                       <FiCheckCircle className="text-base mr-4" />
-                      <p className="font-normal text-sm p-1.5">
-                        Completed Jobs
-                      </p>
+                      <p className="font-normal text-sm p-1.5">Completed</p>
                     </div>
                   </li>
                 </ul>
@@ -415,6 +415,7 @@ const Header = () => {
                         setOpenSidebar(false);
                         handleChangeCloseComponent();
                         dispatch(handleChangeShowBidProposal(false));
+                        dispatch(handleChangeActiveHeader("bids"));
                       }}
                       className={`header_tab_mobile ${
                         activeComponent === "request for bid" &&
@@ -436,6 +437,7 @@ const Header = () => {
                         setOpenSidebar(false);
                         handleChangeCloseComponent();
                         dispatch(handleChangeShowBidProposal(false));
+                        dispatch(handleChangeActiveHeader("bids"));
                       }}
                       className={`header_tab_mobile ${
                         activeComponent === "pending bids" &&
