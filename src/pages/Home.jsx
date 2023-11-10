@@ -23,7 +23,6 @@ import toast from "react-hot-toast";
 import { handleLogout } from "../redux/AuthSlice";
 import { handleLogoutFromAllTabs } from "../redux/globalStates";
 import { socket } from "../Socket";
-import { onMessageListner } from "../firebase/firebase-messaging";
 
 const Home = () => {
   const dispatch = useDispatch();
@@ -94,16 +93,6 @@ const Home = () => {
       dispatch(handleLogoutFromAllTabs());
     }
   }, [AuthError, bidError, DocumentError]);
-
-  // onMessageListner()
-  //   .then((payload) => {
-  //     // setNotification({
-  //     //   title: payload?.notification?.title,
-  //     //   body: payload?.notification?.body,
-  //     // });
-  //     console.log(payload);
-  //   })
-  //   .catch((err) => console.log("failed: ", err));
 
   return (
     <>

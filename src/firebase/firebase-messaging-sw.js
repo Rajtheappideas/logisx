@@ -1,5 +1,5 @@
-import { getMessaging, getToken, onMessage } from "firebase/messaging";
-import { app, firebaseConfig } from "./firebaseConfig";
+import { getMessaging, getToken } from "firebase/messaging";
+import { app } from "./firebaseConfig";
 import { toast } from "react-hot-toast";
 
 const messaging = getMessaging(app);
