@@ -44,7 +44,7 @@ const Auth = () => {
         globalState.fcmToken == null) ||
       (fcmToken !== null && globalState.fcmToken === null)
     ) {
-      return GetToken(setFcmToken, setLoading);
+      return GetToken(globalState.fcmToken, setFcmToken, setLoading);
     }
   };
 

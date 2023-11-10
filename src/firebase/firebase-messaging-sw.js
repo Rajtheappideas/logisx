@@ -4,7 +4,7 @@ import { toast } from "react-hot-toast";
 
 const messaging = getMessaging(app);
 
-export async function GetToken(setToken, setLoading) {
+export async function GetToken(fcmToken, setToken, setLoading) {
   if (Notification.permission === "denied") {
     toast.remove();
     toast.error(
@@ -13,7 +13,7 @@ export async function GetToken(setToken, setLoading) {
     setLoading(false);
     return;
   }
-
+  if (fcmToken !== null) return setLoading(false);
   try {
     toast.loading("Loading...");
     setLoading(true);

@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import { FaTelegram, FaUserCircle } from "react-icons/fa";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { socket } from "../Socket";
 import { imageUrl } from "../Baseurl";
 import { useState } from "react";
@@ -10,10 +10,11 @@ import moment from "moment";
 const SingelChat = ({ showChatSidebar, setShowChatSidebar }) => {
   const [message, setMessage] = useState("");
   const [chatMessages, setChatMessages] = useState([]);
-  const [newMessage, setNewMessage] = useState(null);
 
   const { singleJobDetails } = useSelector((s) => s.root.bid);
   const { user } = useSelector((s) => s.root.auth);
+
+  const dispatch = useDispatch();
 
   const chatRef = useRef(null);
   const lastMessageRef = useRef(null);
@@ -61,12 +62,13 @@ const SingelChat = ({ showChatSidebar, setShowChatSidebar }) => {
       socket.on("chatMessages", (data) => {
         setChatMessages(data);
       });
-    }, 100);
+    }, 50);
 
     setMessage("");
   };
 
   useEffect(() => {
+    if (socket.connected) socket.connect();
     if (!showChatSidebar) return;
     socket.emit("join", { id: user?._id });
     socket.emit("getChatMessages", {
@@ -77,16 +79,15 @@ const SingelChat = ({ showChatSidebar, setShowChatSidebar }) => {
     });
     socket.on("receiveMessage", (data) => {
       if (data?.jobId === singleJobDetails?._id) {
-        setChatMessages([...chatMessages, data]);
-        // socket.emit("getChatMessages", {
-        //   jobId: singleJobDetails?._id,
-        // });
-        // socket.on("chatMessages", (data) => {
-        //   setChatMessages(data);
-        // });
+        socket.emit("getChatMessages", {
+          jobId: singleJobDetails?._id,
+        });
+        socket.on("chatMessages", (data) => {
+          setChatMessages(data);
+        });
       }
     });
-  }, [showChatSidebar]);
+  }, [showChatSidebar, socket]);
 
   useEffect(() => {
     inputRef?.current?.focus();
