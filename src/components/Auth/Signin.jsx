@@ -55,6 +55,7 @@ const Signin = ({ fcmToken, FcmTokenLoading }) => {
           dispatch(handleSuccess());
           dispatch(handleChangeShowSignupProcess(false));
           socket.emit("join", { id: res.payload?.shipper?._id }).connect();
+
           navigate("/");
         } else if (res?.payload?.status === "error") {
           toast.error(res?.payload?.message);

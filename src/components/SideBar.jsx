@@ -11,22 +11,21 @@ import { LiaTruckMovingSolid } from "react-icons/lia";
 import { useDispatch, useSelector } from "react-redux";
 import {
   handleChangeActiveComponent,
-  handleChangeActiveJobDetails,
   handleLogoutFromAllTabs,
 } from "../redux/globalStates";
 import { handleLogout } from "../redux/AuthSlice";
 import { toast } from "react-hot-toast";
 import { socket } from "../Socket";
 import { AiOutlinePlus } from "react-icons/ai";
-import { handleChangeShowBidProposal } from "../redux/BidSlice";
+import {
+  handleChangeShowBidProposal,
+  handleChangeShowJobDetails,
+} from "../redux/BidSlice";
 
 const SideBar = () => {
-  const {
-    activeHeader,
-    activeComponent,
-    showActiveJobDetails,
-    showShippedDetails,
-  } = useSelector((state) => state.root.globalStates);
+  const { activeHeader, activeComponent } = useSelector(
+    (state) => state.root.globalStates
+  );
 
   const dispatch = useDispatch();
 
@@ -58,8 +57,7 @@ const SideBar = () => {
           <div
             onClick={() => {
               dispatch(handleChangeActiveComponent("active jobs"));
-              showActiveJobDetails &&
-                dispatch(handleChangeActiveJobDetails(false));
+              dispatch(handleChangeShowJobDetails(false));
             }}
             className={`sidebar_tab ${
               activeComponent === "active jobs" && "bg-primaryBlue text-white"
@@ -71,8 +69,7 @@ const SideBar = () => {
           <div
             onClick={() => {
               dispatch(handleChangeActiveComponent("completed jobs"));
-              showActiveJobDetails &&
-                dispatch(handleChangeActiveJobDetails(false));
+              dispatch(handleChangeShowJobDetails(false));
             }}
             className={`sidebar_tab ${
               activeComponent === "completed jobs" &&

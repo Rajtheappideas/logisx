@@ -13,7 +13,6 @@ import useAbortApiCall from "../../hooks/useAbortApiCall";
 import { handleLogout } from "../../redux/AuthSlice";
 import { handleLogoutFromAllTabs } from "../../redux/globalStates";
 import toast from "react-hot-toast";
-import Chat from "../Chat";
 import SingelChat from "../SingelChat";
 import { socket } from "../../Socket";
 

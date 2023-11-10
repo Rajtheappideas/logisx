@@ -15,15 +15,11 @@ const libraries = ["places"];
 
 const Timeline = () => {
   const [error, setError] = useState(null);
-  const [jobStatus, setJobStatus] = useState("");
 
   const { singleJobDetails } = useSelector((s) => s.root.bid);
+  const { user } = useSelector((s) => s.root.auth);
 
   const [showUploadBillModal, setShowUploadBillModal] = useState(false);
-  const [center, setCenter] = useState({
-    lat: 18.52043,
-    lng: 73.856743,
-  });
 
   const { token } = useSelector((s) => s.root.auth);
   const { activeComponent } = useSelector((state) => state.root.globalStates);
@@ -87,12 +83,6 @@ const Timeline = () => {
     // );
   };
 
-  // useEffect(() => {
-  //   socket.on("JobStatus", (data) => {
-  //     console.log(data);
-  //   });
-  // }, []);
-
   return (
     <>
       <UploadBills
@@ -109,11 +99,7 @@ const Timeline = () => {
             Loading Map...
           </div>
         ) : (
-          <LiveTrackMap
-            setError={setError}
-            setCenter={setCenter}
-            center={center}
-          />
+          <LiveTrackMap setError={setError} />
         )}
         {/* error */}
         {error && (

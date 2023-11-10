@@ -5,10 +5,12 @@ import { socket } from "../Socket";
 import { imageUrl } from "../Baseurl";
 import { useState } from "react";
 import { HiOutlineXMark } from "react-icons/hi2";
+import moment from "moment";
 
 const SingelChat = ({ showChatSidebar, setShowChatSidebar }) => {
   const [message, setMessage] = useState("");
   const [chatMessages, setChatMessages] = useState([]);
+  const [newMessage, setNewMessage] = useState(null);
 
   const { singleJobDetails } = useSelector((s) => s.root.bid);
   const { user } = useSelector((s) => s.root.auth);
@@ -45,35 +47,55 @@ const SingelChat = ({ showChatSidebar, setShowChatSidebar }) => {
   const handleSendMessage = async (e) => {
     e.preventDefault();
     if (message === "") return inputRef.current?.focus();
+
     socket.emit("sendMessage", {
       jobId: singleJobDetails?._id,
       sender: singleJobDetails?.shipper,
       receiver: singleJobDetails?.acceptedBid?.truckerId?._id,
       message,
     });
-    socket.emit("getChatMessages", {
-      jobId: singleJobDetails?._id,
-    });
-    socket.on("chatMessages", (data) => {
-      setChatMessages(data);
-    });
+    setTimeout(() => {
+      socket.emit("getChatMessages", {
+        jobId: singleJobDetails?._id,
+      });
+      socket.on("chatMessages", (data) => {
+        setChatMessages(data);
+      });
+    }, 100);
+
     setMessage("");
   };
 
   useEffect(() => {
     if (!showChatSidebar) return;
+    socket.emit("join", { id: user?._id });
     socket.emit("getChatMessages", {
       jobId: singleJobDetails?._id,
     });
     socket.on("chatMessages", (data) => {
       setChatMessages(data);
     });
-  }, [socket, showChatSidebar]);
+    socket.on("receiveMessage", (data) => {
+      if (data?.jobId === singleJobDetails?._id) {
+        setChatMessages([...chatMessages, data]);
+        // socket.emit("getChatMessages", {
+        //   jobId: singleJobDetails?._id,
+        // });
+        // socket.on("chatMessages", (data) => {
+        //   setChatMessages(data);
+        // });
+      }
+    });
+  }, [showChatSidebar]);
 
   useEffect(() => {
     inputRef?.current?.focus();
     lastMessageRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [chatMessages]);
+
+  useEffect(() => {
+    return () => setChatMessages([]);
+  }, []);
 
   return (
     <div
@@ -107,33 +129,36 @@ const SingelChat = ({ showChatSidebar, setShowChatSidebar }) => {
         <div className="w-full absolute bottom-12 top-14 md:space-y-4 space-y-2 md:px-2 left-0 px-1 overflow-y-scroll overflow-x-hidden md:p-3 p-2 bg-white min-h-[82vh] max-h-full scrollbar">
           {chatMessages.map((message) => (
             <div key={message?._id}>
-              {message?.sender === user?._id ? (
-                <div
-                  key={message?._id}
-                  className="w-full pr-4 text-left flex items-start justify-start gap-x-2"
-                >
-                  <FaUserCircle size={30} />
-                  <p className="max-w-[80%] break-words text-black text-left md:text-base text-sm bg-bgGray relative p-2 pl-2.5 rounded-2xl">
-                    {message?.message}
-                    <span className="absolute top-0 -left-2.5 small_clip_for_chat_left bg-bgGray h-3 w-5"></span>
-                  </p>
+              {message?.sender !== user?._id ? (
+                <div key={message?._id}>
+                  <div className="w-full pr-4 text-left flex items-start justify-start gap-x-2">
+                    <img
+                      src={imageUrl.concat(
+                        singleJobDetails?.acceptedBid?.truckerId?.profile
+                      )}
+                      className="object-cover object-center rounded-full w-10 h-10"
+                    />
+                    <p className="max-w-[80%] break-words text-black text-left md:text-base text-sm bg-bgGray relative p-2 pl-2.5 rounded-2xl">
+                      {message?.message}
+                      <span className="absolute top-0 -left-2.5 small_clip_for_chat_left bg-bgGray h-3 w-5"></span>
+                    </p>
+                  </div>
+                  <span className="text-textLightGray text-xs pl-2">
+                    {moment(message?.createdAt).format("LT")}
+                  </span>
                 </div>
               ) : (
-                <div
-                  key={message?._id}
-                  className="w-full pl-4 text-right flex items-start gap-x-2 "
-                >
-                 
-                  <p className="max-w-[80%] break-words ml-auto text-white text-right md:text-base text-sm bg-primaryBlue relative p-2 pr-2 rounded-2xl">
-                    {message?.message}
-                    <span className="absolute top-0 -right-2 small_clip_for_chat_right bg-primaryBlue h-3 w-5"></span>
-                  </p>
-                  <img
-                    src={imageUrl.concat(
-                      singleJobDetails?.acceptedBid?.truckerId?.profile
-                    )}
-                    className="object-cover object-center rounded-full w-10 h-10"
-                  />
+                <div key={message?._id} className="pb-2">
+                  <div className="w-full pl-4 text-right flex items-start gap-x-2">
+                    <p className="max-w-[80%] break-words ml-auto text-white text-right md:text-base text-sm bg-primaryBlue relative p-2 pr-2 rounded-2xl">
+                      {message?.message}
+                      <span className="absolute top-0 -right-2 small_clip_for_chat_right bg-primaryBlue h-3 w-5"></span>
+                    </p>
+                    <FaUserCircle size={30} />
+                  </div>
+                  <span className="text-textLightGray text-xs pr-1 float-right">
+                    {moment(message?.createdAt).format("LT")}
+                  </span>
                 </div>
               )}
               <div ref={lastMessageRef} />

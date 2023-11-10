@@ -12,6 +12,8 @@ const ActiveJobsDetails = ({ setShowChatSidebar }) => {
 
   const dispatch = useDispatch();
 
+  // console.log(singleJobDetails);
+
   return (
     <div className="w-full md:space-y-4 space-y-2">
       {singleJobLoading ? (
@@ -20,34 +22,38 @@ const ActiveJobsDetails = ({ setShowChatSidebar }) => {
         <>
           <div className="flex w-full justify-around items-center">
             <div className="xl:w-1/3 lg:w-1/5"></div>
-            <div className="flex-1 space-x-2 space-y-2">
-              <button
-                onClick={() => setActiveTab("details")}
-                className={` ${
-                  activeTab === "details"
-                    ? "bg-primaryBlue text-white"
-                    : "bg-disableGray"
-                } rounded-full md:w-36 w-28 md:p-3 p-1`}
-              >
-                Details
-              </button>
-              <button
-                onClick={() => setActiveTab("timeline")}
-                className={` ${
-                  activeTab === "timeline"
-                    ? "bg-primaryBlue text-white"
-                    : "bg-disableGray"
-                } rounded-full md:w-36 w-28 md:p-3 p-1`}
-              >
-                Timeline
-              </button>
-              <button
-                onClick={() => setShowChatSidebar(true)}
-                className="bg-disableGray rounded-full md:w-36 w-28 md:p-3 p-1"
-              >
-                Chat
-              </button>
-            </div>
+            {singleJobDetails?.jobStatus !== "complete" ? (
+              <div className="flex-1 space-x-2 space-y-2">
+                <button
+                  onClick={() => setActiveTab("details")}
+                  className={` ${
+                    activeTab === "details"
+                      ? "bg-primaryBlue text-white"
+                      : "bg-disableGray"
+                  } rounded-full md:w-36 w-28 md:p-3 p-1`}
+                >
+                  Details
+                </button>
+                <button
+                  onClick={() => setActiveTab("timeline")}
+                  className={` ${
+                    activeTab === "timeline"
+                      ? "bg-primaryBlue text-white"
+                      : "bg-disableGray"
+                  } rounded-full md:w-36 w-28 md:p-3 p-1`}
+                >
+                  Timeline
+                </button>
+                <button
+                  onClick={() => setShowChatSidebar(true)}
+                  className="bg-disableGray rounded-full md:w-36 w-28 md:p-3 p-1"
+                >
+                  Chat
+                </button>
+              </div>
+            ) : (
+              <div className="w-full"></div>
+            )}
             <div>
               <span>
                 <HiOutlineXMark

@@ -12,6 +12,7 @@ import {
 } from "react-phone-number-input";
 import { useEffect } from "react";
 import Geocode from "react-geocode";
+import moment from "moment";
 
 const libraries = ["places"];
 
@@ -69,8 +70,8 @@ const PickUpinfoStep1 = ({
     libraries,
   });
 
-  let arrTime = arrivalTime;
-  let depTime = departureTime;
+  let arrTime = getValues().arrivalTime;
+  let depTime = getValues().departureTime;
 
   function onLoadArrival(autocomplete) {
     setSearchValueArrival(autocomplete);
@@ -292,7 +293,7 @@ const PickUpinfoStep1 = ({
     let timer;
     timer = setTimeout(() => {
       searchLocationForDeparture();
-    }, [3000]);
+    }, [10000]);
     return () => clearTimeout(timer);
   }, [watch("departureLocation")]);
 
@@ -300,10 +301,9 @@ const PickUpinfoStep1 = ({
     let timer;
     timer = setTimeout(() => {
       searchLocationForArrival();
-    }, [3000]);
+    }, [10000]);
     return () => clearTimeout(timer);
   }, [watch("arrivalLocation")]);
-
 
   return (
     <>
@@ -342,7 +342,6 @@ const PickUpinfoStep1 = ({
               {errors?.departureLocation?.message}
             </span>
           </div>
-
           {/* Arrival location */}
           <div className="w-full md:space-y-3 space-y-2">
             <label className="Label">Arrival location</label>
@@ -394,6 +393,9 @@ const PickUpinfoStep1 = ({
               name="departureTime"
               className="input_field"
               {...register("departureTime")}
+              // min={moment(new Date()).format("HH:mm:ss")}
+              min="07:00:00"
+              max="13:00:02"
             />
             <span className="error">{errors?.departureTime?.message}</span>
           </div>
@@ -463,7 +465,7 @@ const PickUpinfoStep1 = ({
           <div className="lg:col-span-2 space-y-2">
             <p className="Label">Job description</p>
             <textarea
-              className="p-2 h-28 w-full focus:border-primaryBlue focus:border-2 text-sm rounded-lg border outline-none"
+              className="p-2 max-h-[10rem] min-h-[5rem] w-full focus:border-primaryBlue focus:border-2 text-sm rounded-lg border outline-none"
               placeholder="Type Here..."
               {...register("jobDescription")}
             ></textarea>
