@@ -68,7 +68,7 @@ const SingelChat = ({ showChatSidebar, setShowChatSidebar }) => {
   };
 
   useEffect(() => {
-    if (socket.connected) socket.connect();
+    if (!socket.connected) socket.connect();
     if (!showChatSidebar) return;
     socket.emit("join", { id: user?._id });
     socket.emit("getChatMessages", {

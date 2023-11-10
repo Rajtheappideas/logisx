@@ -66,6 +66,7 @@ const LiveTrackMap = ({ setError }) => {
   }, []);
 
   useEffect(() => {
+    if (!socket.connected) socket.connect();
     /* eslint-disable */
     const directionService = new window.google.maps.DirectionsService();
     directionService.route(
