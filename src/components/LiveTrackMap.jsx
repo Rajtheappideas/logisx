@@ -88,26 +88,36 @@ const LiveTrackMap = ({ setError }) => {
       }
     );
     socket.emit("join", { id: user?._id });
-    socket.on("receiveLiveTracking", (data) => {
-      if (
-        singleJobDetails?.jobStatus === "wayToPickUp" &&
-        (singleJobDetails?.liveTracking === "continue" ||
-          singleJobDetails?.liveTracking === "start")
-      ) {
-        setOrigin({
-          lat: parseFloat(data?.latitude),
-          lng: parseFloat(data?.longitude),
-        });
-      } else if (
-        singleJobDetails?.jobStatus === "wayToDelivery" &&
-        (singleJobDetails?.liveTracking === "continue" ||
-          singleJobDetails?.liveTracking === "start")
-      ) {
-        setDestination({
-          lat: parseFloat(data?.latitude),
-          lng: parseFloat(data?.longitude),
-        });
-      }
+    socket.on("jobAction", (jobAction) => {
+      socket.on("receiveLiveTracking", (data) => {
+        if (
+          singleJobDetails?._id === jobAction?.jobId &&
+          singleJobDetails?.jobStatus === "wayToPickUp" &&
+          (jobAction?.liveTracking === "continue" ||
+            jobAction?.liveTracking === "start")
+        ) {
+          setOrigin({
+            lat: parseFloat(data?.latitude),
+            lng: parseFloat(data?.longitude),
+          });
+          console.log("pickup", data);
+        } else if (
+          singleJobDetails?._id === jobAction?.jobId &&
+          singleJobDetails?.jobStatus === "wayToDelivery" &&
+          (jobAction?.liveTracking === "continue" ||
+            jobAction?.liveTracking === "start")
+        ) {
+          setOrigin({
+            lat: parseFloat(data?.latitude),
+            lng: parseFloat(data?.longitude),
+          });
+          // setDestination({
+          //   lat: parseFloat(data?.latitude),
+          //   lng: parseFloat(data?.longitude),
+          // });
+          console.log("delivery");
+        }
+      });
     });
     return () => {
       setError(null);
@@ -131,6 +141,8 @@ const LiveTrackMap = ({ setError }) => {
         fullscreenControl: false,
         mapTypeControl: false,
         clickableIcons: false,
+        streetViewControl: false,
+        streetViewControlOptions: false,
       }}
     >
       <DirectionsRenderer

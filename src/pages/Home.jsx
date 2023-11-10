@@ -75,6 +75,7 @@ const Home = () => {
   }, []);
 
   useEffect(() => {
+    toast.remove();
     if (
       (AuthError?.status === "fail" &&
         AuthError?.code === 423 &&
