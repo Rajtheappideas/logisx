@@ -14,10 +14,11 @@ import { handleSuccess } from "../../redux/globalStates";
 import { socket } from "../../Socket";
 import { signinSchema } from "../../yupValidations/validation";
 
-const Signin = ({ fcmToken, FcmTokenLoading }) => {
+const Signin = ({ FcmTokenLoading }) => {
   const [showPassword, setshowPassword] = useState(false);
 
   const { loading } = useSelector((state) => state.root.auth);
+  const { fcmToken } = useSelector((state) => state.root.globalStates);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();

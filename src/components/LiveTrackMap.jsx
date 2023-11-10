@@ -25,6 +25,7 @@ const LiveTrackMap = ({ setError }) => {
     lat: singleJobDetails?.arrivalCoords?.coordinates[1],
     lng: singleJobDetails?.arrivalCoords?.coordinates[0],
   });
+  const [liveTrackingStatus, setLiveTrackingStatus] = useState("continue");
 
   const { user } = useSelector((s) => s.root.auth);
 
@@ -88,43 +89,39 @@ const LiveTrackMap = ({ setError }) => {
       }
     );
     socket.emit("join", { id: user?._id });
+
     socket.on("jobAction", (jobAction) => {
-      socket.on("receiveLiveTracking", (data) => {
-        if (
-          singleJobDetails?._id === jobAction?.jobId &&
-          singleJobDetails?.jobStatus === "wayToPickUp" &&
-          (jobAction?.liveTracking === "continue" ||
-            jobAction?.liveTracking === "start")
-        ) {
-          setOrigin({
-            lat: parseFloat(data?.latitude),
-            lng: parseFloat(data?.longitude),
-          });
-          console.log("pickup", data);
-        } else if (
-          singleJobDetails?._id === jobAction?.jobId &&
-          singleJobDetails?.jobStatus === "wayToDelivery" &&
-          (jobAction?.liveTracking === "continue" ||
-            jobAction?.liveTracking === "start")
-        ) {
-          setOrigin({
-            lat: parseFloat(data?.latitude),
-            lng: parseFloat(data?.longitude),
-          });
-          // setDestination({
-          //   lat: parseFloat(data?.latitude),
-          //   lng: parseFloat(data?.longitude),
-          // });
-          console.log("delivery");
-        }
-      });
+      setLiveTrackingStatus(jobAction?.liveTracking);
+    });
+    socket.on("receiveLiveTracking", (data) => {
+      if (
+        singleJobDetails?.jobStatus === "wayToPickUp" &&
+        (liveTrackingStatus === "continue" || liveTrackingStatus === "start")
+      ) {
+        setOrigin({
+          lat: parseFloat(data?.latitude),
+          lng: parseFloat(data?.longitude),
+        });
+      } else if (
+        singleJobDetails?.jobStatus === "wayToDelivery" &&
+        (liveTrackingStatus === "continue" || liveTrackingStatus === "start")
+      ) {
+        setOrigin({
+          lat: parseFloat(data?.latitude),
+          lng: parseFloat(data?.longitude),
+        });
+        // setDestination({
+        //   lat: parseFloat(data?.latitude),
+        //   lng: parseFloat(data?.longitude),
+        // });
+      }
     });
     return () => {
       setError(null);
       setDirections(null);
     };
     /* eslint-enable */
-  }, [origin, destination, socket]);
+  }, [origin, destination, socket, liveTrackingStatus]);
 
   // start, wayToPickUp, truckerArrived, loading, loadingComplete, wayToDelivery, unloading, complete
 

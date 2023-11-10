@@ -137,13 +137,9 @@ const Auth = () => {
             </div>
           )}
           {openTab === "sign-in" ? (
-            <Signin fcmToken={fcmToken} FcmTokenLoading={loading} />
+            <Signin FcmTokenLoading={loading} />
           ) : (
-            <Signup
-              setOpenTab={setOpenTab}
-              fcmToken={fcmToken}
-              FcmTokenLoading={loading}
-            />
+            <Signup setOpenTab={setOpenTab} FcmTokenLoading={loading} />
           )}
         </div>
       </div>
