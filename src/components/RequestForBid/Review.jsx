@@ -4,7 +4,7 @@ import Success from "../ForgotPassword/Success";
 import RequestBidSuccessPopup from "../Bids/RequestBidSuccessPopup";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { handleRequestBid } from "../../redux/BidSlice";
+import { handleGetPendingBids, handleRequestBid } from "../../redux/BidSlice";
 import useAbortApiCall from "../../hooks/useAbortApiCall";
 import toast from "react-hot-toast";
 
@@ -55,6 +55,7 @@ const Review = ({ setStep, step, getValues, setShowSuccessPopup }) => {
       response.then((res) => {
         if (res?.payload?.status === "success") {
           setShowSuccessPopup(true);
+          dispatch(handleGetPendingBids({ token, signal: AbortControllerRef }));
         }
       });
     }
@@ -62,9 +63,7 @@ const Review = ({ setStep, step, getValues, setShowSuccessPopup }) => {
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
-    return () => abortApiCall();
   }, []);
-
 
   return (
     <div className="w-full md:space-y-5 space-y-3 md:text-base text-sm">

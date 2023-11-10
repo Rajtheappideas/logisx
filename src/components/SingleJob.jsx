@@ -21,6 +21,7 @@ import useAbortApiCall from "../hooks/useAbortApiCall";
 import toast from "react-hot-toast";
 import { useState } from "react";
 import { useEffect } from "react";
+import Countdown from "react-countdown";
 
 const SingleJob = memo(({ setActiveBidId, jobDescription, data }) => {
   const [IsFavourite, setIsFavourite] = useState(false);
@@ -152,10 +153,13 @@ const SingleJob = memo(({ setActiveBidId, jobDescription, data }) => {
         <p className="lg:text-2xl text-base text-textBlackcolor font-semibold">
           {data?.bidId}
         </p>
-        <div className="flex items-center gap-x-1">
+        <div className="flex items-center gap-x-1 text-lg">
           {(activeHeader === "bids" || jobDescription !== undefined) && (
             <>
-              <p className="">00:00:00</p>
+              <Countdown
+                date={Date.now() + parseInt(data?.timer) * 1000}
+                autoStart={true}
+              />
               <RiTimerLine className="mr-1 text-xl" />
             </>
           )}
