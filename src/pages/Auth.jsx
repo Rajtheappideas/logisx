@@ -14,7 +14,7 @@ import { handleChangeFcmToken } from "../redux/globalStates";
 const Auth = () => {
   const [openTab, setOpenTab] = useState("sign-up");
   const [fcmToken, setFcmToken] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [activeTabIndex, setActiveTabIndex] = useState(0);
   const [tabUnderlineWidth, setTabUnderlineWidth] = useState(0);
   const [tabUnderlineLeft, setTabUnderlineLeft] = useState(0);
@@ -33,13 +33,14 @@ const Auth = () => {
   const dispatch = useDispatch();
 
   const handleSetFcmToken = () => {
-    if (fcmToken !== null && globalState.fcmToken == null) {
+    if (globalState.fcmToken !== null) {
+      return;
+    } else if (fcmToken !== null && globalState.fcmToken === null) {
       return dispatch(handleChangeFcmToken(fcmToken));
     }
     if (
       fcmToken === null ||
       (error !== null && error?.message === "fcmToken is required.") ||
-      error?.message.includes("fcmToken is required.") ||
       globalState.fcmToken === null
     ) {
       return GetToken(globalState.fcmToken, setFcmToken, setLoading);

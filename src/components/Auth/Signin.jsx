@@ -60,6 +60,7 @@ const Signin = ({ FcmTokenLoading }) => {
           navigate("/");
         } else if (res?.payload?.status === "error") {
           toast.error(res?.payload?.message);
+          toast.error("not found token");
         }
       });
     }
@@ -70,6 +71,7 @@ const Signin = ({ FcmTokenLoading }) => {
       abortApiCall();
     };
   }, []);
+
 
   return (
     <form
