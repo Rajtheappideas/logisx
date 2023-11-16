@@ -127,7 +127,7 @@ const SingelChat = ({ showChatSidebar, setShowChatSidebar }) => {
           </div>
         </div>
         {/* chat div */}
-        <div className="w-full absolute bottom-12 top-14 md:space-y-4 space-y-2 md:px-2 left-0 px-1 overflow-y-scroll overflow-x-hidden md:p-3 p-2 bg-white min-h-[82vh] max-h-full scrollbar">
+        <div className="w-full absolute bottom-12 top-14 md:space-y-4 space-y-2 md:px-2 left-0 px-1 pb-4 overflow-y-scroll overflow-x-hidden md:p-3 p-2 bg-white min-h-[82vh] max-h-full scrollbar">
           {chatMessages.map((message) => (
             <div key={message?._id}>
               {message?.sender !== user?._id ? (

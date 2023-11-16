@@ -38,11 +38,9 @@ const Auth = () => {
     }
     if (
       fcmToken === null ||
-      (error !== null &&
-        error?.message === "fcmToken is required." &&
-        fcmToken !== null &&
-        globalState.fcmToken == null) ||
-      (fcmToken !== null && globalState.fcmToken === null)
+      (error !== null && error?.message === "fcmToken is required.") ||
+      error?.message.includes("fcmToken is required.") ||
+      globalState.fcmToken === null
     ) {
       return GetToken(globalState.fcmToken, setFcmToken, setLoading);
     }

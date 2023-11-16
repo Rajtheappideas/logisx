@@ -154,15 +154,16 @@ const SingleJob = memo(({ setActiveBidId, jobDescription, data }) => {
           {data?.bidId}
         </p>
         <div className="flex items-center gap-x-1 text-lg">
-          {(activeHeader === "bids" || jobDescription !== undefined) && (
-            <>
-              <Countdown
-                date={Date.now() + parseInt(data?.timer) * 1000}
-                autoStart={true}
-              />
-              <RiTimerLine className="mr-1 text-xl" />
-            </>
-          )}
+          {(activeHeader === "bids" || jobDescription !== undefined) &&
+            data?.status === "pending" && (
+              <>
+                <Countdown
+                  date={Date.now() + parseInt(data?.timer) * 1000}
+                  autoStart={true}
+                />
+                <RiTimerLine className="mr-1 text-xl" />
+              </>
+            )}
           <button type="button" onClick={handleAddAndRemoveFavourite}>
             {IsFavourite ? (
               <RiHeartFill size={30} color="red" />
