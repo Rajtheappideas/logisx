@@ -1,4 +1,4 @@
-import { getMessaging, getToken } from "firebase/messaging";
+import { getMessaging, getToken, onMessage } from "firebase/messaging";
 import { app } from "./firebaseConfig";
 import { toast } from "react-hot-toast";
 
@@ -61,18 +61,10 @@ export function GetToken(fcmToken, setToken, setLoading) {
   });
 }
 
-/* eslint-disable no-undef */
-// window.importScripts("https://www.gstatic.com/firebasejs/8.2.0/firebase-app.js");
-// window.importScripts("https://www.gstatic.com/firebasejs/8.2.0/firebase-messaging.js");
-// messaging?.onBackgroundMessage(function (payload) {
-//   console.log("Received background message ", payload);
-//   // Customize notification here
-//   const notificationTitle = payload.notification.title;
-//   const notificationOptions = {
-//     body: payload.notification.body,
-//   };
-//   window.self.registration.showNotification(
-//     notificationTitle,
-//     notificationOptions
-//   ); /* eslint-disable-line no-restricted-globals */
-// });
+export const onMessageListener = () =>
+  new Promise((resolve) => {
+    onMessage(messaging, (payload) => {
+      console.log("payload", payload);
+      resolve(payload);
+    });
+  });

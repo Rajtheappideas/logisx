@@ -17,6 +17,7 @@ import {
   loginAllTabsEventListener,
   logoutAllTabsEventListener,
 } from "./redux/globalStates";
+import { onMessageListener } from "./firebase/firebase-messaging-sw";
 
 function App() {
   const dispatch = useDispatch();
@@ -25,6 +26,16 @@ function App() {
     dispatch(loginAllTabsEventListener());
     dispatch(logoutAllTabsEventListener());
   }, []);
+
+  useEffect(() => {
+    onMessageListener()
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  });
 
   return (
     <BrowserRouter>

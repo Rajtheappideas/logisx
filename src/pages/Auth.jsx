@@ -43,6 +43,7 @@ const Auth = () => {
       (error !== null && error?.message === "fcmToken is required.") ||
       globalState.fcmToken === null
     ) {
+      window.localStorage.clear();
       return GetToken(globalState.fcmToken, setFcmToken, setLoading);
     }
   };
