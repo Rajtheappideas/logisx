@@ -1,26 +1,32 @@
-const { onBackgroundMessage } = require("firebase/firebase-messaging-sw");
-const { firebaseConfig } = require("../src/firebase/firebaseConfig");
+// import { firebaseConfig } from "../src/firebase/firebaseConfig";
 
-// Scripts for firebase and firebase messaging
-window.importScripts(
-  "https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js"
-);
-window.importScripts(
-  "https://www.gstatic.com/firebasejs/9.0.0/firebase-messaging.js"
-);
+// // / Scripts for firebase and firebase messaging
+// // eslint-disable-next-line no-undef
+// importScripts("https://www.gstatic.com/firebasejs/8.2.0/firebase-app.js");
+// // eslint-disable-next-line no-undef
+// importScripts("https://www.gstatic.com/firebasejs/8.2.0/firebase-messaging.js");
 
-// const firebase = firebase.initializeApp(firebaseConfig);
+// // Initialize the Firebase app in the service worker by passing the generated config
 
+// // eslint-disable-next-line no-undef
+// firebase.initializeApp(firebaseConfig);
+
+// // Retrieve firebase messaging
+// // eslint-disable-next-line no-undef
 // const messaging = firebase.messaging();
 
-// messaging?.
-onBackgroundMessage(function (payload) {
-  console.log("Received background message ", payload);
-  // Customize notification here
-  const notificationTitle = payload.notification.title;
-  const notificationOptions = {
-    body: payload.notification.body,
-  };
+// messaging.onBackgroundMessage(function (payload) {
+//   console.log("Received background message ", payload);
 
-  window.self.registration.showNotification(notificationTitle, notificationOptions);
-});
+//   const notificationTitle = payload.notification.title;
+//   const notificationOptions = {
+//     body: payload.notification.body,
+//   };
+
+//   // eslint-disable-next-line no-restricted-globals
+//   return new Notification(notificationTitle, notificationOptions);
+//   //   return self.registration.showNotification(
+//   //     notificationTitle,
+//   //     notificationOptions
+//   //   );
+// });

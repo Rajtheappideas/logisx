@@ -3,7 +3,7 @@ import "./App.css";
 import Home from "./pages/Home";
 import Auth from "./pages/Auth";
 import ForgotPassword from "./pages/ForgotPassword";
-import { Toaster } from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 import ErrorFallBack from "./components/ErrorFallBack";
 import { ErrorBoundary } from "react-error-boundary";
 import { Suspense } from "react";
@@ -18,24 +18,25 @@ import {
   logoutAllTabsEventListener,
 } from "./redux/globalStates";
 import { onMessageListener } from "./firebase/firebase-messaging-sw";
+import { useState } from "react";
+import { socket } from "./Socket";
 
 function App() {
+  const [data, setData] = useState(null);
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(loginAllTabsEventListener());
     dispatch(logoutAllTabsEventListener());
   }, []);
-
-  useEffect(() => {
-    onMessageListener()
-      .then((res) => {
-        console.log(res);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  });
+  onMessageListener()
+    .then((res) => {
+      console.log(res);
+      // toast(res?.)
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 
   return (
     <BrowserRouter>
