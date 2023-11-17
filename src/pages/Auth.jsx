@@ -38,6 +38,11 @@ const Auth = () => {
     } else if (fcmToken !== null && globalState.fcmToken === null) {
       return dispatch(handleChangeFcmToken(fcmToken));
     }
+    if (window.Notification.permission !== "granted") {
+      toast.remove();
+      toast.error("Please allowed notificaitons.");
+      window.Notification.requestPermission();
+    }
     if (
       fcmToken === null ||
       (error !== null && error?.message === "fcmToken is required.") ||

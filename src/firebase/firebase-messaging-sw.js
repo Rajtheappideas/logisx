@@ -14,27 +14,27 @@ export function GetToken(fcmToken, setToken, setLoading) {
   }
 
   if (fcmToken !== null) return;
-  // if (window.Notification.permission === "granted") {
-  //   toast.loading("Loading...");
-  //   setLoading(true);
-  //   getToken(messaging, {
-  //     vapidKey: process.env.REACT_APP_CLOUD_MESSAGING_KEY,
-  //   })
-  //     .then((currentToken) => {
-  //       toast.remove();
-  //       setToken(currentToken);
-  //       setLoading(false);
-  //     })
-  //     .catch((err) => {
-  //       toast.remove();
-  //       console.log(err);
-  //       setLoading(false);
-  //       setToken(null);
-  //     })
-  //     .finally(() => {
-  //       setLoading(false);
-  //     });
-  // }
+  if (window.Notification.permission === "granted") {
+    toast.loading("Loading...");
+    setLoading(true);
+    getToken(messaging, {
+      vapidKey: process.env.REACT_APP_CLOUD_MESSAGING_KEY,
+    })
+      .then((currentToken) => {
+        toast.remove();
+        setToken(currentToken);
+        setLoading(false);
+      })
+      .catch((err) => {
+        toast.remove();
+        console.log(err);
+        setLoading(false);
+        setToken(null);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }
 
   window.Notification.requestPermission().then((permission) => {
     if (permission === "granted") {
@@ -60,6 +60,7 @@ export function GetToken(fcmToken, setToken, setLoading) {
           setLoading(false);
         });
     } else {
+      setLoading(false);
       return toast("please allowed notifications.");
     }
   });
