@@ -72,7 +72,6 @@ const Signin = ({ FcmTokenLoading }) => {
     };
   }, []);
 
-
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
