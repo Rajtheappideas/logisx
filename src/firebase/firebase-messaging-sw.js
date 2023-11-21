@@ -13,7 +13,6 @@ export function GetToken(fcmToken, setToken, setLoading) {
     return;
   }
 
-  if (fcmToken !== null) return;
   if (window.Notification.permission === "granted") {
     toast.loading("Loading...");
     setLoading(true);
@@ -42,7 +41,7 @@ export function GetToken(fcmToken, setToken, setLoading) {
       toast.loading("Loading...");
       setLoading(true);
 
-      return getToken(messaging, {
+      getToken(messaging, {
         vapidKey: process.env.REACT_APP_CLOUD_MESSAGING_KEY,
       })
         .then((currentToken) => {
@@ -61,7 +60,7 @@ export function GetToken(fcmToken, setToken, setLoading) {
         });
     } else {
       setLoading(false);
-      return toast("please allowed notifications.");
+      toast("please allowed notifications.");
     }
   });
 }

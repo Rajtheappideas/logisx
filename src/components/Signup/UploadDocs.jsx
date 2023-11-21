@@ -37,6 +37,7 @@ const UploadDocs = memo(({ setStep, setValue, getValues }) => {
   };
 
   const handleChangeFile = (e) => {
+    // console.log(e);
     if (photos.flat(Infinity).length > 2) {
       return toast.error("Max 3 photos can upload.");
     } else {
@@ -105,6 +106,8 @@ const UploadDocs = memo(({ setStep, setValue, getValues }) => {
       return toast.error("max 3 pics");
     }
   }, [photos]);
+
+// console.log(photos);
 
   return (
     <div className="w-full">

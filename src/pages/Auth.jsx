@@ -10,6 +10,7 @@ import { GetToken } from "../firebase/firebase-messaging-sw";
 import useAbortApiCall from "../hooks/useAbortApiCall";
 import { toast } from "react-hot-toast";
 import { handleChangeFcmToken } from "../redux/globalStates";
+import { handleChangeShowSignupProcess } from "../redux/AuthSlice";
 
 const Auth = () => {
   const [openTab, setOpenTab] = useState("sign-up");
@@ -95,7 +96,7 @@ const Auth = () => {
         }}
       >
         <div className="text-center">
-          <Link to="/">
+          <Link to="/" onClick={()=>dispatch(handleChangeShowSignupProcess(false))}>
             <img
               src={Logo}
               alt="logo"
