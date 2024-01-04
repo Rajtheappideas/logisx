@@ -8,9 +8,11 @@ import { useSelector } from "react-redux";
 
 const RequestBid = () => {
   const [bidUploadType, setBidUploadType] = useState("single_bid");
-  const [activeBidComponent, setActiveBidComponent] = useState("bid_upload");
+  const [activeBidComponent, setActiveBidComponent] = useState("pick_up_info");
   const [showUploadFile, setShowUploadFile] = useState(false);
   const [mutlipleBidFile, setMutlipleBidFile] = useState(null);
+  const [bids, setBids] = useState([]);
+  // console.log(bids);
 
   const { activeHeader } = useSelector((state) => state.root.globalStates);
 
@@ -20,13 +22,13 @@ const RequestBid = () => {
         Request for BID
       </p> */}
       <div className="bg-white min-h-screen md:p-6 p-2 rounded-lg">
-        {activeBidComponent === "bid_upload" && activeHeader === "bids" && (
+        {/* {activeBidComponent === "bid_upload" && activeHeader === "bids" && (
           <RequestForBid
             setBidUploadType={setBidUploadType}
             bidUploadType={bidUploadType}
             setActiveBidComponent={setActiveBidComponent}
           />
-        )}
+        )} */}
         {/* single bid upload components */}
         {activeBidComponent === "pick_up_info" &&
           bidUploadType === "single_bid" && (
@@ -35,11 +37,14 @@ const RequestBid = () => {
 
         {/* mutilple bid upload */}
         {activeBidComponent === "upload_docs" &&
-          bidUploadType === "multiple_bid" && (
+          bidUploadType === "multiple_bid" &&
+          mutlipleBidFile == null &&
+          bids.length === 0 && (
             <UploadBidDocs
               setActiveBidComponent={setActiveBidComponent}
               setShowUploadFile={setShowUploadFile}
               setBidUploadType={setBidUploadType}
+              setMutlipleBidFile={setMutlipleBidFile}
             />
           )}
         {showUploadFile && (
@@ -48,9 +53,17 @@ const RequestBid = () => {
             showUploadFile={showUploadFile}
             setMutlipleBidFile={setMutlipleBidFile}
             mutlipleBidFile={mutlipleBidFile}
+            setBids={setBids}
           />
         )}
-        {/* {mutlipleBidFile !== null && <MultipleBidsTable />} */}
+        {mutlipleBidFile !== null && bids.length > 0 && (
+          <MultipleBidsTable
+            setShowUploadFile={setShowUploadFile}
+            setMutlipleBidFile={setMutlipleBidFile}
+            bids={bids}
+            setBids={setBids}
+          />
+        )}
       </div>
     </div>
   );

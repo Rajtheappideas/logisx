@@ -41,6 +41,7 @@ const Review = ({ setStep, step, getValues, setShowSuccessPopup }) => {
     loadNotes,
     poNumber,
     refrenceNumber,
+    weight,
   } = getValues();
 
   const handleCreateRequestForBid = () => {
@@ -204,6 +205,12 @@ const Review = ({ setStep, step, getValues, setShowSuccessPopup }) => {
           {endorsement.length > 0
             ? endorsement.map((list, i) => <p key={i}>{list}</p>)
             : "-"}
+        </div>
+        <div className="space-y-1">
+          <p className="text-sm text-disableGray font-semibold">
+            Weight
+          </p>
+          <p>{weight}</p>
         </div>
         <div className="space-y-1">
           <p className="text-sm text-disableGray font-semibold">

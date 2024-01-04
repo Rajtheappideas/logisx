@@ -4,7 +4,19 @@ import { PiTelegramLogoLight } from "react-icons/pi";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import ReactPaginate from "react-paginate";
 
-const MultipleBidsTable = () => {
+const MultipleBidsTable = ({ setShowUploadFile, bids }) => {
+  console.log(bids);
+
+  // Papa.parse(acceptedFiles[0], {
+  //   header: true,
+  //   skipEmptyLines: true,
+  //   complete: function (results) {
+  //     console.log(results.data);
+  //   },
+  //   error: (err) => {
+  //     console.log(err);
+  //   },
+  // });
   return (
     <div className="w-full min-h-screen md:space-y-4 space-y-2">
       <p className="md:text-2xl text-lg text-primaryBlue font-semibold">
@@ -19,7 +31,10 @@ const MultipleBidsTable = () => {
           />
         </div>
         <div className="flex items-center gap-x-3 flex-wrap">
-          <button className="uppercase md:h-12 md:w-40 w-28 h-9 rounded-lg border border-primaryBlue text-primaryBlue text-center">
+          <button
+            onClick={() => setShowUploadFile(true)}
+            className="uppercase md:h-12 md:w-40 w-28 h-9 rounded-lg border border-primaryBlue text-primaryBlue text-center"
+          >
             + add new
           </button>
           <button className="uppercase md:h-12 md:w-40 w-auto px-1 h-9 rounded-lg border bg-primaryBlue text-white text-center">
@@ -32,9 +47,6 @@ const MultipleBidsTable = () => {
         <table className="border-none outline-none w-full overflow-scroll md:text-base text-sm">
           <thead className="w-full border-b border-gray-100 text-left whitespace-nowrap">
             <tr>
-              <th className="md:p-4 p-2">
-                <span>Bid I.D.</span>
-              </th>
               <th className="md:p-4 p-2">P.O Number</th>
               <th className="md:p-4 p-2">Receiver’s Number </th>
               <th className="md:p-4 p-2">Arrival Location</th>
@@ -55,6 +67,76 @@ const MultipleBidsTable = () => {
             </tr>
           </thead>
           <tbody className="w-full">
+            {bids.length > 0 &&
+              bids.map((bid, index) => (
+                <tr
+                  key={index}
+                  className="border-b border-gray-200 w-full text-left"
+                >
+                  <td className="text-left md:p-4 p-2 whitespace-nowrap">
+                    {bid?.P.O.Number}
+                  </td>
+                  <td className="text-left md:p-4 p-2 whitespace-nowrap">
+                    {bid?.RefrenceNumber}
+                  </td>
+                  <td className="text-left md:p-4 p-2 whitespace-nowrap">
+                    Kalamazoo Distrib...
+                  </td>
+                  <td className="text-left md:p-4 p-2 whitespace-nowrap">
+                    March 7
+                  </td>
+                  <td className="text-left md:p-4 p-2 whitespace-nowrap">
+                    March 7
+                  </td>
+                  <td className="text-left md:p-4 p-2 whitespace-nowrap">
+                    20:05
+                  </td>
+                  <td className="text-left md:p-4 p-2 whitespace-nowrap">
+                    lorem ipsum lipsum...
+                  </td>
+                  <td className="text-left md:p-4 p-2 whitespace-nowrap">
+                    John adam
+                  </td>
+                  <td className="text-left md:p-4 p-2 whitespace-nowrap">
+                    Kalamazoo Distrib...
+                  </td>
+                  <td className="text-left md:p-4 p-2 whitespace-nowrap">
+                    +1 2134451
+                  </td>
+                  <td className="text-left md:p-4 p-2 whitespace-nowrap">
+                    loremipsum@mail.com
+                  </td>
+                  <td className="text-left md:p-4 p-2 whitespace-nowrap">
+                    20 June 2023
+                  </td>
+                  <td className="text-left md:p-4 p-2 whitespace-nowrap">
+                    lorem ipsum
+                  </td>
+                  <td className="text-left md:p-4 p-2 whitespace-nowrap">
+                    lorem ipsum, ipsum
+                  </td>
+                  <td className="text-left md:p-4 p-2 whitespace-nowrap">
+                    lorem ipsum, ipsum
+                  </td>
+                  <td className="text-left md:p-4 p-2 whitespace-nowrap">
+                    $1000
+                  </td>
+
+                  <td className="flex items-center justify-start md:p-4 p-2">
+                    <button
+                      //   onClick={() => dispatch(handleChangeActiveJobDetails(true))}
+                      type="button"
+                      className="hover:bg-gray-200 p-1 rounded-full h-10 w-10"
+                    >
+                      <RiDeleteBin6Line
+                        color="red"
+                        size={30}
+                        className="inline-block"
+                      />
+                    </button>
+                  </td>
+                </tr>
+              ))}
             <tr className="border-b border-gray-200 w-full text-left">
               <td className="md:p-4 p-2 whitespace-nowrap">RW3342D</td>
 

@@ -32,7 +32,8 @@ export const handleRequestBid = createAsyncThunk(
       for (const key in data) {
         formData.append(key, data[key]);
       }
-
+      formData.append("arrivalLocationMasked", data?.arrivalLocation);
+      formData.append("departureLocationMasked", data?.departureLocation);
       const response = await PostUrl("request_bid", {
         data: formData,
         signal: signal.current.signal,

@@ -132,3 +132,7 @@ export const pickUpInfoStepOne = yup.object({
   bidExpriry: yup.string().required("expiry date is required"),
   price: yup.string().required("price is required"),
 });
+
+export const pickUpInfoStepTwo = yup.object({
+  weight: yup.string().required("weight is required"),
+});

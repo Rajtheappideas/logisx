@@ -5,6 +5,7 @@ const UploadBidDocs = ({
   setShowUploadFile,
   setActiveBidComponent,
   setBidUploadType,
+  setMutlipleBidFile,
 }) => {
   return (
     <div className="w-full md:space-y-5 space-y-3">
@@ -13,6 +14,7 @@ const UploadBidDocs = ({
           onClick={() => {
             setActiveBidComponent("bid_upload");
             setBidUploadType("single_bid");
+            setMutlipleBidFile(null);
           }}
           className="md:text-2xl text-lg cursor-pointer flex items-center text-primaryBlue font-semibold"
         >

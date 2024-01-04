@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
+import { pickUpInfoStepTwo } from "../../yupValidations/validation";
 
 const PickUpinfoStep2 = ({
   setStep,
@@ -13,7 +14,7 @@ const PickUpinfoStep2 = ({
   clearErrors,
   step,
 }) => {
-  const { equipment, endorsement, specification } = getValues();
+  const { equipment, endorsement, specification, weight } = getValues();
 
   const [equipments, setEquipments] = useState([]);
   const [endorsements, setEndorsements] = useState([]);
@@ -43,21 +44,24 @@ const PickUpinfoStep2 = ({
     formState: { errors },
   } = useForm({
     shouldFocusError: true,
+    resolver: yupResolver(pickUpInfoStepTwo),
     defaultValues: {
       equipment: [],
       endorsement: [],
       specification,
+      weight,
     },
   });
 
   const onSubmit = (data) => {
-    const { specification } = data;
+    const { specification ,weight} = data;
     toast.remove();
     if (equipments.length === 0)
       return toast.error("Select at least one equipments");
     setValue("equipment", equipments);
     setValue("endorsement", endorsements);
     setValue("specification", specification);
+    setValue("weight", weight);
     setStep(3);
   };
 
@@ -126,6 +130,19 @@ const PickUpinfoStep2 = ({
             </div>
           ))}
         </div>
+      </div>
+
+      <p className="text-textColorGray font-semibold lg:text-lg text-sm">
+        Weight
+      </p>
+      <div className="w-full md:space-y-3 space-y-2">
+        <input
+          type="text"
+          name="weight"
+          className="input_field"
+          {...register("weight")}
+        />
+        <span className="error">{errors?.weight?.message}</span>
       </div>
       {/* specification */}
       <p className="text-textColorGray font-semibold lg:text-lg text-sm">

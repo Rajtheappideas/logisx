@@ -29,6 +29,7 @@ function App() {
     dispatch(loginAllTabsEventListener());
     dispatch(logoutAllTabsEventListener());
   }, []);
+  
   onMessageListener()
     .then((res) => {
       console.log(res);

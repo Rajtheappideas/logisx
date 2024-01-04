@@ -6,12 +6,14 @@ import fileupload from "../assets/images/upload_icon.png";
 import { useDispatch, useSelector } from "react-redux";
 import { handleRequestMutlipleBid } from "../redux/BidSlice";
 import useAbortApiCall from "../hooks/useAbortApiCall";
+import Papa from "papaparse";
 
 const UploadFile = ({
   setShowUploadFile,
   showUploadFile,
   setMutlipleBidFile,
   mutlipleBidFile,
+  setBids,
 }) => {
   const [loading, setLoading] = useState(false);
 
@@ -25,11 +27,20 @@ const UploadFile = ({
   const uploadFileRef = useRef(null);
 
   const { getInputProps, getRootProps } = useDropzone({
-    accept: {
-      ".csv": [],
-    },
+    accept: { "text/csv": [".csv"] },
     onDrop: (acceptedFiles) => {
       setMutlipleBidFile(acceptedFiles);
+      setShowUploadFile(false);
+      Papa.parse(acceptedFiles[0], {
+        header: true,
+        skipEmptyLines: true,
+        complete: function (results) {
+          setBids(results.data);
+        },
+        error: (err) => {
+          console.log(err);
+        },
+      });
     },
     maxFiles: 1,
     onDropRejected: (rejection) => {
@@ -39,6 +50,10 @@ const UploadFile = ({
       } else {
         toast.error(rejection[0]?.errors[0]?.message);
       }
+    },
+    onError: (err) => {
+      console.log(err);
+      toast.error("You can upload maximum 1 files & file should be .csv");
     },
   });
 
@@ -82,7 +97,7 @@ const UploadFile = ({
           // toast.success("File uploaded successfully");
           toast(res?.payload?.message);
           setShowUploadFile(false);
-          setMutlipleBidFile(null)
+          setMutlipleBidFile(null);
         }
       });
     }
@@ -91,7 +106,7 @@ const UploadFile = ({
   useEffect(() => {
     return () => abortApiCall();
   }, []);
-  
+
   return (
     <div
       className={`fixed bg-black/10 duration-300 z-50 ease-out ${
@@ -112,13 +127,12 @@ const UploadFile = ({
               type="button"
               onClick={() => {
                 setShowUploadFile(false);
-                setMutlipleBidFile(null);
               }}
             >
               <AiOutlineClose size={30} />
             </button>
           </div>
-          {mutlipleBidFile !== null ? (
+          {mutlipleBidFile !== null && mutlipleBidFile.length > 0 ? (
             <div className="w-full h-[70%] space-y-4">
               <div className="overflow-y-scroll scrollbar h-full space-y-2 w-full">
                 <div className="bg-gray-100 border border-BorderGray w-full p-3 flex justify-between items-center text-black text-base">
@@ -126,7 +140,10 @@ const UploadFile = ({
 
                   <button
                     type="button"
-                    onClick={() => setMutlipleBidFile(null)}
+                    onClick={() => {
+                      setMutlipleBidFile(null);
+                      setBids([]);
+                    }}
                   >
                     <AiOutlineClose height={25} />
                   </button>
@@ -150,8 +167,12 @@ const UploadFile = ({
                   {...getInputProps()}
                   type="file"
                   className="absolute w-full cursor-pointer inset-0 h-full z-50 opacity-0 mx-auto rounded-3xl"
-                  onChange={(e) => handleChangeFile(e)}
-                  accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+                  id="fileUpload"
+                  onChange={(e) => {
+                    handleChangeFile(e);
+                    console.log(e.target.files);
+                  }}
+                  // accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
                 />
                 <button
                   type="button"
@@ -165,7 +186,7 @@ const UploadFile = ({
               </p>
             </div>
           )}
-          {mutlipleBidFile !== null && (
+          {/* {mutlipleBidFile !== null && mutlipleBidFile.length > 0 && (
             <button
               type="button"
               className={`w-full bg-primaryBlue font-bold text-white text-center h-10 rounded-lg ${
@@ -176,7 +197,7 @@ const UploadFile = ({
             >
               {createBidLoading ? "Uploading..." : "Upload"}
             </button>
-          )}
+          )} */}
         </div>
       </div>
     </div>

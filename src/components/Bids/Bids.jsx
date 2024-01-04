@@ -6,7 +6,10 @@ import { FiMenu } from "react-icons/fi";
 import BidDetails from "./BidDetails";
 import { useDispatch, useSelector } from "react-redux";
 import TableViewBid from "./TableViewBid";
-import { handleChangeShowBidUploadComponent, handleLogoutFromAllTabs } from "../../redux/globalStates";
+import {
+  handleChangeShowBidUploadComponent,
+  handleLogoutFromAllTabs,
+} from "../../redux/globalStates";
 import {
   handleBidProposals,
   handleGetCancelledBids,

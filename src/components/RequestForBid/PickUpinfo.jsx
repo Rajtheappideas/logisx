@@ -41,6 +41,7 @@ const PickUpinfo = ({ setActiveBidComponent }) => {
       loadNotes: "",
       poNumber: "",
       refrenceNumber: "",
+      weight: "",
     },
   });
 
