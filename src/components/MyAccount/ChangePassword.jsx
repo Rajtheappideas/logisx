@@ -101,7 +101,7 @@ const ChangePassword = () => {
         >
           {/* current password */}
           <div className="relative h-[4rem]">
-            <label className="Label">Current Password</label>
+            <label className="Label">Current password</label>
             <input
               className="input_field text-black"
               type={showCurrentPassword ? "text" : "password"}

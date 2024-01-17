@@ -125,13 +125,12 @@ const Details = () => {
                   alt={bill}
                   className="w-full 2xl:h-80 lg:h-60 md:h-40 h-32 object-contain object-start p-2"
                 />
-           
               </div>
             ))}
           </div>
         </>
       )}
-      {singleJobDetails?.history.length > 0 && (
+      {singleJobDetails?.history && singleJobDetails?.history?.length > 0 && (
         <>
           <p className="text-textColorGray text-sm">Delivery history</p>
           <div className="w-full border border-boxBroder rounded-xl md:p-4 p-2">

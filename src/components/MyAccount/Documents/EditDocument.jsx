@@ -51,11 +51,11 @@ const EditDocument = ({ setShowEditDocument }) => {
     photo: yup
       .mixed()
       .required("photo is required")
-      .test("is-valid-size", "Max allowed size is 1 MB", (value) => {
-        for (const item of value) {
-          return item?.size < 1_000_000;
-        }
-      })
+      // .test("is-valid-size", "Max allowed size is 1 MB", (value) => {
+      //   for (const item of value) {
+      //     return item?.size < 1_000_000;
+      //   }
+      // })
       .test("is_valid_type", "Not valid image type", (value) => {
         for (const item of value) {
           return item.name.includes("png", "jpg", "jpeg");
@@ -204,7 +204,7 @@ const EditDocument = ({ setShowEditDocument }) => {
       <div className="bg-white md:p-4 p-2 rounded-2xl w-full min-h-screen md:space-y-4 space-y-2">
         <p
           onClick={() => setShowEditDocument(false)}
-          className="md:text-2xl text-md  text-primaryBlue font-semibold flex items-center cursor-pointer"
+          className="md:text-2xl text-md  text-primaryBlue font-semibold flex items-center cursor-pointer w-fit"
         >
           <GoArrowLeft className="inline-block mr-2" />
           Edit Document
@@ -314,6 +314,9 @@ const EditDocument = ({ setShowEditDocument }) => {
                   ))
                 : null}
             </div>
+            <span role="alert" className="error">
+              {errors?.photo?.message}
+            </span>
           </div>
           <button
             type="submit"

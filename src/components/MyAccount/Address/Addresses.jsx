@@ -103,7 +103,7 @@ const Addresses = () => {
                           <span>{address?.location}</span>
                           <MdDelete
                             onClick={() => handleDetele(address?._id)}
-                            className="w-8 h-8 text-red-500 cursor-pointer hover:bg-red-200 p-1 transition-all duration-300 rounded-lg"
+                            className="min-w-[2rem] min-h-[2rem] text-red-500 cursor-pointer hover:bg-red-200 p-1 transition-all duration-300 rounded-lg"
                           />
                         </li>
                       ))
@@ -128,7 +128,7 @@ const Addresses = () => {
                           <span>{address?.location}</span>
                           <MdDelete
                             onClick={() => handleDetele(address?._id)}
-                            className="w-8 h-8 text-red-500 cursor-pointer hover:bg-red-200 p-1 transition-all duration-300 rounded-lg"
+                            className="min-w-[2rem] min-h-[2rem] text-red-500 cursor-pointer hover:bg-red-200 p-1 transition-all duration-300 rounded-lg"
                           />
                         </li>
                       ))

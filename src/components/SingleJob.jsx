@@ -50,7 +50,6 @@ const SingleJob = memo(({ setActiveBidId, jobDescription, data }) => {
           signal: AbortControllerRef,
         })
       );
-
       dispatch(handleChangeShowJobDetails(true));
     } else if (activeComponent === "pending bids") {
       dispatch(handleChangeShowBidProposal(true));

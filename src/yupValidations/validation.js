@@ -94,11 +94,11 @@ export const uploadDocsSchema = yup.object({
   photo: yup
     .mixed()
     .required("photo is required")
-    .test("is-valid-size", "Max allowed size is 1 MB", (value) => {
-      for (const item of value) {
-        return item?.size < 1_000_000;
-      }
-    })
+    // .test("is-valid-size", "Max allowed size is 1 MB", (value) => {
+    //   for (const item of value) {
+    //     return item?.size < 1_000_000;
+    //   }
+    // })
     .test("is_valid_type", "Not valid image type", (value) => {
       for (const item of value) {
         return item.name.includes("png", "jpg", "jpeg");

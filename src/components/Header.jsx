@@ -245,7 +245,7 @@ const Header = () => {
           <img
             src={logo}
             alt="logo"
-            className="lg:w-32 w-20 h-fit cursor-pointer"
+            className="lg:w-32 w-20 h-fit"
           />
         </div>
         <nav className="flex md:mr-6 mr-2 items-center gap-x-2 flex-initial justify-end">

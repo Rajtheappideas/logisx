@@ -442,21 +442,21 @@ const BidSlice = createSlice({
     },
 
     hanldeFindSingleJob: (state, { payload }) => {
-      // if (payload?.jobStatus === "in-transit") {
-      //   const job = state.inTransitJobs.find((job) => job?._id === payload?.id);
-      //   if (job) {
-      //     state.singleJobDetails = job;
-      //   } else {
-      //     state.singleJobDetails = null;
-      //   }
-      // } else {
-      //   const job = state.completedJobs.find((job) => job?._id === payload?.id);
-      //   if (job) {
-      //     state.singleJobDetails = job;
-      //   } else {
-      //     state.singleJobDetails = null;
-      //   }
-      // }
+      if (payload?.jobStatus === "in-transit") {
+        const job = state.inTransitJobs.find((job) => job?._id === payload?.id);
+        if (job) {
+          state.singleJobDetails = job;
+        } else {
+          state.singleJobDetails = null;
+        }
+      } else {
+        const job = state.completedJobs.find((job) => job?._id === payload?.id);
+        if (job) {
+          state.singleJobDetails = job;
+        } else {
+          state.singleJobDetails = null;
+        }
+      }
     },
   },
   extraReducers: (builder) => {
