@@ -11,7 +11,7 @@ import FavoriteSlice from "./FavoriteSlice";
 const rootPersistConfig = {
   key: "root",
   storage,
-  blacklist: ["auth", "content", "bid", "documents", "favorite"],
+  whitelist: [""],
 };
 
 const authConfig = {
@@ -19,9 +19,19 @@ const authConfig = {
   storage,
   blacklist: ["showSignupProcess"],
 };
+const globalStatesConfig = {
+  key: "globalStates",
+  storage,
+  blacklist: [
+    "fcmToken",
+    "addresses",
+    "addressLoading",
+    "DeleteAddressLoading",
+  ],
+};
 
 const rootReducer = combineReducers({
-  globalStates: GlobalStates,
+  globalStates: persistReducer(globalStatesConfig, GlobalStates),
   auth: persistReducer(authConfig, AuthSlice),
   content: GetContentSlice,
   bid: BidSlice,

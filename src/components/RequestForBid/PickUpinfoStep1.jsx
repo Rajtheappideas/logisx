@@ -1,7 +1,7 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import React, { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Autocomplete, useJsApiLoader } from "@react-google-maps/api";
 import { pickUpInfoStepOne } from "../../yupValidations/validation";
 import toast from "react-hot-toast";
@@ -12,7 +12,8 @@ import {
 } from "react-phone-number-input";
 import { useEffect } from "react";
 import Geocode from "react-geocode";
-import moment from "moment";
+import { FaCaretDown } from "react-icons/fa";
+import { MdCancel } from "react-icons/md";
 
 const libraries = ["places"];
 
@@ -21,8 +22,11 @@ const PickUpinfoStep1 = ({
   getValues,
   setValue,
   setActiveBidComponent,
-  clearErrors,
   reset,
+  setSelectedFromDropdownArrival,
+  selectedFromDropdownArrival,
+  setSelectedFromDropdownDeparture,
+  selectedFromDropdownDeparture,
 }) => {
   const {
     departureLocation,
@@ -62,6 +66,8 @@ const PickUpinfoStep1 = ({
     useState(null);
   const [selectFirstLocationArrival, setSelectFirstLocationArrival] =
     useState(null);
+  const [showDropdownDepature, setShowDropdownDepature] = useState(false);
+  const [showDropdownArrival, setShowDropdownArrival] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -69,6 +75,10 @@ const PickUpinfoStep1 = ({
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAP_API_KEY,
     libraries,
   });
+
+  const { addresses, addressLoading, DeleteAddressLoading } = useSelector(
+    (s) => s.root.globalStates
+  );
 
   let arrTime = getValues().arrivalTime;
   let depTime = getValues().departureTime;
@@ -112,6 +122,7 @@ const PickUpinfoStep1 = ({
     register,
     control,
     watch,
+    clearErrors,
     formState: { errors },
   } = useForm({
     shouldFocusError: true,
@@ -168,21 +179,46 @@ const PickUpinfoStep1 = ({
       return true;
     }
     if (
-      latAndlngForArrival.Lat === "" ||
-      latAndlngForArrival.Lng === "" ||
-      latAndlngForDeparture.Lat === "" ||
-      latAndlngForDeparture.Lng === ""
+      (latAndlngForArrival.Lat === "" || latAndlngForArrival.Lng === "") &&
+      selectedFromDropdownArrival === null
     ) {
       toast.remove();
-      toast.error("Please select valid locations");
+      toast.error("Please select valid arrival location.");
+      return;
+    } else if (
+      (latAndlngForDeparture.Lat === "" || latAndlngForDeparture.Lng === "") &&
+      selectedFromDropdownDeparture === null
+    ) {
+      toast.remove();
+      toast.error("Please select valid deparuter location.");
       return;
     } else {
-      setValue("departureLocation", departureLocation);
-      setValue("arrivalLocation", arrivalLocation);
-      setValue("departureLat", latAndlngForDeparture.Lat);
-      setValue("departureLng", latAndlngForDeparture.Lng);
-      setValue("arrivalLat", latAndlngForArrival.Lat);
-      setValue("arrivalLng", latAndlngForArrival.Lng);
+      if (selectedFromDropdownDeparture) {
+        const departure = addresses?.departureAddresses.find(
+          (add) => add?.location === selectedFromDropdownDeparture
+        );
+        setValue("departureLocation", departure?.location);
+        setValue("departureLat", departure.latitude);
+        setValue("departureLng", departure.longitude);
+      } else {
+        setValue("departureLocation", departureLocation);
+        setValue("departureLat", latAndlngForDeparture.Lat);
+        setValue("departureLng", latAndlngForDeparture.Lng);
+      }
+
+      if (selectedFromDropdownArrival) {
+        const arrival = addresses?.arrivalAddresses.find(
+          (add) => add?.location === selectedFromDropdownArrival
+        );
+        setValue("arrivalLocation", arrival?.location);
+        setValue("arrivalLat", arrival.latitude);
+        setValue("arrivalLng", arrival.longitude);
+      } else {
+        setValue("arrivalLocation", arrivalLocation);
+        setValue("arrivalLat", latAndlngForArrival.Lat);
+        setValue("arrivalLng", latAndlngForArrival.Lng);
+      }
+
       setValue("departureDate", departureDate);
       setValue(
         "departureTime",
@@ -283,6 +319,9 @@ const PickUpinfoStep1 = ({
         Lng: departureLng,
       });
     }
+    // if(selectedFromDropdownArrival){
+
+    // }
     setSelectFirstLocationDeparture(departureLocation);
     setSelectFirstLocationArrival(arrivalLocation);
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -310,68 +349,209 @@ const PickUpinfoStep1 = ({
       <p className="md:text-2xl text-lg text-primaryBlue font-semibold">
         Pick-up info
       </p>
-      <form className="w-full">
+      <form className="w-full" onSubmit={handleSubmit(onSubmit)}>
         <div className="grid lg:grid-cols-2 md:gap-5 gap-3 w-full">
           {/* Departure location */}
-          <div className="w-full md:space-y-3 space-y-2">
+          {/* <div className="w-full md:space-y-3 space-y-2">
             <label className="Label">Departure location</label>
-            {isLoaded && (
-              <Autocomplete
-                className="w-full outline-none focus:outline-none input_field"
-                onPlaceChanged={onPlaceChangedDeparture}
-                onLoad={onLoadDeparture}
-              >
-                <input
-                  className="w-full outline-none"
-                  type="text"
-                  value={selectFirstLocationDeparture}
-                  placeholder="Address, City, State, zip code"
-                  {...register("departureLocation", {
-                    onChange: (e) => {
-                      setValue("departureLocation", e.target.value);
-                      setSelectFirstLocationDeparture(null);
-                    },
-                  })}
-                  autoComplete="off"
-                  name="departureLocation"
-                  id="departureLocation"
-                />
-              </Autocomplete>
-            )}
+            <div
+              className="w-full cursor-pointer  space-y-3 rounded-lg p-4 border relative"
+              onClick={() => setShowDropdownDepature(!showDropdownDepature)}
+            >
+              <div className=" flex items-center justify-between ">
+                <p
+                  className={`${
+                    !selectedFromDropdownDeparture
+                      ? "text-gray-200"
+                      : "text-black"
+                  } select-none`}
+                >
+                  {selectedFromDropdownDeparture
+                    ? selectedFromDropdownDeparture?.location
+                    : "Please select a saved departure location"}
+                </p>
+                {selectedFromDropdownDeparture ? (
+                  <MdCancel
+                    onClick={() => {
+                      setSelectedFromDropdownDeparture(null);
+                      // setValue("departureLocation", "");
+                    }}
+                    className="h-6 w-6 text-blue-400"
+                  />
+                ) : showDropdownDepature ? (
+                  <FaCaretDown className="h-6 w-6 rotate-180 transition-all duration-300" />
+                ) : (
+                  <FaCaretDown className="h-6 w-6 transition-all duration-300" />
+                )}
+              </div>
+              {showDropdownDepature && (
+                <div className="w-full space-y-2">
+                  {addresses?.departureAddresses.map((address) => (
+                    <p
+                      key={address?._id}
+                      onClick={() => {
+                        setSelectedFromDropdownDeparture(address);
+                        setValue("departureLocation", address?.location);
+                        setValue("departureLat", address?.latitude);
+                        setValue("departureLng", address?.longitude);
+                        clearErrors("departureLocation");
+                      }}
+                      className="hover:bg-gray-200 bg-gray-100 p-1"
+                    >
+                      {address?.location}
+                    </p>
+                  ))}
+                </div>
+              )}
+            </div>
             <span className="error" role="alert">
               {errors?.departureLocation?.message}
             </span>
-          </div>
-          {/* Arrival location */}
-          <div className="w-full md:space-y-3 space-y-2">
-            <label className="Label">Arrival location</label>
-            {isLoaded && (
-              <Autocomplete
-                className="w-full outline-none focus:outline-none input_field"
-                onPlaceChanged={onPlaceChangedArrival}
-                onLoad={onLoadArrival}
-              >
-                <input
-                  className="w-full outline-none"
-                  type="text"
-                  placeholder="Address, City, State, zip code"
-                  autoComplete="off"
-                  value={selectFirstLocationArrival}
-                  {...register("arrivalLocation", {
-                    onChange: (e) => {
-                      setValue("arrivalLocation", e.target.value);
-                      setSelectFirstLocationArrival(null);
-                    },
-                  })}
-                  name="arrivalLocation"
-                  id="arrivalLocation"
-                />
-              </Autocomplete>
+          </div> */}
+          <div className="w-full md:space-y-3 space-y-2 relative">
+            <label className="Label">Departure location</label>
+            {selectedFromDropdownDeparture && (
+              <MdCancel
+                onClick={() => {
+                  setSelectedFromDropdownDeparture(null);
+                  setValue("departureLocation", "");
+                }}
+                className="h-6 w-6 text-blue-400 absolute cursor-pointer top-9 right-1 bg-white"
+              />
             )}
-            <span className="error" role="alert">
-              {errors?.arrivalLocation?.message}
-            </span>
+            <select
+              {...register("departureLocation")}
+              name="departureLocation"
+              className=" border rounded-lg outline-none p-2 pr-4 w-full"
+              onChange={(e) => {
+                if (e.target.value !== "") {
+                  setSelectedFromDropdownDeparture(e.target.value);
+                  setValue("departureLocation", e.target.value);
+                } else {
+                  setSelectedFromDropdownDeparture(null);
+                  setValue("departureLocation", "");
+                }
+              }}
+              value={
+                selectedFromDropdownDeparture || "select departure location"
+              }
+            >
+              <option label="select departure location"></option>
+              {addresses?.departureAddresses.map((address) => (
+                <option
+                  key={address?._id}
+                  className="hover:bg-gray-200 bg-gray-100 "
+                >
+                  {address?.location}
+                </option>
+              ))}
+            </select>
           </div>
+
+          {/* Departure location input */}
+          {selectedFromDropdownDeparture == null && (
+            <div className="w-full md:space-y-3 space-y-2">
+              <label className="Label">Input new departure location</label>
+              {isLoaded && (
+                <Autocomplete
+                  className="w-full outline-none focus:outline-none input_field"
+                  onPlaceChanged={onPlaceChangedDeparture}
+                  onLoad={onLoadDeparture}
+                >
+                  <input
+                    className="w-full outline-none"
+                    type="text"
+                    value={selectFirstLocationDeparture}
+                    placeholder="Address, City, State, zip code"
+                    {...register("departureLocation", {
+                      onChange: (e) => {
+                        setValue("departureLocation", e.target.value);
+                        setSelectFirstLocationDeparture(null);
+                      },
+                    })}
+                    autoComplete="off"
+                    name="departureLocation"
+                    id="departureLocation"
+                  />
+                </Autocomplete>
+              )}
+              <span className="error" role="alert">
+                {errors?.departureLocation?.message}
+              </span>
+            </div>
+          )}
+          {/* Arrival location */}
+          <div className="w-full md:space-y-3 space-y-2 relative">
+            <label className="Label">Arrival location</label>
+            {selectedFromDropdownArrival && (
+              <MdCancel
+                onClick={() => {
+                  setSelectedFromDropdownArrival(null);
+                  setValue("arrivalLocation", "");
+                }}
+                className="h-6 w-6 text-blue-400 absolute cursor-pointer top-9 right-1 bg-white"
+              />
+            )}
+            <select
+              {...register("arrivalLocation")}
+              name="arrivalLocation"
+              className=" border rounded-lg outline-none p-2 w-full"
+              onChange={(e) => {
+                if (e.target.value !== "") {
+                  setSelectedFromDropdownArrival(e.target.value);
+                  setValue("arrivalLocation", e.target.value);
+                } else {
+                  setSelectedFromDropdownArrival(null);
+                  setValue("arrivalLocation", "");
+                }
+              }}
+              value={selectedFromDropdownArrival || "select arrival location"}
+            >
+              <option label="select arrival location"></option>
+              {addresses?.arrivalAddresses.map((address) => (
+                <option
+                  key={address?._id}
+                  className="hover:bg-gray-200 bg-gray-100 "
+                >
+                  {address?.location}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Arrival location input*/}
+          {selectedFromDropdownArrival == null && (
+            <div className="w-full md:space-y-3 space-y-2">
+              <label className="Label">Input new arrival location</label>
+              {isLoaded && (
+                <Autocomplete
+                  className="w-full outline-none focus:outline-none input_field"
+                  onPlaceChanged={onPlaceChangedArrival}
+                  onLoad={onLoadArrival}
+                >
+                  <input
+                    className="w-full outline-none"
+                    type="text"
+                    placeholder="Address, City, State, zip code"
+                    autoComplete="off"
+                    value={selectFirstLocationArrival}
+                    {...register("arrivalLocation", {
+                      onChange: (e) => {
+                        setValue("arrivalLocation", e.target.value);
+                        setSelectFirstLocationArrival(null);
+                        console.log("Asdasd");
+                      },
+                    })}
+                    name="arrivalLocation"
+                    id="arrivalLocation"
+                  />
+                </Autocomplete>
+              )}
+              <span className="error" role="alert">
+                {errors?.arrivalLocation?.message}
+              </span>
+            </div>
+          )}
           {/* Delivery pick-up date */}
           <div className="w-full md:space-y-3 space-y-2">
             <label className="Label">Departure Delivery pick-up</label>
@@ -574,18 +754,24 @@ const PickUpinfoStep1 = ({
             <span className="error">{errors?.price?.message}</span>
           </div>
           <div className="w-full col-span-full flex items-center justify-between md:flex-row flex-col gap-2">
-            <button
-              onClick={() => setActiveBidComponent("bid_upload")}
+            <div></div>
+            <div></div>
+            {/* <button
+              onClick={() => setActiveBidComponent("single_bid")}
               type="button"
               className="blue_button w-1/4 uppercase"
             >
               back
-            </button>
+            </button> */}
 
             <div>1 of 3</div>
             <button
-              type="button"
-              onClick={handleSubmit(onSubmit)}
+              type="submit"
+              onClick={() => {
+                // clearErrors(["arrivalLocation", "departureLocation"]);
+                // console.log(getValues());
+                // handleSubmit(onSubmit);
+              }}
               className="blue_button w-1/4 uppercase"
             >
               NEXT

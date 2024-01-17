@@ -52,7 +52,7 @@ const Home = () => {
               res?.payload?.message === "Please login first."))
         ) {
           window.localStorage.clear();
-          toast.error(res?.payload?.message);
+          // toast.error(res?.payload?.message);
           dispatch(handleLogout());
           dispatch(handleLogoutFromAllTabs());
         }
@@ -65,10 +65,10 @@ const Home = () => {
     if (user !== null) {
       dispatch(handleGetChat({ token, signal: AbortControllerRef }));
       handleFetchDocuments();
+      dispatch(handleGetFaqs({ signal: AbortControllerRef }));
+      dispatch(handleGetTerms({ signal: AbortControllerRef }));
+      dispatch(handleGetPrivacy({ signal: AbortControllerRef }));
     }
-    dispatch(handleGetFaqs({ signal: AbortControllerRef }));
-    dispatch(handleGetTerms({ signal: AbortControllerRef }));
-    dispatch(handleGetPrivacy({ signal: AbortControllerRef }));
     return () => {
       abortApiCall();
     };
@@ -96,7 +96,7 @@ const Home = () => {
 
   return (
     <>
-      <Helmet title={`${activeComponent} | Logisx`} />
+      <Helmet title={`${activeComponent} | Logisx`}></Helmet>
       <Header />
       {showSearchComponent && <Search />}
       {/* {showBidUploadComponent && <RequestBid />} */}
@@ -113,6 +113,7 @@ const Home = () => {
             {(activeComponent === "request for bid" ||
               activeComponent === "pending bids") && <Bids />}
             {(activeComponent === "profile" ||
+              activeComponent === "addresses" ||
               activeComponent === "documents" ||
               activeComponent === "favorites" ||
               activeComponent === "faq" ||

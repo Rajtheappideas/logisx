@@ -1,0 +1,2 @@
+add address fields already added.
+show number of bids in pending bids on view bids btn. -done

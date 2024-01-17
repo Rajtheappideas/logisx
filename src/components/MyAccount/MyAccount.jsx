@@ -12,7 +12,11 @@ import { handleGetFavorites } from "../../redux/BidSlice";
 import useAbortApiCall from "../../hooks/useAbortApiCall";
 import toast from "react-hot-toast";
 import { handleLogout } from "../../redux/AuthSlice";
-import { handleLogoutFromAllTabs } from "../../redux/globalStates";
+import {
+  handleGetAddress,
+  handleLogoutFromAllTabs,
+} from "../../redux/globalStates";
+import Addresses from "./Address/Addresses";
 
 const MyAccount = () => {
   const { activeComponent } = useSelector((state) => state.root.globalStates);
@@ -43,10 +47,29 @@ const MyAccount = () => {
     }
   };
 
+  const handleFetchAddress = () => {
+    const response = dispatch(handleGetAddress({ token }));
+    if (response) {
+      response.then((res) => {
+        if (
+          res?.payload?.status === "fail" &&
+          (res?.payload?.code === 423 ||
+            (res?.payload?.code === 400 &&
+              res?.payload?.message === "Please login first."))
+        ) {
+          window.localStorage.clear();
+          toast.error(res?.payload?.message);
+          dispatch(handleLogout());
+          dispatch(handleLogoutFromAllTabs());
+        }
+      });
+    }
+  };
+
   useEffect(() => {
     if (user !== null) {
-      // dispatch(handleGetFavorites({ token, signal: AbortControllerRef }));
-      handleFetchFavs()
+      handleFetchAddress();
+      handleFetchFavs();
     }
   }, []);
 
@@ -54,6 +77,7 @@ const MyAccount = () => {
     <div className="h-auto">
       {activeComponent === "profile" && <Profile />}
       {activeComponent === "documents" && <Documents />}
+      {activeComponent === "addresses" && <Addresses />}
       {activeComponent === "favorites" && <Favourites />}
       {activeComponent === "faq" && <FAQs />}
       {activeComponent === "change password" && <ChangePassword />}

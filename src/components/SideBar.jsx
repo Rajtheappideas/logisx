@@ -9,6 +9,7 @@ import { RiLockPasswordLine } from "react-icons/ri";
 import { PiFileText } from "react-icons/pi";
 import { LiaTruckMovingSolid } from "react-icons/lia";
 import { useDispatch, useSelector } from "react-redux";
+import { MdOutlineLocationOn  } from "react-icons/md";
 import {
   handleChangeActiveComponent,
   handleLogoutFromAllTabs,
@@ -32,12 +33,13 @@ const SideBar = () => {
   const accountTabs = [
     { id: 1, title: "Profile", icon: BiUser },
     { id: 2, title: "Documents", icon: CgFileDocument },
-    { id: 3, title: "Favorites", icon: FiHeart },
-    { id: 4, title: "FAQ", icon: BsChatText },
-    { id: 5, title: "Change password", icon: RiLockPasswordLine },
-    { id: 6, title: "Terms", icon: GoChecklist },
-    { id: 7, title: "Policy", icon: PiFileText },
-    { id: 8, title: "Logout", icon: FiLogOut },
+    { id: 3, title: "Addresses", icon: MdOutlineLocationOn  },
+    { id: 4, title: "Favorites", icon: FiHeart },
+    { id: 5, title: "FAQ", icon: BsChatText },
+    { id: 6, title: "Change password", icon: RiLockPasswordLine },
+    { id: 7, title: "Terms", icon: GoChecklist },
+    { id: 8, title: "Policy", icon: PiFileText },
+    { id: 9, title: "Logout", icon: FiLogOut },
   ];
 
   const handleChangeLogout = () => {

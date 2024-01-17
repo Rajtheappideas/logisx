@@ -212,24 +212,27 @@ const SingleJob = memo(({ setActiveBidId, jobDescription, data }) => {
         </div>
       </div>
       {/* status */}
-      <div className="flex items-center">
-        <p className="text-lg font-semibold">Status :</p>
-        <span
-          className={`${
-            data?.status === "in-transit"
-              ? "bg-primaryBlue"
-              : data?.status === "pending"
-              ? "bg-primaryBlue"
-              : data?.status === "complete"
-              ? "bg-greenColor"
-              : data?.status === "cancelled"
-              ? "bg-gray-300"
-              : ""
-          }
+      <div className="flex items-center justify-between">
+        <div className="flex items-center">
+          <p className="text-lg font-semibold">Status :</p>
+          <span
+            className={`${
+              data?.status === "in-transit"
+                ? "bg-primaryBlue"
+                : data?.status === "pending"
+                ? "bg-primaryBlue"
+                : data?.status === "complete"
+                ? "bg-greenColor"
+                : data?.status === "cancelled"
+                ? "bg-gray-300"
+                : ""
+            }
           capitalize text-white font-medium text-center md:w-32 md:ml-2 ml-1 w-24 md:h-10 md:leading-10 align-middle h-9 leading-9 rounded-3xl`}
-        >
-          {data?.status}
-        </span>
+          >
+            {data?.status}
+          </span>
+        </div>
+        <div className="">{data?.weight} lbs</div>
       </div>
 
       {/* description */}
@@ -255,7 +258,10 @@ const SingleJob = memo(({ setActiveBidId, jobDescription, data }) => {
             className="blue_button uppercase tracking-wide"
             onClick={() => handleDispatch()}
           >
-            view {data?.status === "pending" && "Bids"}
+            view{" "}
+            {data?.status === "pending" &&
+              activeComponent !== "favorites" &&
+              `Bids (${data?.bidCount})`}
           </button>
         )}
       </div>

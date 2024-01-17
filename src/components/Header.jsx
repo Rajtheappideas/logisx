@@ -298,12 +298,13 @@ const Header = () => {
             <input
               className=" block bg-[#F6F6F6] w-full border-none rounded-md md:py-2 py-1 pl-9 pr-3 shadow-sm outline-none sm:text-sm"
               placeholder="arrival, departure & status"
-              type="text"
+              type="search"
               name="search"
               title="Enter Arrival location, Departure location & Status"
               onChange={(e) => {
                 handleChangeSearchTerm(e);
               }}
+              autoComplete="off"
             />
           </div>
           <AiOutlineMenu

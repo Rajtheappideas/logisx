@@ -82,11 +82,10 @@ const Details = ({ singleBidProposal, setActiveBidId }) => {
     }
   };
 
-  useEffect(() => {
-    // return () => abortApiCall();
-  }, []);
+  // useEffect(() => {
+  //   // return () => abortApiCall();
+  // }, []);
 
-  console.log(singleBidProposal);
 
   return (
     <>

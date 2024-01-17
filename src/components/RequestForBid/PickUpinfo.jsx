@@ -1,16 +1,28 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import PickUpinfoStep1 from "./PickUpinfoStep1";
 import PickUpinfoStep2 from "./PickUpinfoStep2";
 import PickUpinfoStep3 from "./PickUpinfoStep3";
 import Review from "./Review";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
 import RequestBidSuccessPopup from "../Bids/RequestBidSuccessPopup";
-import { handleChangeActiveComponent } from "../../redux/globalStates";
+import {
+  handleChangeActiveComponent,
+  handleGetAddress,
+  handleLogoutFromAllTabs,
+} from "../../redux/globalStates";
+import { handleLogout } from "../../redux/AuthSlice";
+import toast from "react-hot-toast";
 
 const PickUpinfo = ({ setActiveBidComponent }) => {
   const [step, setStep] = useState(1);
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
+  const [selectedFromDropdownArrival, setSelectedFromDropdownArrival] =
+    useState(null);
+  const [selectedFromDropdownDeparture, setSelectedFromDropdownDeparture] =
+    useState(null);
+
+  const { token } = useSelector((s) => s.root.auth);
 
   const dispatch = useDispatch();
 
@@ -49,6 +61,29 @@ const PickUpinfo = ({ setActiveBidComponent }) => {
     dispatch(handleChangeActiveComponent("pending bids"));
   };
 
+  const handleFetchAddress = () => {
+    const response = dispatch(handleGetAddress({ token }));
+    if (response) {
+      response.then((res) => {
+        if (
+          res?.payload?.status === "fail" &&
+          (res?.payload?.code === 423 ||
+            (res?.payload?.code === 400 &&
+              res?.payload?.message === "Please login first."))
+        ) {
+          window.localStorage.clear();
+          toast.error(res?.payload?.message);
+          dispatch(handleLogout());
+          dispatch(handleLogoutFromAllTabs());
+        }
+      });
+    }
+  };
+
+  useEffect(() => {
+    handleFetchAddress();
+  }, []);
+
   return (
     <div className="w-full h-full md:space-y-3 space-y-2">
       {step === 1 && (
@@ -59,6 +94,10 @@ const PickUpinfo = ({ setActiveBidComponent }) => {
           setActiveBidComponent={setActiveBidComponent}
           clearErrors={clearErrors}
           reset={reset}
+          setSelectedFromDropdownArrival={setSelectedFromDropdownArrival}
+          selectedFromDropdownArrival={selectedFromDropdownArrival}
+          setSelectedFromDropdownDeparture={setSelectedFromDropdownDeparture}
+          selectedFromDropdownDeparture={selectedFromDropdownDeparture}
         />
       )}
       {step === 2 && (
