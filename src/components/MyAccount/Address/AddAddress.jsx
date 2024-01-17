@@ -92,7 +92,7 @@ const AddAddress = ({ setShowAddAddress }) => {
         </div>
         {/* input field */}
         <div className="w-full md:space-y-3 space-y-2">
-          <label className="Label">Departure location</label>
+          <label className="Label">location</label>
           {isLoaded && (
             <Autocomplete
               className="w-full outline-none focus:outline-none input_field"
